@@ -12,3 +12,4 @@ matplotlib==3.8.4
 seaborn==0.13.2
 notebook==7.2.0
 ipykernel==6.29.4
+gunicorn==22.0.0
