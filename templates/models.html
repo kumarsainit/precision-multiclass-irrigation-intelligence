@@ -5,15 +5,10 @@
 {% block content %}
 
 <div class="mb-6" style="margin-bottom: 2rem;">
-
-  <h1 class="page-title">
-    Model Specification
-  </h1>
-
+  <h1 class="page-title">Model Specification</h1>
   <p class="page-sub">
     Technical details of the final XGBoost model selected for irrigation-need prediction.
   </p>
-
 </div>
 
 <div style="max-width: 900px; margin: 0 auto;">
@@ -27,7 +22,6 @@
         color: white;
       "
     >
-
       <div
         style="
           display: flex;
@@ -35,7 +29,6 @@
           justify-content: space-between;
         "
       >
-
         <div>
 
           <span
@@ -91,18 +84,11 @@
         </div>
 
       </div>
-
     </div>
 
-    <div
-      class="card-body"
-      style="padding: 2.5rem;"
-    >
+    <div class="card-body" style="padding: 2.5rem;">
 
-      <div
-        class="two-col-grid"
-        style="gap: 3rem;"
-      >
+      <div class="two-col-grid" style="gap: 3rem;">
 
         <div>
 
@@ -116,13 +102,10 @@
               margin-bottom: 1.5rem;
             "
           >
-            Performance Benchmark
+            Final Test Performance
           </div>
 
-          <div
-            id="metrics-container"
-            class="space-y-6"
-          >
+          <div id="metrics-container">
 
             <div
               style="
@@ -138,7 +121,7 @@
 
         </div>
 
-        <div class="space-y-6">
+        <div>
 
           <div
             style="
@@ -321,6 +304,37 @@
             margin-bottom: 1rem;
           "
         >
+          Class-wise Test Performance
+        </div>
+
+        <div
+          id="class-metrics-container"
+          class="two-col-grid"
+          style="gap: 1.5rem;"
+        ></div>
+
+      </div>
+
+      <hr
+        style="
+          border: 0;
+          border-top: 1px solid var(--border-color);
+          margin: 2.5rem 0;
+        "
+      >
+
+      <div>
+
+        <div
+          style="
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+          "
+        >
           Technical References & Documentation
         </div>
 
@@ -467,13 +481,42 @@
   background: var(--primary);
   height: 100%;
   border-radius: 10px;
-  transition:
-    width 1.5s cubic-bezier(
-      0.17,
-      0.67,
-      0.83,
-      0.67
-    );
+  transition: width 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+
+.class-metric-card {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.class-metric-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+}
+
+.class-metric-row {
+  margin-bottom: 0.9rem;
+}
+
+.class-metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.class-metric-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.class-metric-value {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--primary);
 }
 
 </style>
@@ -484,140 +527,79 @@
 
 <script>
 
-fetch('/api/models')
+const finalMetrics = {
+  accuracy: 0.9853,
+  macroF1: 0.9704,
+  rocAuc: 0.9976,
+  averagePrecision: 0.9970,
+  highF1: 0.9397,
+  highPrecision: 0.9521,
+  highRecall: 0.9276,
+  lowPrecision: 0.9867,
+  lowRecall: 0.9951,
+  lowF1: 0.9909,
+  mediumPrecision: 0.9860,
+  mediumRecall: 0.9752,
+  mediumF1: 0.9806
+};
 
-  .then(response => response.json())
+const metrics = [
+  {
+    label: "Test Accuracy",
+    value: finalMetrics.accuracy
+  },
+  {
+    label: "Test Macro F1",
+    value: finalMetrics.macroF1
+  },
+  {
+    label: "Macro ROC-AUC",
+    value: finalMetrics.rocAuc
+  },
+  {
+    label: "Micro Average Precision",
+    value: finalMetrics.averagePrecision
+  },
+  {
+    label: "High-Class F1",
+    value: finalMetrics.highF1
+  }
+];
 
-  .then(data => {
+const metricsContainer =
+  document.getElementById("metrics-container");
 
-    const models =
-      Array.isArray(data.models)
-        ? data.models
-        : [];
+metricsContainer.innerHTML = metrics
+  .map(metric => metricRow(metric.label, metric.value))
+  .join("");
 
-    const model = models.find(
-      currentModel =>
-        String(currentModel.id).toLowerCase() === "xgboost"
-    );
+const classMetrics = [
+  {
+    name: "High",
+    precision: finalMetrics.highPrecision,
+    recall: finalMetrics.highRecall,
+    f1: finalMetrics.highF1
+  },
+  {
+    name: "Low",
+    precision: finalMetrics.lowPrecision,
+    recall: finalMetrics.lowRecall,
+    f1: finalMetrics.lowF1
+  },
+  {
+    name: "Medium",
+    precision: finalMetrics.mediumPrecision,
+    recall: finalMetrics.mediumRecall,
+    f1: finalMetrics.mediumF1
+  }
+];
 
-    const container =
-      document.getElementById(
-        "metrics-container"
-      );
+const classMetricsContainer =
+  document.getElementById("class-metrics-container");
 
-    if (!model) {
-
-      container.innerHTML = `
-        <div
-          style="
-            padding: 1rem;
-            border: 1px solid #fecaca;
-            background: #fef2f2;
-            border-radius: 8px;
-            color: #991b1b;
-            font-size: 0.9rem;
-          "
-        >
-          XGBoost performance data is unavailable.
-        </div>
-      `;
-
-      return;
-    }
-
-    const metrics = [
-
-      {
-        label: "Accuracy",
-        value: model.accuracy
-      },
-
-      {
-        label: "Precision",
-        value: model.precision
-      },
-
-      {
-        label: "Recall",
-        value: model.recall
-      },
-
-      {
-        label: "F1 Score",
-        value: model.f1_score
-      },
-
-      {
-        label: "Macro ROC-AUC",
-        value: model.roc_auc
-      },
-
-      {
-        label: "Micro Average Precision",
-        value: model.average_precision
-      }
-
-    ];
-
-    const availableMetrics =
-      metrics.filter(
-        metric =>
-          typeof metric.value === "number" &&
-          Number.isFinite(metric.value)
-      );
-
-    if (availableMetrics.length === 0) {
-
-      container.innerHTML = `
-        <p
-          style="
-            color: var(--text-muted);
-            font-size: 0.9rem;
-          "
-        >
-          XGBoost performance metrics are
-          currently unavailable.
-        </p>
-      `;
-
-      return;
-    }
-
-    container.innerHTML =
-      availableMetrics
-        .map(metric =>
-          metricRow(
-            metric.label,
-            metric.value
-          )
-        )
-        .join("");
-
-  })
-
-  .catch(error => {
-
-    console.error(
-      "Failed to load XGBoost metrics:",
-      error
-    );
-
-    document.getElementById(
-      "metrics-container"
-    ).innerHTML = `
-      <p
-        style="
-          color: #dc3545;
-          font-size: 0.9rem;
-        "
-      >
-        XGBoost performance data temporarily
-        unavailable.
-      </p>
-    `;
-
-  });
-
+classMetricsContainer.innerHTML = classMetrics
+  .map(classMetric => classMetricCard(classMetric))
+  .join("");
 
 function metricRow(label, value) {
 
@@ -628,10 +610,9 @@ function metricRow(label, value) {
     );
 
   const formattedPercentage =
-    percentage.toFixed(1);
+    percentage.toFixed(2);
 
   return `
-
     <div class="metric-row">
 
       <div
@@ -668,13 +649,61 @@ function metricRow(label, value) {
 
         <div
           class="metric-bar-fill"
-          style="width: ${formattedPercentage}%"
+          style="width: ${percentage}%"
         ></div>
 
       </div>
 
     </div>
+  `;
+}
 
+function classMetricCard(classMetric) {
+
+  return `
+    <div class="class-metric-card">
+
+      <div class="class-metric-title">
+        ${classMetric.name} Irrigation Need
+      </div>
+
+      ${classMetricRow(
+        "Precision",
+        classMetric.precision
+      )}
+
+      ${classMetricRow(
+        "Recall",
+        classMetric.recall
+      )}
+
+      ${classMetricRow(
+        "F1 Score",
+        classMetric.f1
+      )}
+
+    </div>
+  `;
+}
+
+function classMetricRow(label, value) {
+
+  return `
+    <div class="class-metric-row">
+
+      <div class="class-metric-header">
+
+        <span class="class-metric-label">
+          ${label}
+        </span>
+
+        <span class="class-metric-value">
+          ${(value * 100).toFixed(2)}%
+        </span>
+
+      </div>
+
+    </div>
   `;
 }
 
