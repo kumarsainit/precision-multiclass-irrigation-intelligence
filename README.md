@@ -1,4 +1,6 @@
 # Precision Multi-Class Irrigation Intelligence
+> **Live Project:** [Open the deployed application](https://precision-multiclass-irrigation.onrender.com/)
+
 
 > **End-to-end machine learning system for predicting crop-field irrigation requirements as Low, Medium, or High — from data preprocessing and model evaluation to a deployable XGBoost + Flask inference service.**
 
