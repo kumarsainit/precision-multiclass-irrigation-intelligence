@@ -18,10 +18,8 @@
 
 <div style="max-width: 900px; margin: 0 auto;">
 
-  <!-- Main Model Card -->
   <div class="card" style="overflow: hidden;">
 
-    <!-- Header -->
     <div
       style="
         background: var(--primary);
@@ -106,7 +104,6 @@
         style="gap: 3rem;"
       >
 
-        <!-- Left Side: Performance -->
         <div>
 
           <div
@@ -141,7 +138,6 @@
 
         </div>
 
-        <!-- Right Side: Algorithm Logic -->
         <div class="space-y-6">
 
           <div
@@ -157,7 +153,6 @@
             Algorithm Logic
           </div>
 
-          <!-- Gradient Boosting -->
           <div
             style="
               display: flex;
@@ -210,7 +205,6 @@
 
           </div>
 
-          <!-- Regularization -->
           <div
             style="
               display: flex;
@@ -268,7 +262,6 @@
 
           </div>
 
-          <!-- Deployment Strategy -->
           <div
             style="
               background: #f0fdf4;
@@ -316,7 +309,6 @@
         "
       >
 
-      <!-- Technical References -->
       <div>
 
         <div
@@ -337,7 +329,6 @@
           style="gap: 1.5rem;"
         >
 
-          <!-- XGBoost Documentation -->
           <a
             href="https://xgboost.readthedocs.io/"
             target="_blank"
@@ -357,8 +348,29 @@
             onmouseout="this.style.borderColor='var(--border-color)'"
           >
 
-            <span style="font-size: 1.2rem;">
-              📖
+            <span
+              style="
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--primary);
+              "
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
             </span>
 
             <div
@@ -372,7 +384,6 @@
 
           </a>
 
-          <!-- XGBoost GitHub -->
           <a
             href="https://github.com/dmlc/xgboost"
             target="_blank"
@@ -392,8 +403,28 @@
             onmouseout="this.style.borderColor='var(--border-color)'"
           >
 
-            <span style="font-size: 1.2rem;">
-              💻
+            <span
+              style="
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--primary);
+              "
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+              </svg>
             </span>
 
             <div
@@ -449,14 +480,13 @@
 
 {% endblock %}
 
-
 {% block scripts %}
 
 <script>
 
 fetch('/api/models')
 
-  .then(r => r.json())
+  .then(response => response.json())
 
   .then(data => {
 
@@ -465,13 +495,9 @@ fetch('/api/models')
         ? data.models
         : [];
 
-    /*
-     * XGBoost is the final selected
-     * deployment model.
-     */
     const model = models.find(
-      m =>
-        String(m.id).toLowerCase() === "xgboost"
+      currentModel =>
+        String(currentModel.id).toLowerCase() === "xgboost"
     );
 
     const container =
@@ -499,17 +525,10 @@ fetch('/api/models')
       return;
     }
 
-    /*
-     * Metrics are read directly from
-     * the backend API.
-     *
-     * No hardcoded performance values
-     * are used here.
-     */
     const metrics = [
 
       {
-        label: "Predictive Accuracy",
+        label: "Accuracy",
         value: model.accuracy
       },
 
@@ -524,8 +543,18 @@ fetch('/api/models')
       },
 
       {
-        label: "F1 Weighted Score",
+        label: "F1 Score",
         value: model.f1_score
+      },
+
+      {
+        label: "Macro ROC-AUC",
+        value: model.roc_auc
+      },
+
+      {
+        label: "Micro Average Precision",
+        value: model.average_precision
       }
 
     ];
@@ -586,16 +615,20 @@ fetch('/api/models')
         unavailable.
       </p>
     `;
+
   });
 
 
-function metricRow(label, val) {
+function metricRow(label, value) {
 
-  const pct =
+  const percentage =
     Math.max(
       0,
-      Math.min(100, val * 100)
-    ).toFixed(1);
+      Math.min(100, value * 100)
+    );
+
+  const formattedPercentage =
+    percentage.toFixed(1);
 
   return `
 
@@ -626,7 +659,7 @@ function metricRow(label, val) {
             color: var(--primary);
           "
         >
-          ${pct}%
+          ${formattedPercentage}%
         </span>
 
       </div>
@@ -635,7 +668,7 @@ function metricRow(label, val) {
 
         <div
           class="metric-bar-fill"
-          style="width: ${pct}%"
+          style="width: ${formattedPercentage}%"
         ></div>
 
       </div>

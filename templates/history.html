@@ -3,35 +3,70 @@
 {% block title %}History{% endblock %}
 
 {% block content %}
-<div class="mb-6" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+
+<div
+  class="mb-6"
+  style="
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+  "
+>
+
   <div>
-    <h1 class="page-title">Prediction History</h1>
+
+    <h1 class="page-title">
+      Prediction History
+    </h1>
+
     <p class="page-sub">
       Audit trail of XGBoost-powered irrigation decisions and field observations.
     </p>
+
   </div>
 
   <button
     onclick="loadHistory()"
     class="btn-primary"
-    style="width: auto; padding: 0.5rem 1.25rem; font-size: 0.85rem;"
+    style="
+      width: auto;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.85rem;
+    "
   >
     Refresh Log
   </button>
+
 </div>
 
-<!-- Simple Summary Statistics -->
 <div
   class="two-col-grid"
-  style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;"
+  style="
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 2rem;
+  "
 >
+
   <div
     class="card"
-    style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem;"
+    style="
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    "
   >
+
     <div
-      style="padding: 0.75rem; background: #e0f2fe; color: #0369a1; border-radius: 10px;"
+      style="
+        padding: 0.75rem;
+        background: #e0f2fe;
+        color: #0369a1;
+        border-radius: 10px;
+      "
     >
+
       <svg
         width="20"
         height="20"
@@ -42,9 +77,11 @@
       >
         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
       </svg>
+
     </div>
 
     <div>
+
       <div
         style="
           font-size: 0.7rem;
@@ -58,18 +95,29 @@
       </div>
 
       <div
-        style="font-size: 1.25rem; font-weight: 700;"
+        style="
+          font-size: 1.25rem;
+          font-weight: 700;
+        "
         id="stat-total"
       >
         —
       </div>
+
     </div>
+
   </div>
 
   <div
     class="card"
-    style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem;"
+    style="
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    "
   >
+
     <div
       style="
         padding: 0.75rem;
@@ -78,6 +126,7 @@
         border-radius: 10px;
       "
     >
+
       <svg
         width="20"
         height="20"
@@ -88,9 +137,11 @@
       >
         <path d="M13 10V3L4 14h7v7l9-11h-7z"></path>
       </svg>
+
     </div>
 
     <div>
+
       <div
         style="
           font-size: 0.7rem;
@@ -104,18 +155,29 @@
       </div>
 
       <div
-        style="font-size: 1.25rem; font-weight: 700;"
+        style="
+          font-size: 1.25rem;
+          font-weight: 700;
+        "
         id="stat-conf"
       >
         —
       </div>
+
     </div>
+
   </div>
 
   <div
     class="card"
-    style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem;"
+    style="
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    "
   >
+
     <div
       style="
         padding: 0.75rem;
@@ -124,6 +186,7 @@
         border-radius: 10px;
       "
     >
+
       <svg
         width="20"
         height="20"
@@ -134,9 +197,11 @@
       >
         <path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
       </svg>
+
     </div>
 
     <div>
+
       <div
         style="
           font-size: 0.7rem;
@@ -150,18 +215,27 @@
       </div>
 
       <div
-        style="font-size: 1.25rem; font-weight: 700;"
+        style="
+          font-size: 1.25rem;
+          font-weight: 700;
+        "
         id="stat-crop"
       >
         —
       </div>
+
     </div>
+
   </div>
+
 </div>
 
 <div class="card">
+
   <div class="history-table-wrap">
+
     <div id="history-content">
+
       <div
         style="
           padding: 4rem;
@@ -169,244 +243,459 @@
           color: var(--text-muted);
         "
       >
-        <p>Synchronizing history...</p>
+        <p>
+          Synchronizing history...
+        </p>
       </div>
+
     </div>
+
   </div>
+
 </div>
 
 <style>
-  .history-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-  }
 
-  .history-table th {
-    background: #FAFAFA;
-    padding: 1rem 1.5rem;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border-color);
-  }
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
 
-  .history-table td {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.9rem;
-  }
+.history-table th {
+  background: #FAFAFA;
+  padding: 1rem 1.5rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+}
 
-  .history-table tr:last-child td {
-    border-bottom: none;
-  }
+.history-table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}
 
-  .history-table tr:hover {
-    background-color: #FDFBF7;
-  }
+.history-table tr:last-child td {
+  border-bottom: none;
+}
 
-  .badge {
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
+.history-table tr:hover {
+  background-color: #FDFBF7;
+}
 
-  .badge-high {
-    background: #fee2e2;
-    color: #b91c1c;
-  }
+.badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
 
-  .badge-medium {
-    background: #fef3c7;
-    color: #92400e;
-  }
+.badge-high {
+  background: #fee2e2;
+  color: #b91c1c;
+}
 
-  .badge-low {
-    background: #e0f2fe;
-    color: #0369a1;
-  }
+.badge-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
 
-  .badge-none {
-    background: #f1f5f9;
-    color: #475569;
-  }
+.badge-low {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.badge-none {
+  background: #f1f5f9;
+  color: #475569;
+}
+
 </style>
+
 {% endblock %}
 
 {% block scripts %}
+
 <script>
+
 function loadHistory() {
+
   fetch('/api/history')
-    .then(r => r.json())
+
+    .then(response => response.json())
+
     .then(data => {
 
-      const wrap = document.getElementById('history-content');
-      const predictions = data.predictions || [];
+      const wrap =
+        document.getElementById(
+          'history-content'
+        );
+
+      const predictions =
+        Array.isArray(data.predictions)
+          ? data.predictions
+          : [];
 
       if (predictions.length === 0) {
-        wrap.innerHTML = `
-          <div style="padding: 5rem; text-align: center;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
 
-            <h3 style="
-              font-weight: 700;
-              color: var(--text-main);
-            ">
+        wrap.innerHTML = `
+
+          <div
+            style="
+              padding: 5rem;
+              text-align: center;
+            "
+          >
+
+            <div
+              style="
+                width: 56px;
+                height: 56px;
+                margin: 0 auto 1rem;
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--text-muted);
+              "
+            >
+
+              <svg
+                width="26"
+                height="26"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                stroke-width="1.8"
+              >
+                <path d="M6 3h12v18H6z"></path>
+                <path d="M9 7h6M9 11h6M9 15h4"></path>
+              </svg>
+
+            </div>
+
+            <h3
+              style="
+                font-weight: 700;
+                color: var(--text-main);
+              "
+            >
               No History Found
             </h3>
 
-            <p style="color: var(--text-muted);">
+            <p
+              style="
+                color: var(--text-muted);
+              "
+            >
               Run your first analysis to see data here.
             </p>
+
           </div>
+
         `;
 
-        document.getElementById('stat-total').textContent = '0';
-        document.getElementById('stat-conf').textContent = '—';
-        document.getElementById('stat-crop').textContent = '—';
+        document.getElementById(
+          'stat-total'
+        ).textContent = '0';
+
+        document.getElementById(
+          'stat-conf'
+        ).textContent = '—';
+
+        document.getElementById(
+          'stat-crop'
+        ).textContent = '—';
 
         return;
       }
 
-      // Update total prediction count
-      document.getElementById('stat-total').textContent =
+      document.getElementById(
+        'stat-total'
+      ).textContent =
         predictions.length;
 
-      // Calculate average confidence
-      const confidenceValues = predictions
-        .map(p => Number(p.confidence))
-        .filter(v => Number.isFinite(v));
+      const confidenceValues =
+        predictions
+
+          .map(
+            prediction =>
+              Number(prediction.confidence)
+          )
+
+          .filter(
+            value =>
+              Number.isFinite(value)
+          );
 
       if (confidenceValues.length > 0) {
-        const avgConf =
-          confidenceValues.reduce((acc, value) => acc + value, 0) /
+
+        const averageConfidence =
+          confidenceValues.reduce(
+            (total, value) =>
+              total + value,
+            0
+          ) /
           confidenceValues.length;
 
-        document.getElementById('stat-conf').textContent =
-          Math.round(avgConf * 100) + '%';
+        document.getElementById(
+          'stat-conf'
+        ).textContent =
+          Math.round(
+            averageConfidence * 100
+          ) + '%';
+
       } else {
-        document.getElementById('stat-conf').textContent = '—';
+
+        document.getElementById(
+          'stat-conf'
+        ).textContent = '—';
+
       }
 
-      // Determine most frequently predicted crop
-      const crops = predictions
-        .map(p => p.crop_type)
-        .filter(Boolean);
+      const crops =
+        predictions
+
+          .map(
+            prediction =>
+              prediction.crop_type
+          )
+
+          .filter(Boolean);
 
       const cropCounts = {};
 
       crops.forEach(crop => {
-        cropCounts[crop] = (cropCounts[crop] || 0) + 1;
+
+        cropCounts[crop] =
+          (cropCounts[crop] || 0) + 1;
+
       });
 
-      const topCrop = Object.entries(cropCounts)
-        .sort((a, b) => b[1] - a[1])[0];
+      const topCrop =
+        Object.entries(cropCounts)
 
-      document.getElementById('stat-crop').textContent =
-        topCrop ? topCrop[0] : '—';
+          .sort(
+            (a, b) =>
+              b[1] - a[1]
+          )[0];
+
+      document.getElementById(
+        'stat-crop'
+      ).textContent =
+        topCrop
+          ? topCrop[0]
+          : '—';
 
       let rows = '';
 
-      predictions.forEach(p => {
+      predictions.forEach(prediction => {
 
         const level =
-          (p.irrigation_required || 'none').toLowerCase();
+          (
+            prediction.irrigation_required ||
+            'none'
+          ).toLowerCase();
+
+        const waterAmount =
+          Number(
+            prediction.water_recommendation_mm
+          );
+
+        const confidence =
+          Number(
+            prediction.confidence
+          );
 
         rows += `
+
           <tr>
 
             <td>
-              <div style="
-                font-weight: 700;
-                color: var(--text-main);
-              ">
-                ${fmtDate(p.timestamp)}
+
+              <div
+                style="
+                  font-weight: 700;
+                  color: var(--text-main);
+                "
+              >
+                ${fmtDate(prediction.timestamp)}
               </div>
 
-              <div style="
-                font-size: 0.75rem;
-                color: var(--text-muted);
-              ">
+              <div
+                style="
+                  font-size: 0.75rem;
+                  color: var(--text-muted);
+                "
+              >
                 XGBoost Final Deployment Model
               </div>
+
             </td>
 
             <td>
-              <div style="
-                display: flex;
-                align-items: center;
-                gap: 8px;
-              ">
-                <span>🌱</span>
 
-                <span style="font-weight: 500;">
-                  ${p.crop_type || '—'}
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                "
+              >
+
+                <span
+                  style="
+                    width: 24px;
+                    height: 24px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--primary);
+                  "
+                >
+
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 20V10"></path>
+                    <path d="M12 14c-4-1-6-3.5-6-7 3.5 0 6 2 6 5"></path>
+                    <path d="M12 12c1-3 3-5 6-5 0 3.5-2 6-6 7"></path>
+                  </svg>
+
                 </span>
+
+                <span
+                  style="
+                    font-weight: 500;
+                  "
+                >
+                  ${prediction.crop_type || '—'}
+                </span>
+
               </div>
+
             </td>
 
             <td>
-              <div style="
-                font-weight: 700;
-                color: ${
-                  p.water_recommendation_mm > 0
-                    ? 'var(--primary)'
-                    : 'var(--text-muted)'
-                };
-              ">
-                ${p.water_recommendation_mm || 0}
 
-                <span style="
-                  font-size: 0.7rem;
-                  font-weight: 400;
-                  color: var(--text-muted);
-                ">
+              <div
+                style="
+                  font-weight: 700;
+                  color: ${
+                    Number.isFinite(waterAmount) &&
+                    waterAmount > 0
+                      ? 'var(--primary)'
+                      : 'var(--text-muted)'
+                  };
+                "
+              >
+
+                ${
+                  Number.isFinite(waterAmount)
+                    ? waterAmount
+                    : 0
+                }
+
+                <span
+                  style="
+                    font-size: 0.7rem;
+                    font-weight: 400;
+                    color: var(--text-muted);
+                  "
+                >
                   mm
                 </span>
+
               </div>
+
             </td>
 
             <td>
-              <span class="badge ${badgeClass(level)}">
-                ${p.irrigation_required || '—'}
+
+              <span
+                class="badge ${badgeClass(level)}"
+              >
+                ${prediction.irrigation_required || '—'}
               </span>
+
             </td>
 
-            <td style="text-align: right;">
-              <div style="
-                font-family: monospace;
-                font-weight: 700;
-                color: var(--text-main);
-              ">
+            <td
+              style="
+                text-align: right;
+              "
+            >
+
+              <div
+                style="
+                  font-family: monospace;
+                  font-weight: 700;
+                  color: var(--text-main);
+                "
+              >
+
                 ${
-                  p.confidence !== undefined &&
-                  p.confidence !== null
-                    ? (p.confidence * 100).toFixed(1) + '%'
+                  Number.isFinite(confidence)
+                    ? (confidence * 100).toFixed(1) + '%'
                     : '—'
                 }
+
               </div>
+
             </td>
 
           </tr>
+
         `;
+
       });
 
       wrap.innerHTML = `
+
         <table class="history-table">
 
           <thead>
+
             <tr>
-              <th>Timestamp</th>
-              <th>Crop</th>
-              <th>Rec. Volume</th>
-              <th>Urgency</th>
-              <th style="text-align: right;">
+
+              <th>
+                Timestamp
+              </th>
+
+              <th>
+                Crop
+              </th>
+
+              <th>
+                Rec. Volume
+              </th>
+
+              <th>
+                Urgency
+              </th>
+
+              <th
+                style="
+                  text-align: right;
+                "
+              >
                 AI Confidence
               </th>
+
             </tr>
+
           </thead>
 
           <tbody>
@@ -414,7 +703,9 @@ function loadHistory() {
           </tbody>
 
         </table>
+
       `;
+
     })
 
     .catch(error => {
@@ -424,37 +715,79 @@ function loadHistory() {
         error
       );
 
-      document.getElementById('history-content').innerHTML = `
-        <div style="
-          padding: 5rem;
-          text-align: center;
-          color: #dc3545;
-        ">
-          <div style="
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-          ">
-            ⚠️
+      document.getElementById(
+        'history-content'
+      ).innerHTML = `
+
+        <div
+          style="
+            padding: 5rem;
+            text-align: center;
+            color: #dc3545;
+          "
+        >
+
+          <div
+            style="
+              width: 56px;
+              height: 56px;
+              margin: 0 auto 1rem;
+              border: 1px solid #fecaca;
+              background: #fef2f2;
+              border-radius: 12px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+
+            <svg
+              width="26"
+              height="26"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+            >
+              <path d="M12 9v4"></path>
+              <path d="M12 17h.01"></path>
+              <path d="M10.3 3.7L2.9 16.5A2 2 0 0 0 4.6 19.5h14.8a2 2 0 0 0 1.7-3L13.7 3.7a2 2 0 0 0-3.4 0z"></path>
+            </svg>
+
           </div>
 
-          <p style="font-weight: 700;">
+          <p
+            style="
+              font-weight: 700;
+            "
+          >
             Connection Lost
           </p>
 
-          <p style="
-            font-size: 0.85rem;
-            opacity: 0.8;
-          ">
+          <p
+            style="
+              font-size: 0.85rem;
+              opacity: 0.8;
+            "
+          >
             Could not sync with the prediction history.
           </p>
+
         </div>
+
       `;
+
     });
+
 }
 
 loadHistory();
 
-// Refresh every 30 seconds
-setInterval(loadHistory, 30000);
+setInterval(
+  loadHistory,
+  30000
+);
+
 </script>
+
 {% endblock %}

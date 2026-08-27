@@ -21,14 +21,10 @@
 
 </div>
 
-
 <div class="predict-layout">
-
-  <!-- ── Left: Form ───────────────────────────────────────────── -->
 
   <div class="space-y-6">
 
-    <!-- Active Engine Info -->
     <div class="card">
 
       <div class="card-header">
@@ -46,7 +42,7 @@
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
           </svg>
 
           Active Engine
@@ -84,8 +80,9 @@
           </div>
 
           <span class="form-hint">
-            Utilizing the selected XGBoost classifier
-            for multi-class irrigation requirement prediction.
+            Final XGBoost classifier selected after comparative
+            evaluation of CatBoost, XGBoost, LightGBM, and
+            Logistic Regression.
           </span>
 
         </div>
@@ -94,19 +91,16 @@
 
     </div>
 
-
-    <!-- Main Input Grid -->
-
     <div class="two-col-grid">
-
-      <!-- Crop Info -->
 
       <div class="card">
 
         <div class="card-header">
+
           <div class="card-header-title">
             Crop Info
           </div>
+
         </div>
 
         <div class="card-body space-y-4">
@@ -145,7 +139,6 @@
 
           </div>
 
-
           <div class="form-group">
 
             <label for="crop_growth_stage">
@@ -177,7 +170,6 @@
 
           </div>
 
-
           <div class="form-group">
 
             <label for="field_area_hectare">
@@ -198,15 +190,14 @@
 
       </div>
 
-
-      <!-- Environmental -->
-
       <div class="card">
 
         <div class="card-header">
+
           <div class="card-header-title">
             Environmental
           </div>
+
         </div>
 
         <div class="card-body space-y-4">
@@ -216,7 +207,7 @@
             <div class="form-group">
 
               <label for="temperature_c">
-                🌡️ Temp (°C)
+                Temperature (°C)
               </label>
 
               <input
@@ -228,11 +219,10 @@
 
             </div>
 
-
             <div class="form-group">
 
               <label for="humidity">
-                💧 Humidity (%)
+                Humidity (%)
               </label>
 
               <input
@@ -248,13 +238,12 @@
 
           </div>
 
-
           <div class="two-col-grid">
 
             <div class="form-group">
 
               <label for="rainfall_mm">
-                🌧️ Rain (mm)
+                Rainfall (mm)
               </label>
 
               <input
@@ -266,11 +255,10 @@
 
             </div>
 
-
             <div class="form-group">
 
               <label for="windspeed_kmph">
-                🌬️ Wind (km/h)
+                Wind Speed (km/h)
               </label>
 
               <input
@@ -284,11 +272,10 @@
 
           </div>
 
-
           <div class="form-group">
 
             <label for="sunlight_hours">
-              ☀️ Sunlight (hrs)
+              Sunlight (hrs)
             </label>
 
             <input
@@ -304,15 +291,14 @@
 
       </div>
 
-
-      <!-- Soil Properties -->
-
       <div class="card">
 
         <div class="card-header">
+
           <div class="card-header-title">
             Soil Properties
           </div>
+
         </div>
 
         <div class="card-body space-y-4">
@@ -349,7 +335,6 @@
 
           </div>
 
-
           <div class="two-col-grid">
 
             <div class="form-group">
@@ -367,11 +352,10 @@
 
             </div>
 
-
             <div class="form-group">
 
               <label for="organic_carbon">
-                Org Carbon (%)
+                Organic Carbon (%)
               </label>
 
               <input
@@ -389,15 +373,14 @@
 
       </div>
 
-
-      <!-- Field Practices -->
-
       <div class="card">
 
         <div class="card-header">
+
           <div class="card-header-title">
             Field Practices
           </div>
+
         </div>
 
         <div class="card-body space-y-4">
@@ -430,11 +413,10 @@
 
           </div>
 
-
           <div class="form-group">
 
             <label for="previous_irrigation_mm">
-              Prev Irrigation (mm)
+              Previous Irrigation (mm)
             </label>
 
             <input
@@ -445,7 +427,6 @@
             />
 
           </div>
-
 
           <div class="form-group">
 
@@ -462,7 +443,6 @@
                 </div>
 
               </div>
-
 
               <label class="switch">
 
@@ -485,9 +465,6 @@
 
     </div>
 
-
-    <!-- Submit -->
-
     <div>
 
       <button
@@ -503,12 +480,7 @@
 
   </div>
 
-
-  <!-- ── Right: Result Panel ───────────────────────────── -->
-
   <div class="result-sticky">
-
-    <!-- Empty State -->
 
     <div
       id="result-empty"
@@ -520,13 +492,10 @@
       </h3>
 
       <p>
-        Fill out field parameters to view recommendations.
+        Fill out field parameters to view the XGBoost prediction.
       </p>
 
     </div>
-
-
-    <!-- Loading -->
 
     <div
       id="result-loading"
@@ -541,17 +510,12 @@
 
     </div>
 
-
-    <!-- Result Card -->
-
     <div
       id="result-card"
       class="card result-card"
     >
 
       <div class="card-body">
-
-        <!-- Urgency Badge -->
 
         <div
           style="
@@ -582,9 +546,6 @@
 
         </div>
 
-
-        <!-- Metric Grid -->
-
         <div class="stat-grid">
 
           <div
@@ -593,23 +554,18 @@
           >
 
             <div class="stat-label">
-              Recommend
+              Water Volume
             </div>
 
             <div class="stat-val">
 
               <span id="res-water">
-                —
+                Not specified
               </span>
-
-              <small>
-                mm
-              </small>
 
             </div>
 
           </div>
-
 
           <div
             class="stat-box"
@@ -631,9 +587,6 @@
 
         </div>
 
-
-        <!-- Reasoning -->
-
         <div class="section-title">
           Key Reasoning
         </div>
@@ -642,9 +595,6 @@
           id="res-reasons"
           class="reasoning-list"
         ></ul>
-
-
-        <!-- Feature Drivers -->
 
         <div class="section-title">
           Primary Drivers
@@ -655,9 +605,6 @@
           class="fi-list"
           style="margin-top: 10px;"
         ></div>
-
-
-        <!-- Meta -->
 
         <div class="result-meta">
 
@@ -679,7 +626,6 @@
 
 {% endblock %}
 
-
 {% block scripts %}
 
 <script>
@@ -694,9 +640,6 @@ function submitForm() {
     "crop_growth_stage",
     "water_source"
   ];
-
-
-  // Validate required fields
 
   for (const id of required) {
 
@@ -715,9 +658,6 @@ function submitForm() {
 
   }
 
-
-  // Update result panel
-
   document.getElementById(
     "result-empty"
   ).style.display = "none";
@@ -730,19 +670,10 @@ function submitForm() {
     "result-card"
   ).classList.remove("visible");
 
-
-  // Disable button during inference
-
   btn.disabled = true;
 
   btn.innerHTML =
     '<div class="spinner"></div> Analyzing Data...';
-
-
-  /*
-   * Final selected deployment model:
-   * XGBoost
-   */
 
   const payload = {
 
@@ -840,20 +771,20 @@ function submitForm() {
 
   };
 
+  fetch(
+    "/api/predict",
+    {
 
-  // Send prediction request
+      method: "POST",
 
-  fetch("/api/predict", {
+      headers: {
+        "Content-Type": "application/json"
+      },
 
-    method: "POST",
+      body: JSON.stringify(payload)
 
-    headers: {
-      "Content-Type": "application/json"
-    },
-
-    body: JSON.stringify(payload)
-
-  })
+    }
+  )
 
     .then(r => r.json())
 
@@ -865,12 +796,10 @@ function submitForm() {
         )
         .classList.remove("visible");
 
-
       btn.disabled = false;
 
       btn.textContent =
         "Calculate Irrigation Requirement";
-
 
       if (data.error) {
 
@@ -886,11 +815,10 @@ function submitForm() {
         return;
       }
 
-
       renderResult(data);
 
       showToast(
-        "Prediction complete."
+        "XGBoost prediction complete."
       );
 
     })
@@ -902,24 +830,20 @@ function submitForm() {
         err
       );
 
-
       document
         .getElementById(
           "result-loading"
         )
         .classList.remove("visible");
 
-
       btn.disabled = false;
 
       btn.textContent =
         "Calculate Irrigation Requirement";
 
-
       document.getElementById(
         "result-empty"
       ).style.display = "flex";
-
 
       showToast(
         "Request failed.",
@@ -930,38 +854,34 @@ function submitForm() {
 
 }
 
-
 function renderResult(d) {
 
   const level =
-    (d.irrigation_required || "none")
-      .toLowerCase();
-
+    (
+      d.irrigation_required ||
+      "none"
+    ).toLowerCase();
 
   const badge =
     document.getElementById(
       "res-badge"
     );
 
-
-  // Dynamic badge mapping
-
   badge.className = "badge";
 
-
-  if (level.includes("high")) {
+  if (level === "high") {
 
     badge.classList.add(
       "badge-high"
     );
 
-  } else if (level.includes("medium")) {
+  } else if (level === "medium") {
 
     badge.classList.add(
       "badge-medium"
     );
 
-  } else if (level.includes("low")) {
+  } else if (level === "low") {
 
     badge.classList.add(
       "badge-low"
@@ -975,21 +895,29 @@ function renderResult(d) {
 
   }
 
-
   badge.textContent =
     d.irrigation_required ||
-    "Not Required";
+    "No Data";
 
+  const waterElement =
+    document.getElementById(
+      "res-water"
+    );
 
-  // Recommended water volume
+  if (
+    d.water_recommendation_mm !== null &&
+    d.water_recommendation_mm !== undefined
+  ) {
 
-  document.getElementById(
-    "res-water"
-  ).textContent =
-    d.water_recommendation_mm ?? "0";
+    waterElement.textContent =
+      `${d.water_recommendation_mm} mm`;
 
+  } else {
 
-  // XGBoost confidence
+    waterElement.textContent =
+      "Not specified";
+
+  }
 
   document.getElementById(
     "res-confidence"
@@ -1004,9 +932,6 @@ function renderResult(d) {
 
       : "—";
 
-
-  // Reasoning
-
   const ul =
     document.getElementById(
       "res-reasons"
@@ -1014,24 +939,36 @@ function renderResult(d) {
 
   ul.innerHTML = "";
 
+  const reasons =
+    d.reasoning || [];
 
-  (
-    d.reasoning || [
-      "Conditions remain within safe operational levels."
-    ]
-  ).forEach(r => {
+  if (reasons.length === 0) {
 
     const li =
       document.createElement("li");
 
-    li.textContent = r;
+    li.textContent =
+      "Prediction generated using the trained XGBoost model.";
 
     ul.appendChild(li);
 
-  });
+  } else {
 
+    reasons.forEach(
+      reason => {
 
-  // Feature importance
+        const li =
+          document.createElement("li");
+
+        li.textContent =
+          reason;
+
+        ul.appendChild(li);
+
+      }
+    );
+
+  }
 
   const fi =
     document.getElementById(
@@ -1039,7 +976,6 @@ function renderResult(d) {
     );
 
   fi.innerHTML = "";
-
 
   const items =
     Object.entries(
@@ -1050,82 +986,109 @@ function renderResult(d) {
       )
       .slice(0, 3);
 
+  if (items.length === 0) {
 
-  items.forEach(
-    ([key, val]) => {
+    fi.innerHTML = `
+      <div
+        style="
+          font-size: 0.8rem;
+          color: var(--text-muted);
+        "
+      >
+        Feature importance unavailable.
+      </div>
+    `;
 
-      const pct =
-        Math.round(val * 100);
+  } else {
 
+    const maxImportance =
+      Math.max(
+        ...items.map(
+          item => item[1]
+        )
+      );
 
-      fi.innerHTML += `
+    items.forEach(
+      ([key, val]) => {
 
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            margin-bottom: 4px;
-          "
-        >
+        const pct =
+          maxImportance > 0
+            ? Math.round(
+                (val / maxImportance) * 100
+              )
+            : 0;
 
-          <span
-            style="
-              text-transform: capitalize;
-            "
-          >
-            ${key.replace(
-              /_/g,
-              ' '
-            )}
-          </span>
-
-          <span
-            style="
-              font-weight: 700;
-            "
-          >
-            ${pct}%
-          </span>
-
-        </div>
-
-
-        <div
-          style="
-            background: #eee;
-            height: 4px;
-            border-radius: 2px;
-            margin-bottom: 10px;
-          "
-        >
+        fi.innerHTML += `
 
           <div
             style="
-              background: var(--primary);
-              width: ${pct}%;
-              height: 100%;
-              border-radius: 2px;
+              display: flex;
+              justify-content: space-between;
+              font-size: 0.8rem;
+              margin-bottom: 4px;
             "
-          ></div>
+          >
 
-        </div>
+            <span
+              style="
+                text-transform: capitalize;
+              "
+            >
+              ${key.replace(
+                /_/g,
+                " "
+              )}
+            </span>
 
-      `;
+            <span
+              style="
+                font-weight: 700;
+              "
+            >
+              ${pct}%
+            </span>
 
-    }
-  );
+          </div>
 
+          <div
+            style="
+              background: #eee;
+              height: 4px;
+              border-radius: 2px;
+              margin-bottom: 10px;
+            "
+          >
+
+            <div
+              style="
+                background: var(--primary);
+                width: ${pct}%;
+                height: 100%;
+                border-radius: 2px;
+              "
+            ></div>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+  }
 
   document.getElementById(
     "res-time"
   ).textContent =
-    fmtDate(d.timestamp);
-
+    fmtDate(
+      d.timestamp
+    );
 
   document.getElementById(
     "result-card"
-  ).classList.add("visible");
+  ).classList.add(
+    "visible"
+  );
 
 }
 

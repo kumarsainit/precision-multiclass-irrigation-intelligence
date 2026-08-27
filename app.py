@@ -4,6 +4,7 @@ import pandas as pd
 import os
 from datetime import datetime
 
+
 app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -21,27 +22,34 @@ COLUMNS_PATH = os.path.join(
 model = None
 model_columns = None
 
+
 if os.path.exists(MODEL_PATH) and os.path.exists(COLUMNS_PATH):
+    try:
+        model = joblib.load(MODEL_PATH)
+        model_columns = joblib.load(COLUMNS_PATH)
 
-    model = joblib.load(MODEL_PATH)
-    model_columns = joblib.load(COLUMNS_PATH)
+        print("XGBoost final deployment model loaded successfully.")
+        print(f"Model feature columns loaded: {len(model_columns)}")
 
-    print("XGBoost final deployment model loaded successfully.")
+    except Exception as error:
+        print("Error loading XGBoost model artifacts:")
+        print(error)
 
 else:
-
-    print("Warning: Final XGBoost model files not found.")
+    print("Warning: Final XGBoost model artifacts were not found.")
+    print("Required files:")
+    print(" - xgboost_model.pkl")
+    print(" - model_columns.pkl")
     print(
-        "Run notebook/train_model.ipynb first "
-        "and place xgboost_model.pkl and model_columns.pkl "
+        "Run the training notebook first and place both artifacts "
         "in the project root."
     )
 
 
 LABEL_MAP = {
-    0: "Low",
-    1: "Medium",
-    2: "High"
+    0: "High",
+    1: "Low",
+    2: "Medium"
 }
 
 
@@ -57,19 +65,36 @@ MODELS_INFO = [
         "name": "XGBoost",
         "description": (
             "Extreme Gradient Boosting classifier selected as the "
-            "final deployment model after evaluating CatBoost, "
+            "final production model after evaluating CatBoost, "
             "XGBoost, LightGBM, and Logistic Regression."
         ),
-        "accuracy": 0.9970,
-        "precision": 0.9970,
-        "recall": 0.9970,
-        "f1_score": 0.9970,
+        "accuracy": 0.9853,
+        "macro_f1": 0.9704,
+        "high_f1": 0.9397,
         "macro_roc_auc": 0.9976,
         "micro_average_precision": 0.9970,
-        "algorithm_type": "Ensemble (Boosting)",
+        "classification_report": {
+            "High": {
+                "precision": 0.9521,
+                "recall": 0.9276,
+                "f1_score": 0.9397
+            },
+            "Low": {
+                "precision": 0.9867,
+                "recall": 0.9951,
+                "f1_score": 0.9909
+            },
+            "Medium": {
+                "precision": 0.9860,
+                "recall": 0.9752,
+                "f1_score": 0.9806
+            }
+        },
+        "algorithm_type": "Ensemble (Gradient Boosting)",
         "best_for": (
             "Final multi-class irrigation-need prediction "
-            "with high generalization performance"
+            "with strong generalization and probability-based "
+            "ranking performance."
         ),
         "is_final": True
     },
@@ -78,19 +103,19 @@ MODELS_INFO = [
         "id": "catboost",
         "name": "CatBoost",
         "description": (
-            "Gradient boosting classifier evaluated during model "
-            "selection. It provided strong multi-class performance "
-            "but did not exceed the final XGBoost evaluation."
+            "Gradient boosting classifier evaluated during "
+            "model selection. It achieved strong performance "
+            "but was not selected as the final production model."
         ),
-        "accuracy": 0.9964,
-        "precision": 0.9964,
-        "recall": 0.9964,
-        "f1_score": 0.9964,
+        "accuracy": 0.9853,
+        "macro_f1": 0.9700,
+        "high_f1": 0.9384,
         "macro_roc_auc": 0.9972,
         "micro_average_precision": 0.9964,
-        "algorithm_type": "Ensemble (Boosting)",
+        "algorithm_type": "Ensemble (Gradient Boosting)",
         "best_for": (
-            "Categorical-data modelling and comparative evaluation"
+            "Comparative evaluation and modelling "
+            "of structured agricultural data."
         ),
         "is_final": False
     },
@@ -99,19 +124,19 @@ MODELS_INFO = [
         "id": "lightgbm",
         "name": "LightGBM",
         "description": (
-            "Gradient boosting classifier evaluated as part of "
-            "the model comparison pipeline. It achieved performance "
-            "very close to XGBoost but was not selected as the final model."
+            "Gradient boosting classifier evaluated during "
+            "model comparison. It was not selected as the "
+            "final production model."
         ),
-        "accuracy": 0.9969,
-        "precision": 0.9969,
-        "recall": 0.9969,
-        "f1_score": 0.9969,
+        "accuracy": 0.9852,
+        "macro_f1": 0.9705,
+        "high_f1": 0.9403,
         "macro_roc_auc": 0.9975,
         "micro_average_precision": 0.9969,
-        "algorithm_type": "Ensemble (Boosting)",
+        "algorithm_type": "Ensemble (Gradient Boosting)",
         "best_for": (
-            "Fast gradient boosting on structured tabular data"
+            "Comparative evaluation of fast gradient boosting "
+            "on structured tabular data."
         ),
         "is_final": False
     },
@@ -120,18 +145,19 @@ MODELS_INFO = [
         "id": "logistic_regression",
         "name": "Logistic Regression",
         "description": (
-            "Linear probabilistic classifier used as a baseline "
-            "for comparison against tree-based ensemble models."
+            "Linear probabilistic classifier included as the "
+            "baseline model for comparison against tree-based "
+            "ensemble models."
         ),
-        "accuracy": 0.9034,
-        "precision": 0.9034,
-        "recall": 0.9034,
-        "f1_score": 0.9034,
+        "accuracy": 0.8196,
+        "macro_f1": 0.6894,
+        "high_f1": 0.4202,
         "macro_roc_auc": 0.9297,
         "micro_average_precision": 0.9034,
         "algorithm_type": "Linear",
         "best_for": (
-            "Baseline comparison and linearly separable scenarios"
+            "Baseline comparison and linearly separable "
+            "classification scenarios."
         ),
         "is_final": False
     }
@@ -139,54 +165,209 @@ MODELS_INFO = [
 ]
 
 
-FEATURE_IMPORTANCES = {
-    "Soil_Moisture": 0.21,
-    "Rainfall_mm": 0.18,
-    "Temperature_C": 0.13,
-    "Humidity": 0.10,
-    "Previous_Irrigation_mm": 0.08,
-    "Sunlight_Hours": 0.07,
-    "Wind_Speed_kmh": 0.05,
-    "Soil_pH": 0.04,
-    "Electrical_Conductivity": 0.04,
-    "Organic_Carbon": 0.03,
-    "Crop_Growth_Stage": 0.03,
-    "Crop_Type": 0.02,
-    "Field_Area_hectare": 0.01,
-    "Mulching_Used": 0.01
-}
+def get_feature_importances():
+
+    if model is None or model_columns is None:
+        return {}
+
+    if not hasattr(model, "feature_importances_"):
+        return {}
+
+    try:
+
+        importances = model.feature_importances_
+        feature_names = list(model_columns)
+
+        if len(importances) != len(feature_names):
+            return {}
+
+        feature_importance = {
+            str(feature_names[index]): float(importances[index])
+            for index in range(len(feature_names))
+        }
+
+        feature_importance = {
+            key: value
+            for key, value in feature_importance.items()
+            if value > 0
+        }
+
+        return dict(
+            sorted(
+                feature_importance.items(),
+                key=lambda item: item[1],
+                reverse=True
+            )
+        )
+
+    except Exception as error:
+
+        print(
+            "Could not read XGBoost feature importance:",
+            error
+        )
+
+        return {}
 
 
-WATER_MM = {
-    "Low": 15,
-    "Medium": 30,
-    "High": 50
-}
+def build_reasoning(row, level):
+
+    reasons = []
+
+    try:
+        soil_moisture = float(
+            row.get("Soil_Moisture", 50)
+        )
+    except (TypeError, ValueError):
+        soil_moisture = 50
+
+    try:
+        rainfall = float(
+            row.get("Rainfall_mm", 0)
+        )
+    except (TypeError, ValueError):
+        rainfall = 0
+
+    try:
+        temperature = float(
+            row.get("Temperature_C", 25)
+        )
+    except (TypeError, ValueError):
+        temperature = 25
+
+    try:
+        humidity = float(
+            row.get("Humidity", 60)
+        )
+    except (TypeError, ValueError):
+        humidity = 60
+
+    try:
+        wind_speed = float(
+            row.get("Wind_Speed_kmh", 10)
+        )
+    except (TypeError, ValueError):
+        wind_speed = 10
+
+    try:
+        sunlight = float(
+            row.get("Sunlight_Hours", 8)
+        )
+    except (TypeError, ValueError):
+        sunlight = 8
+
+    mulching = str(
+        row.get("Mulching_Used", "No")
+    )
+
+    growth_stage = str(
+        row.get("Crop_Growth_Stage", "")
+    ).lower()
+
+    if soil_moisture < 30:
+        reasons.append(
+            f"Soil moisture is very low ({soil_moisture}%)."
+        )
+
+    elif soil_moisture > 70:
+        reasons.append(
+            f"Soil moisture is relatively high ({soil_moisture}%)."
+        )
+
+    if rainfall > 20:
+        reasons.append(
+            f"Recent rainfall is relatively high ({rainfall} mm)."
+        )
+
+    elif rainfall < 5:
+        reasons.append(
+            f"Recent rainfall is low ({rainfall} mm)."
+        )
+
+    if temperature > 35:
+        reasons.append(
+            f"High temperature ({temperature} °C) can increase "
+            "crop water demand."
+        )
+
+    if humidity < 40:
+        reasons.append(
+            f"Low humidity ({humidity}%) can increase "
+            "atmospheric water demand."
+        )
+
+    if wind_speed > 20:
+        reasons.append(
+            f"High wind speed ({wind_speed} km/h) can increase "
+            "evaporation."
+        )
+
+    if sunlight > 9:
+        reasons.append(
+            f"Long sunlight exposure ({sunlight} hrs) can increase "
+            "crop water consumption."
+        )
+
+    if mulching.lower() == "yes":
+        reasons.append(
+            "Mulching is active and can help reduce soil moisture loss."
+        )
+
+    if growth_stage == "flowering":
+        reasons.append(
+            "The crop is in the flowering stage, "
+            "a water-sensitive growth period."
+        )
+
+    if level == "High":
+        reasons.append(
+            "XGBoost predicts a High irrigation-need class."
+        )
+
+    elif level == "Medium":
+        reasons.append(
+            "XGBoost predicts a Medium irrigation-need class."
+        )
+
+    elif level == "Low":
+        reasons.append(
+            "XGBoost predicts a Low irrigation-need class."
+        )
+
+    return reasons[:5]
 
 
 FIELD_MAP = {
 
-    "soil_moisture": "Soil_Moisture",
+    "soil_moisture":
+        "Soil_Moisture",
 
-    "soil_ph": "Soil_pH",
+    "soil_ph":
+        "Soil_pH",
 
-    "organic_carbon": "Organic_Carbon",
+    "organic_carbon":
+        "Organic_Carbon",
 
     "electrical_conductivity":
         "Electrical_Conductivity",
 
-    "temperature_c": "Temperature_C",
+    "temperature_c":
+        "Temperature_C",
 
-    "humidity": "Humidity",
+    "humidity":
+        "Humidity",
 
-    "rainfall_mm": "Rainfall_mm",
+    "rainfall_mm":
+        "Rainfall_mm",
 
-    "sunlight_hours": "Sunlight_Hours",
+    "sunlight_hours":
+        "Sunlight_Hours",
 
     "windspeed_kmph":
         "Wind_Speed_kmh",
 
-    "crop_type": "Crop_Type",
+    "crop_type":
+        "Crop_Type",
 
     "crop_growth_stage":
         "Crop_Growth_Stage",
@@ -208,182 +389,19 @@ FIELD_MAP = {
 
 DEFAULTS = {
 
-    "Soil_Type": "Loamy",
+    "Soil_Type":
+        "Loamy",
 
-    "Season": "Kharif",
+    "Season":
+        "Kharif",
 
-    "Irrigation_Type": "Drip",
+    "Irrigation_Type":
+        "Drip",
 
-    "Region": "North"
+    "Region":
+        "North"
 
 }
-
-
-def build_reasoning(row, level):
-
-    reasons = []
-
-    soil_moisture = float(
-        row.get(
-            "Soil_Moisture",
-            50
-        )
-    )
-
-    rainfall = float(
-        row.get(
-            "Rainfall_mm",
-            0
-        )
-    )
-
-    temperature = float(
-        row.get(
-            "Temperature_C",
-            25
-        )
-    )
-
-    humidity = float(
-        row.get(
-            "Humidity",
-            60
-        )
-    )
-
-    wind_speed = float(
-        row.get(
-            "Wind_Speed_kmh",
-            10
-        )
-    )
-
-    sunlight = float(
-        row.get(
-            "Sunlight_Hours",
-            8
-        )
-    )
-
-    mulching = row.get(
-        "Mulching_Used",
-        "No"
-    )
-
-    growth_stage = str(
-        row.get(
-            "Crop_Growth_Stage",
-            ""
-        )
-    ).lower()
-
-
-    if soil_moisture < 30:
-
-        reasons.append(
-            f"Soil moisture is very low "
-            f"({soil_moisture}%) — well below "
-            f"the safe threshold of 40%"
-        )
-
-    elif soil_moisture > 70:
-
-        reasons.append(
-            f"Soil moisture is adequate "
-            f"({soil_moisture}%) — immediate "
-            f"irrigation is not urgent"
-        )
-
-
-    if rainfall > 20:
-
-        reasons.append(
-            f"Recent rainfall ({rainfall} mm) "
-            f"is reducing the irrigation deficit"
-        )
-
-    elif rainfall < 5:
-
-        reasons.append(
-            f"Very little recent rainfall "
-            f"({rainfall} mm) — moisture "
-            f"replenishment may be needed"
-        )
-
-
-    if temperature > 35:
-
-        reasons.append(
-            f"High temperature ({temperature} °C) "
-            f"is accelerating evapotranspiration"
-        )
-
-
-    if mulching == "Yes":
-
-        reasons.append(
-            "Mulching is active — helping reduce "
-            "soil moisture loss"
-        )
-
-
-    if growth_stage == "flowering":
-
-        reasons.append(
-            "Crop is in the flowering stage — "
-            "a critical water-sensitive period"
-        )
-
-
-    if wind_speed > 20:
-
-        reasons.append(
-            f"High wind speed ({wind_speed} km/h) "
-            f"is increasing surface evaporation"
-        )
-
-
-    if humidity < 40:
-
-        reasons.append(
-            f"Low humidity ({humidity}%) is "
-            f"increasing atmospheric water demand"
-        )
-
-
-    if sunlight > 9:
-
-        reasons.append(
-            f"Long sunlight exposure ({sunlight} hrs) "
-            f"raises crop water consumption"
-        )
-
-
-    if level == "Low":
-
-        reasons.append(
-            "Overall irrigation demand is low — "
-            "light irrigation is sufficient"
-        )
-
-
-    if level == "Medium":
-
-        reasons.append(
-            "Overall irrigation demand is moderate — "
-            "controlled irrigation is recommended"
-        )
-
-
-    if level == "High":
-
-        reasons.append(
-            "Overall irrigation demand is high — "
-            "timely irrigation is recommended"
-        )
-
-
-    return reasons[:5]
 
 
 @app.route("/")
@@ -417,8 +435,35 @@ def history_page():
 def get_models():
 
     return jsonify({
-        "models": MODELS_INFO,
-        "final_model": "xgboost"
+
+        "models":
+            MODELS_INFO,
+
+        "final_model":
+            "xgboost",
+
+        "final_model_name":
+            "XGBoost",
+
+        "final_test_metrics": {
+
+            "accuracy":
+                0.9853,
+
+            "macro_f1":
+                0.9704,
+
+            "high_f1":
+                0.9397,
+
+            "macro_roc_auc":
+                0.9976,
+
+            "micro_average_precision":
+                0.9970
+
+        }
+
     })
 
 
@@ -448,63 +493,56 @@ def predict():
     try:
 
         if request.is_json:
-
             raw = request.get_json()
-
         else:
-
             raw = request.form.to_dict()
 
-
         if not raw:
-
             return jsonify({
                 "error":
-                    "No input data provided"
+                    "No input data provided."
             }), 400
 
-
         if model is None:
-
             return jsonify({
                 "error":
-                    "Final XGBoost model is not loaded. "
-                    "Run the training notebook first."
+                    "Final XGBoost model is not loaded.",
+                "details":
+                    (
+                        "Ensure xgboost_model.pkl and "
+                        "model_columns.pkl exist in the "
+                        "project root."
+                    )
             }), 500
-
 
         if model_columns is None:
-
             return jsonify({
                 "error":
-                    "Model feature columns are not loaded. "
-                    "Run the training notebook first."
+                    "Model feature columns are not loaded."
             }), 500
-
 
         mapped = {}
 
-
-        for frontend_key, model_column in FIELD_MAP.items():
+        for (
+            frontend_key,
+            model_column
+        ) in FIELD_MAP.items():
 
             if frontend_key in raw:
 
                 value = raw[frontend_key]
 
-
                 if frontend_key == "mulching_used":
 
                     mapped[model_column] = (
-
                         "Yes"
-
-                        if str(value).lower()
+                        if str(value).strip().lower()
                         in (
                             "true",
                             "1",
-                            "yes"
+                            "yes",
+                            "on"
                         )
-
                         else "No"
                     )
 
@@ -512,77 +550,51 @@ def predict():
 
                     mapped[model_column] = value
 
-
-            elif model_column not in mapped:
-
-                mapped[model_column] = 0
-
-
-        for column, default_value in DEFAULTS.items():
+        for (
+            column,
+            default_value
+        ) in DEFAULTS.items():
 
             if column not in mapped:
-
                 mapped[column] = default_value
-
 
         input_df = pd.DataFrame(
             [mapped]
         )
 
-
         numeric_columns = [
 
             "Soil_pH",
-
             "Soil_Moisture",
-
             "Organic_Carbon",
-
             "Electrical_Conductivity",
-
             "Temperature_C",
-
             "Humidity",
-
             "Rainfall_mm",
-
             "Sunlight_Hours",
-
             "Wind_Speed_kmh",
-
             "Field_Area_hectare",
-
             "Previous_Irrigation_mm"
 
         ]
-
 
         for column in numeric_columns:
 
             if column in input_df.columns:
 
                 input_df[column] = pd.to_numeric(
-
                     input_df[column],
-
                     errors="coerce"
-
                 ).fillna(0)
-
 
         input_encoded = pd.get_dummies(
             input_df
         )
 
-
         input_encoded = input_encoded.reindex(
-
             columns=model_columns,
-
             fill_value=0
-
         )
-
 
         prediction = int(
             model.predict(
@@ -590,6 +602,8 @@ def predict():
             )[0]
         )
 
+        probabilities = None
+        confidence = None
 
         if hasattr(
             model,
@@ -604,48 +618,36 @@ def predict():
                 max(probabilities)
             )
 
-        else:
-
-            confidence = 0.0
-
-
         level = LABEL_MAP.get(
-            prediction,
-            "Medium"
+            prediction
         )
 
+        if level is None:
 
-        area = float(
-            raw.get(
-                "field_area_hectare",
-                1
-            ) or 1
-        )
+            return jsonify({
+                "error":
+                    (
+                        "Unknown model output class "
+                        f"received from XGBoost: {prediction}"
+                    )
+            }), 500
 
-
-        water_mm = round(
-
-            WATER_MM.get(
-                level,
-                0
-            ) * area,
-
-            1
-
-        )
-
+        
+        water_recommendation_mm = None
 
         reasoning = build_reasoning(
             mapped,
             level
         )
 
+        feature_importances = (
+            get_feature_importances()
+        )
 
         timestamp = datetime.now().isoformat()
 
-
         model_name = "XGBoost"
-
+        model_id = "xgboost"
 
         record = {
 
@@ -654,6 +656,9 @@ def predict():
 
             "model_used":
                 model_name,
+
+            "model_id":
+                model_id,
 
             "crop_type":
                 raw.get(
@@ -665,28 +670,29 @@ def predict():
                 level,
 
             "confidence":
-                round(
-                    confidence,
-                    4
+                (
+                    round(
+                        confidence,
+                        4
+                    )
+                    if confidence is not None
+                    else None
                 ),
 
             "water_recommendation_mm":
-                water_mm,
+                water_recommendation_mm,
 
             "timestamp":
                 timestamp
 
         }
 
-
         prediction_history.insert(
             0,
             record
         )
 
-
         _history_id[0] += 1
-
 
         if len(
             prediction_history
@@ -694,38 +700,87 @@ def predict():
 
             prediction_history.pop()
 
+        probability_details = {}
+
+        if probabilities is not None:
+
+            classes = getattr(
+                model,
+                "classes_",
+                range(
+                    len(probabilities)
+                )
+            )
+
+            for index, class_id in enumerate(classes):
+
+                try:
+                    class_id_int = int(
+                        class_id
+                    )
+                except (
+                    TypeError,
+                    ValueError
+                ):
+                    continue
+
+                class_name = LABEL_MAP.get(
+                    class_id_int,
+                    str(class_id_int)
+                )
+
+                probability_details[
+                    class_name
+                ] = round(
+                    float(
+                        probabilities[index]
+                    ),
+                    4
+                )
 
         return jsonify({
 
             "irrigation_required":
                 level,
 
+            "predicted_class":
+                prediction,
+
             "confidence":
-                round(
-                    confidence,
-                    4
+                (
+                    round(
+                        confidence,
+                        4
+                    )
+                    if confidence is not None
+                    else None
                 ),
 
+            "class_probabilities":
+                probability_details,
+
             "water_recommendation_mm":
-                water_mm,
+                water_recommendation_mm,
+
+            "water_recommendation_available":
+                False,
 
             "model_used":
                 model_name,
 
             "model_id":
-                "xgboost",
+                model_id,
 
             "reasoning":
                 reasoning,
 
             "feature_importances":
-                FEATURE_IMPORTANCES,
+                feature_importances,
 
             "timestamp":
                 timestamp
 
         })
-
 
     except Exception as error:
 
@@ -733,11 +788,10 @@ def predict():
 
         traceback.print_exc()
 
-
         return jsonify({
 
             "error":
-                "Prediction failed",
+                "Prediction failed.",
 
             "details":
                 str(error)
