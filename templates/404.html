@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% set active = "error" %}
+{% block title %}404 — Page Not Found | Precision Multi-Class Irrigation Intelligence{% endblock %}
+
+{% block content %}
+<div class="error-page-container">
+  <div class="error-code-badge">HTTP 404</div>
+  
+  <div class="error-icon-box">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M16 16s-1.5-2-4-2-4 2-4 2"></path>
+      <line x1="9" y1="9" x2="9.01" y2="9"></line>
+      <line x1="15" y1="9" x2="15.01" y2="9"></line>
+    </svg>
+  </div>
+
+  <h1 class="error-title">Field Page Not Found</h1>
+  
+  <p class="error-subtitle">
+    The precision irrigation view or telemetry resource you requested cannot be located. It may have been moved or does not exist.
+  </p>
+
+  <div class="error-actions">
+    <a href="/" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>Return to Dashboard</span>
+    </a>
+
+    <a href="/models" class="btn btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+      </svg>
+      <span>Model Specs</span>
+    </a>
+  </div>
+</div>
+{% endblock %}

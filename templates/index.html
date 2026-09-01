@@ -1,1097 +1,692 @@
 {% extends "base.html" %}
 {% set active = "predict" %}
-{% block title %}Precision Multi-Class Irrigation Intelligence{% endblock %}
+{% block title %}Dashboard — Precision Multi-Class Irrigation Intelligence{% endblock %}
+
+{% block breadcrumb %}
+<nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item">
+      <a href="/" class="breadcrumb-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="breadcrumb-separator">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </li>
+    <li class="breadcrumb-item">
+      <span class="breadcrumb-current">Predictor Dashboard</span>
+    </li>
+  </ol>
+</nav>
+{% endblock %}
 
 {% block content %}
 
-<div class="home-intro">
+<!-- Hero Banner (Inspired by hero-34 & Hero-5) -->
+<section class="hero-card">
+  <div class="hero-content">
+    <div class="hero-badge-row">
+      <span class="hero-model-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        Final Deployment Model: XGBoost
+      </span>
+      <span class="hero-category-pill">
+        Multi-Class Precision Irrigation
+      </span>
+    </div>
 
-  <span class="eyebrow">
-    Smart Farm Intelligence
-  </span>
+    <h1 class="hero-title">
+      Precision Multi-Class <span>Irrigation Intelligence</span>
+    </h1>
 
-  <h1 class="page-title">
-    Precision Multi-Class Irrigation Intelligence
-  </h1>
+    <p class="hero-subtitle">
+      Precision irrigation intelligence powered by a verified XGBoost production model, translating crop, soil, weather, and field conditions into actionable Low, Medium, or High irrigation recommendations.
+    </p>
 
-  <p class="page-sub">
-    Predict Low, Medium, or High irrigation requirements
-    using field, soil, crop, and environmental data.
-  </p>
+    <!-- Verified Metric Chips -->
+    <div class="hero-kpis-grid">
+      <div class="hero-kpi-item">
+        <span class="hero-kpi-val highlight-emerald">98.53%</span>
+        <span class="hero-kpi-label">Test Accuracy</span>
+      </div>
 
-</div>
+      <div class="hero-kpi-item">
+        <span class="hero-kpi-val highlight-orange">99.76%</span>
+        <span class="hero-kpi-label">Macro ROC-AUC</span>
+      </div>
 
-<div class="predict-layout">
+      <div class="hero-kpi-item">
+        <span class="hero-kpi-val">97.04%</span>
+        <span class="hero-kpi-label">Macro F1 Score</span>
+      </div>
 
-  <div class="space-y-6">
+      <div class="hero-kpi-item">
+        <span class="hero-kpi-val">93.97%</span>
+        <span class="hero-kpi-label">High-Class F1</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <div class="card">
+<!-- Dashboard Grid (Input Workflow + Live Results) -->
+<div class="dashboard-grid">
 
-      <div class="card-header">
-
-        <div class="card-header-title">
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+  <!-- Left Column: Guided 4-Step Input Stepper -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M2 12h20"></path>
           </svg>
-
-          Active Engine
-
-        </div>
-
+          Field Parameter Workflow
+        </h2>
+        <p class="card-description">
+          Guided 4-step parameter entry for precision irrigation calculation.
+        </p>
       </div>
-
-      <div class="card-body">
-
-        <div class="form-group">
-
-          <div
-            style="
-              display: flex;
-              align-items: center;
-              gap: 8px;
-              font-weight: 500;
-              color: var(--primary);
-            "
-          >
-
-            <span
-              style="
-                height: 8px;
-                width: 8px;
-                background-color: #10b981;
-                border-radius: 50%;
-                display: inline-block;
-              "
-            ></span>
-
-            XGBoost Final Deployment Model
-
-          </div>
-
-          <span class="form-hint">
-            Final XGBoost classifier selected after comparative
-            evaluation of CatBoost, XGBoost, LightGBM, and
-            Logistic Regression.
-          </span>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="two-col-grid">
-
-      <div class="card">
-
-        <div class="card-header">
-
-          <div class="card-header-title">
-            Crop Info
-          </div>
-
-        </div>
-
-        <div class="card-body space-y-4">
-
-          <div class="form-group">
-
-            <label for="crop_type">
-              Crop Type
-            </label>
-
-            <select
-              id="crop_type"
-              name="crop_type"
-            >
-
-              <option
-                value=""
-                disabled
-                selected
-              >
-                Select crop
-              </option>
-
-              <option>Rice</option>
-              <option>Wheat</option>
-              <option>Maize</option>
-              <option>Cotton</option>
-              <option>Sugarcane</option>
-              <option>Soybean</option>
-              <option>Tomato</option>
-              <option>Potato</option>
-              <option>Onion</option>
-              <option>Sunflower</option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label for="crop_growth_stage">
-              Growth Stage
-            </label>
-
-            <select
-              id="crop_growth_stage"
-              name="crop_growth_stage"
-            >
-
-              <option
-                value=""
-                disabled
-                selected
-              >
-                Select stage
-              </option>
-
-              <option>Germination</option>
-              <option>Seedling</option>
-              <option>Vegetative</option>
-              <option>Flowering</option>
-              <option>Fruit Development</option>
-              <option>Maturity</option>
-              <option>Harvest</option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label for="field_area_hectare">
-              Field Area (Hectares)
-            </label>
-
-            <input
-              type="number"
-              id="field_area_hectare"
-              value="1"
-              step="0.1"
-              min="0.1"
-            />
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="card">
-
-        <div class="card-header">
-
-          <div class="card-header-title">
-            Environmental
-          </div>
-
-        </div>
-
-        <div class="card-body space-y-4">
-
-          <div class="two-col-grid">
-
-            <div class="form-group">
-
-              <label for="temperature_c">
-                Temperature (°C)
-              </label>
-
-              <input
-                type="number"
-                id="temperature_c"
-                value="25"
-                step="0.1"
-              />
-
-            </div>
-
-            <div class="form-group">
-
-              <label for="humidity">
-                Humidity (%)
-              </label>
-
-              <input
-                type="number"
-                id="humidity"
-                value="60"
-                step="1"
-                min="0"
-                max="100"
-              />
-
-            </div>
-
-          </div>
-
-          <div class="two-col-grid">
-
-            <div class="form-group">
-
-              <label for="rainfall_mm">
-                Rainfall (mm)
-              </label>
-
-              <input
-                type="number"
-                id="rainfall_mm"
-                value="0"
-                step="0.1"
-              />
-
-            </div>
-
-            <div class="form-group">
-
-              <label for="windspeed_kmph">
-                Wind Speed (km/h)
-              </label>
-
-              <input
-                type="number"
-                id="windspeed_kmph"
-                value="10"
-                step="0.1"
-              />
-
-            </div>
-
-          </div>
-
-          <div class="form-group">
-
-            <label for="sunlight_hours">
-              Sunlight (hrs)
-            </label>
-
-            <input
-              type="number"
-              id="sunlight_hours"
-              value="8"
-              step="0.5"
-            />
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="card">
-
-        <div class="card-header">
-
-          <div class="card-header-title">
-            Soil Properties
-          </div>
-
-        </div>
-
-        <div class="card-body space-y-4">
-
-          <div class="form-group">
-
-            <div class="slider-row">
-
-              <label for="soil_moisture">
-                Moisture Level
-              </label>
-
-              <span
-                class="slider-val"
-                id="soil_moisture_val"
-              >
-                45
-              </span>%
-
-            </div>
-
-            <input
-              type="range"
-              id="soil_moisture"
-              min="0"
-              max="100"
-              value="45"
-              oninput="
-                document.getElementById(
-                  'soil_moisture_val'
-                ).innerText = this.value
-              "
-            />
-
-          </div>
-
-          <div class="two-col-grid">
-
-            <div class="form-group">
-
-              <label for="soil_ph">
-                pH Level
-              </label>
-
-              <input
-                type="number"
-                id="soil_ph"
-                value="6.5"
-                step="0.1"
-              />
-
-            </div>
-
-            <div class="form-group">
-
-              <label for="organic_carbon">
-                Organic Carbon (%)
-              </label>
-
-              <input
-                type="number"
-                id="organic_carbon"
-                value="1.5"
-                step="0.1"
-              />
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="card">
-
-        <div class="card-header">
-
-          <div class="card-header-title">
-            Field Practices
-          </div>
-
-        </div>
-
-        <div class="card-body space-y-4">
-
-          <div class="form-group">
-
-            <label for="water_source">
-              Water Source
-            </label>
-
-            <select
-              id="water_source"
-              name="water_source"
-            >
-
-              <option
-                value=""
-                disabled
-                selected
-              >
-                Select source
-              </option>
-
-              <option>Canal</option>
-              <option>Borewell</option>
-              <option>Drip System</option>
-              <option>Sprinkler</option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label for="previous_irrigation_mm">
-              Previous Irrigation (mm)
-            </label>
-
-            <input
-              type="number"
-              id="previous_irrigation_mm"
-              value="0"
-              step="0.1"
-            />
-
-          </div>
-
-          <div class="form-group">
-
-            <div class="switch-row">
-
-              <div class="switch-label-group">
-
-                <div class="label-main">
-                  Mulching
-                </div>
-
-                <div class="label-sub">
-                  Is ground cover active?
-                </div>
-
-              </div>
-
-              <label class="switch">
-
-                <input
-                  type="checkbox"
-                  id="mulching_used"
-                />
-
-                <span class="switch-track"></span>
-
-              </label>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <div>
 
       <button
-        id="submit-btn"
-        class="btn-primary"
         type="button"
-        onclick="submitForm()"
+        class="btn btn-outline"
+        onclick="resetForm()"
+        style="padding: 0.4rem 0.85rem; font-size: 0.8rem;"
       >
-        Calculate Irrigation Requirement
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"></polyline>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+        </svg>
+        <span>Reset</span>
       </button>
-
     </div>
 
+    <div class="card-body">
+      <!-- Stepper Navigation Header (Inspired by stepper.json) -->
+      <div class="stepper-container">
+        <div class="stepper-header">
+          <div class="stepper-progress-bar">
+            <div id="stepper-progress-fill" class="stepper-progress-fill"></div>
+          </div>
+
+          <!-- Step 1 Node -->
+          <button
+            type="button"
+            class="stepper-step active"
+            data-step="1"
+            onclick="goToStep(1)"
+          >
+            <div class="stepper-node">1</div>
+            <span class="stepper-label">Crop & Field</span>
+          </button>
+
+          <!-- Step 2 Node -->
+          <button
+            type="button"
+            class="stepper-step"
+            data-step="2"
+            onclick="goToStep(2)"
+          >
+            <div class="stepper-node">2</div>
+            <span class="stepper-label">Atmosphere</span>
+          </button>
+
+          <!-- Step 3 Node -->
+          <button
+            type="button"
+            class="stepper-step"
+            data-step="3"
+            onclick="goToStep(3)"
+          >
+            <div class="stepper-node">3</div>
+            <span class="stepper-label">Soil & Water</span>
+          </button>
+
+          <!-- Step 4 Node -->
+          <button
+            type="button"
+            class="stepper-step"
+            data-step="4"
+            onclick="goToStep(4)"
+          >
+            <div class="stepper-node">4</div>
+            <span class="stepper-label">Review & Run</span>
+          </button>
+        </div>
+
+        <!-- Form Element -->
+        <form id="prediction-form" onsubmit="event.preventDefault(); submitForm();">
+
+          <!-- STEP 1: Crop & Field -->
+          <div id="step-panel-1" class="step-panel active">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="crop_type">
+                  <span>Crop Type</span>
+                  <span class="unit-tag">Required</span>
+                </label>
+                <select id="crop_type" name="crop_type" class="form-select" required>
+                  <option value="" disabled selected>Select target crop</option>
+                  <option value="Rice">Rice</option>
+                  <option value="Wheat">Wheat</option>
+                  <option value="Maize">Maize</option>
+                  <option value="Cotton">Cotton</option>
+                  <option value="Sugarcane">Sugarcane</option>
+                  <option value="Soybean">Soybean</option>
+                  <option value="Tomato">Tomato</option>
+                  <option value="Potato">Potato</option>
+                  <option value="Onion">Onion</option>
+                  <option value="Sunflower">Sunflower</option>
+                </select>
+                <span class="form-helper">Botanical water-use coefficient determines baseline demand.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="crop_growth_stage">
+                  <span>Growth Stage</span>
+                  <span class="unit-tag">Required</span>
+                </label>
+                <select id="crop_growth_stage" name="crop_growth_stage" class="form-select" required>
+                  <option value="" disabled selected>Select growth stage</option>
+                  <option value="Germination">Germination</option>
+                  <option value="Seedling">Seedling</option>
+                  <option value="Vegetative">Vegetative</option>
+                  <option value="Flowering">Flowering</option>
+                  <option value="Fruit Development">Fruit Development</option>
+                  <option value="Maturity">Maturity</option>
+                  <option value="Harvest">Harvest</option>
+                </select>
+                <span class="form-helper">Critical moisture windows occur in flowering & vegetative stages.</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 1.25rem;">
+              <label class="form-label" for="field_area_hectare">
+                <span>Field Area</span>
+                <span class="unit-tag">Hectares</span>
+              </label>
+              <input
+                type="number"
+                id="field_area_hectare"
+                name="field_area_hectare"
+                class="form-control"
+                value="2.0"
+                min="0.1"
+                step="0.1"
+                required
+              />
+              <span class="form-helper">Total contiguous agricultural plot surface.</span>
+            </div>
+
+            <!-- Quick Preset Scenarios Section -->
+            <div class="preset-section">
+              <div class="preset-title">Quick Simulation Presets</div>
+              <div class="preset-pills">
+                <button type="button" class="preset-btn" onclick="loadScenario('arid')">
+                  Arid Field Scenario (High Need)
+                </button>
+                <button type="button" class="preset-btn" onclick="loadScenario('postRain')">
+                  Post-Rain Scenario (Low Need)
+                </button>
+                <button type="button" class="preset-btn" onclick="loadScenario('moderate')">
+                  Moderate Scenario (Medium Need)
+                </button>
+              </div>
+            </div>
+
+            <div class="stepper-actions">
+              <div></div>
+              <button type="button" class="btn btn-primary" onclick="nextStep()">
+                <span>Continue: Atmosphere</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 2: Weather & Atmosphere -->
+          <div id="step-panel-2" class="step-panel">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="temperature_c">
+                  <span>Ambient Temperature</span>
+                  <span class="unit-tag">°C</span>
+                </label>
+                <input
+                  type="number"
+                  id="temperature_c"
+                  name="temperature_c"
+                  class="form-control"
+                  value="28.5"
+                  step="0.1"
+                  required
+                />
+                <span class="form-helper">High temperatures accelerate crop evapotranspiration.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="humidity">
+                  <span>Relative Humidity</span>
+                  <span class="unit-tag">%</span>
+                </label>
+                <input
+                  type="number"
+                  id="humidity"
+                  name="humidity"
+                  class="form-control"
+                  value="55"
+                  min="0"
+                  max="100"
+                  step="1"
+                  required
+                />
+                <span class="form-helper">Atmospheric vapor pressure deficit proxy.</span>
+              </div>
+            </div>
+
+            <div class="form-grid-3" style="margin-top: 1.25rem;">
+              <div class="form-group">
+                <label class="form-label" for="rainfall_mm">
+                  <span>Recent Rainfall</span>
+                  <span class="unit-tag">mm</span>
+                </label>
+                <input
+                  type="number"
+                  id="rainfall_mm"
+                  name="rainfall_mm"
+                  class="form-control"
+                  value="2.0"
+                  min="0"
+                  step="0.1"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="windspeed_kmph">
+                  <span>Wind Velocity</span>
+                  <span class="unit-tag">km/h</span>
+                </label>
+                <input
+                  type="number"
+                  id="windspeed_kmph"
+                  name="windspeed_kmph"
+                  class="form-control"
+                  value="12.5"
+                  min="0"
+                  step="0.1"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="sunlight_hours">
+                  <span>Daily Sunlight</span>
+                  <span class="unit-tag">Hours</span>
+                </label>
+                <input
+                  type="number"
+                  id="sunlight_hours"
+                  name="sunlight_hours"
+                  class="form-control"
+                  value="8.5"
+                  min="0"
+                  max="24"
+                  step="0.5"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="stepper-actions">
+              <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Previous</span>
+              </button>
+
+              <button type="button" class="btn btn-primary" onclick="nextStep()">
+                <span>Continue: Soil & Water</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Soil & Practices -->
+          <div id="step-panel-3" class="step-panel">
+            <!-- Soil Moisture Slider (Live Feedback) -->
+            <div class="form-group slider-group" style="margin-bottom: 1.5rem;">
+              <div class="slider-header">
+                <label class="form-label" for="soil_moisture">
+                  <span>Volumetric Soil Moisture Level</span>
+                  <span class="unit-tag">%</span>
+                </label>
+                <span id="soil_moisture_val" class="slider-value-badge">45</span>
+              </div>
+              <input
+                type="range"
+                id="soil_moisture"
+                name="soil_moisture"
+                min="0"
+                max="100"
+                value="45"
+              />
+              <span class="form-helper">Real-time volumetric root-zone moisture percentage.</span>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="soil_ph">
+                  <span>Soil pH Level</span>
+                  <span class="unit-tag">0–14</span>
+                </label>
+                <input
+                  type="number"
+                  id="soil_ph"
+                  name="soil_ph"
+                  class="form-control"
+                  value="6.8"
+                  min="0"
+                  max="14"
+                  step="0.1"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="organic_carbon">
+                  <span>Organic Carbon</span>
+                  <span class="unit-tag">%</span>
+                </label>
+                <input
+                  type="number"
+                  id="organic_carbon"
+                  name="organic_carbon"
+                  class="form-control"
+                  value="1.4"
+                  min="0"
+                  step="0.1"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-grid-2" style="margin-top: 1.25rem;">
+              <div class="form-group">
+                <label class="form-label" for="water_source">
+                  <span>Primary Water Source</span>
+                  <span class="unit-tag">Required</span>
+                </label>
+                <select id="water_source" name="water_source" class="form-select" required>
+                  <option value="" disabled selected>Select water source</option>
+                  <option value="Canal">Canal System</option>
+                  <option value="Borewell">Borewell / Ground</option>
+                  <option value="Drip System">Drip Irrigation</option>
+                  <option value="Sprinkler">Sprinkler System</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="previous_irrigation_mm">
+                  <span>Previous Irrigation</span>
+                  <span class="unit-tag">mm</span>
+                </label>
+                <input
+                  type="number"
+                  id="previous_irrigation_mm"
+                  name="previous_irrigation_mm"
+                  class="form-control"
+                  value="10.0"
+                  min="0"
+                  step="0.1"
+                />
+              </div>
+            </div>
+
+            <!-- Mulching Used Switch -->
+            <div class="switch-control-card" style="margin-top: 1.25rem;">
+              <div>
+                <div class="switch-label-title">Ground Mulching Active</div>
+                <div class="switch-label-sub">Reduces direct soil surface evaporation.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="mulching_used" name="mulching_used" />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="stepper-actions">
+              <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Previous</span>
+              </button>
+
+              <button type="button" class="btn btn-primary" onclick="nextStep()">
+                <span>Review Inputs</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 4: Review Summary & Predict Trigger -->
+          <div id="step-panel-4" class="step-panel">
+            <div class="review-card">
+              <div class="review-grid">
+                <div class="review-item">
+                  <span class="review-key">Crop & Stage</span>
+                  <span id="rev-crop" class="review-val">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-key">Field Area</span>
+                  <span id="rev-area" class="review-val">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-key">Temperature</span>
+                  <span id="rev-temp" class="review-val">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-key">Humidity</span>
+                  <span id="rev-humidity" class="review-val">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-key">Rainfall</span>
+                  <span id="rev-rain" class="review-val">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-key">Wind Velocity</span>
+                  <span id="rev-wind" class="review-val">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-key">Sunlight Hours</span>
+                  <span id="rev-sun" class="review-val">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-key">Soil Moisture</span>
+                  <span id="rev-moisture" class="review-val">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-key">Soil pH</span>
+                  <span id="rev-ph" class="review-val">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-key">Organic Carbon</span>
+                  <span id="rev-carbon" class="review-val">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-key">Water Source</span>
+                  <span id="rev-source" class="review-val">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-key">Mulching</span>
+                  <span id="rev-mulching" class="review-val">—</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit CTA -->
+            <button
+              id="submit-btn"
+              type="submit"
+              class="btn btn-primary btn-block"
+              style="padding: 0.95rem 1.5rem; font-size: 1rem; font-weight: 700;"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              <span>Run XGBoost Inference</span>
+            </button>
+
+            <div class="stepper-actions" style="margin-top: 1rem;">
+              <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Edit Parameters</span>
+              </button>
+              <div></div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
   </div>
 
-  <div class="result-sticky">
+  <!-- Right Column: Sticky Prediction Result Dashboard -->
+  <div class="sticky-result-wrapper">
 
-    <div
-      id="result-empty"
-      class="result-empty"
-    >
-
-      <h3>
-        No Prediction Yet
+    <!-- 1. Placeholder Empty State -->
+    <div id="result-empty" class="result-placeholder">
+      <div class="result-placeholder-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+        </svg>
+      </div>
+      <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary);">
+        Awaiting Field Data
       </h3>
-
-      <p>
-        Fill out field parameters to view the XGBoost prediction.
+      <p style="font-size: 0.85rem; color: var(--text-muted); max-width: 280px;">
+        Complete the parameter workflow on the left or select a quick preset to generate an AI irrigation decision.
       </p>
-
     </div>
 
-    <div
-      id="result-loading"
-      class="result-loading"
-    >
-
-      <div class="loader-big"></div>
-
-      <p class="text-primary font-medium">
-        Running XGBoost Inference...
+    <!-- 2. Loading State -->
+    <div id="result-loading" class="result-loading-state">
+      <div class="loader-spinner"></div>
+      <div style="font-weight: 700; color: var(--text-primary); font-size: 1rem;">
+        Running XGBoost Inference
+      </div>
+      <p style="font-size: 0.8125rem; color: var(--text-muted);">
+        Evaluating multi-class decision trees and probability distributions...
       </p>
-
     </div>
 
-    <div
-      id="result-card"
-      class="card result-card"
-    >
-
-      <div class="card-body">
-
-        <div
-          style="
-            text-align: center;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-          "
-        >
-
-          <div
-            style="
-              font-size: 0.75rem;
-              font-weight: 700;
-              color: var(--text-muted);
-              text-transform: uppercase;
-              margin-bottom: 0.5rem;
-            "
-          >
-            Irrigation Required?
-          </div>
-
-          <div
-            id="res-badge"
-            class="badge"
-          >
-            No Data
-          </div>
-
+    <!-- 3. Result Card Active -->
+    <div id="result-card" class="card result-card-active">
+      <!-- Main Decision Banner -->
+      <div class="result-hero-box">
+        <div class="result-eyebrow">Calculated Irrigation Requirement</div>
+        <div id="res-badge" class="badge badge-none">
+          Awaiting Data
         </div>
-
-        <div class="stat-grid">
-
-          <div
-            class="stat-box"
-            style="text-align: center;"
-          >
-
-            <div class="stat-label">
-              Water Volume
-            </div>
-
-            <div class="stat-val">
-
-              <span id="res-water">
-                Not specified
-              </span>
-
-            </div>
-
-          </div>
-
-          <div
-            class="stat-box"
-            style="text-align: center;"
-          >
-
-            <div class="stat-label">
-              Confidence
-            </div>
-
-            <div
-              class="stat-val"
-              id="res-confidence"
-            >
-              —
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="section-title">
-          Key Reasoning
-        </div>
-
-        <ul
-          id="res-reasons"
-          class="reasoning-list"
-        ></ul>
-
-        <div class="section-title">
-          Primary Drivers
-        </div>
-
-        <div
-          id="res-fi"
-          class="fi-list"
-          style="margin-top: 10px;"
-        ></div>
-
-        <div class="result-meta">
-
-          <span>
-            Model: XGBoost
-          </span>
-
-          <span id="res-time"></span>
-
-        </div>
-
       </div>
 
+      <!-- KPI Stats -->
+      <div class="result-metrics-grid">
+        <div class="metric-stat-box">
+          <div class="metric-stat-label">Recommended Dosage</div>
+          <div id="res-water" class="metric-stat-val">Standard Dosage</div>
+        </div>
+
+        <div class="metric-stat-box">
+          <div class="metric-stat-label">Model Confidence</div>
+          <div id="res-confidence" class="metric-stat-val">—</div>
+        </div>
+      </div>
+
+      <!-- Dynamic Probability Breakdown Graph (Section 18) -->
+      <div class="prob-section">
+        <div class="prob-title">
+          <span>Class Probabilities Distribution</span>
+          <span style="font-size: 0.72rem; color: var(--brand-orange); font-family: var(--font-mono);">XGBoost Softmax</span>
+        </div>
+
+        <div class="prob-bars-list">
+          <!-- Low Probability Bar -->
+          <div class="prob-bar-item">
+            <div class="prob-bar-header">
+              <span class="prob-bar-label">Low Need Probability</span>
+              <span id="prob-low-pct" class="prob-bar-pct">0.0%</span>
+            </div>
+            <div class="prob-track">
+              <div id="prob-low-fill" class="prob-fill fill-low"></div>
+            </div>
+          </div>
+
+          <!-- Medium Probability Bar -->
+          <div class="prob-bar-item">
+            <div class="prob-bar-header">
+              <span class="prob-bar-label">Medium Need Probability</span>
+              <span id="prob-med-pct" class="prob-bar-pct">0.0%</span>
+            </div>
+            <div class="prob-track">
+              <div id="prob-med-fill" class="prob-fill fill-medium"></div>
+            </div>
+          </div>
+
+          <!-- High Probability Bar -->
+          <div class="prob-bar-item">
+            <div class="prob-bar-header">
+              <span class="prob-bar-label">High Need Probability</span>
+              <span id="prob-high-pct" class="prob-bar-pct">0.0%</span>
+            </div>
+            <div class="prob-track">
+              <div id="prob-high-fill" class="prob-fill fill-high"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agronomic Reasoning & Drivers -->
+      <div class="insights-section">
+        <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.5rem;">
+          Key Agronomic Reasoning
+        </div>
+        <ul id="res-reasons" class="reasoning-list"></ul>
+
+        <!-- Top Feature Importance -->
+        <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-top: 1.25rem; margin-bottom: 0.5rem;">
+          Primary Decision Drivers
+        </div>
+        <div id="res-fi" class="fi-list"></div>
+      </div>
+
+      <!-- Result Meta Footer -->
+      <div class="result-meta-footer">
+        <div>
+          Engine: <strong>XGBoost Final Deployment Model</strong>
+        </div>
+        <div id="res-time">—</div>
+      </div>
     </div>
 
   </div>
 
 </div>
-
-{% endblock %}
-
-{% block scripts %}
-
-<script>
-
-function submitForm() {
-
-  const btn =
-    document.getElementById("submit-btn");
-
-  const required = [
-    "crop_type",
-    "crop_growth_stage",
-    "water_source"
-  ];
-
-  for (const id of required) {
-
-    const el =
-      document.getElementById(id);
-
-    if (!el || !el.value) {
-
-      showToast(
-        "Please fill all required fields.",
-        true
-      );
-
-      return;
-    }
-
-  }
-
-  document.getElementById(
-    "result-empty"
-  ).style.display = "none";
-
-  document.getElementById(
-    "result-loading"
-  ).classList.add("visible");
-
-  document.getElementById(
-    "result-card"
-  ).classList.remove("visible");
-
-  btn.disabled = true;
-
-  btn.innerHTML =
-    '<div class="spinner"></div> Analyzing Data...';
-
-  const payload = {
-
-    model: "xgboost",
-
-    crop_type:
-      document.getElementById(
-        "crop_type"
-      ).value,
-
-    crop_growth_stage:
-      document.getElementById(
-        "crop_growth_stage"
-      ).value,
-
-    water_source:
-      document.getElementById(
-        "water_source"
-      ).value,
-
-    soil_moisture:
-      parseFloat(
-        document.getElementById(
-          "soil_moisture"
-        ).value
-      ),
-
-    temperature_c:
-      parseFloat(
-        document.getElementById(
-          "temperature_c"
-        ).value
-      ),
-
-    humidity:
-      parseFloat(
-        document.getElementById(
-          "humidity"
-        ).value
-      ),
-
-    rainfall_mm:
-      parseFloat(
-        document.getElementById(
-          "rainfall_mm"
-        ).value
-      ),
-
-    windspeed_kmph:
-      parseFloat(
-        document.getElementById(
-          "windspeed_kmph"
-        ).value
-      ),
-
-    sunlight_hours:
-      parseFloat(
-        document.getElementById(
-          "sunlight_hours"
-        ).value
-      ),
-
-    previous_irrigation_mm:
-      parseFloat(
-        document.getElementById(
-          "previous_irrigation_mm"
-        ).value
-      ),
-
-    soil_ph:
-      parseFloat(
-        document.getElementById(
-          "soil_ph"
-        ).value
-      ),
-
-    organic_carbon:
-      parseFloat(
-        document.getElementById(
-          "organic_carbon"
-        ).value
-      ),
-
-    field_area_hectare:
-      parseFloat(
-        document.getElementById(
-          "field_area_hectare"
-        ).value
-      ),
-
-    mulching_used:
-      document.getElementById(
-        "mulching_used"
-      ).checked
-
-  };
-
-  fetch(
-    "/api/predict",
-    {
-
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify(payload)
-
-    }
-  )
-
-    .then(r => r.json())
-
-    .then(data => {
-
-      document
-        .getElementById(
-          "result-loading"
-        )
-        .classList.remove("visible");
-
-      btn.disabled = false;
-
-      btn.textContent =
-        "Calculate Irrigation Requirement";
-
-      if (data.error) {
-
-        showToast(
-          data.error,
-          true
-        );
-
-        document.getElementById(
-          "result-empty"
-        ).style.display = "flex";
-
-        return;
-      }
-
-      renderResult(data);
-
-      showToast(
-        "XGBoost prediction complete."
-      );
-
-    })
-
-    .catch(err => {
-
-      console.error(
-        "Prediction request failed:",
-        err
-      );
-
-      document
-        .getElementById(
-          "result-loading"
-        )
-        .classList.remove("visible");
-
-      btn.disabled = false;
-
-      btn.textContent =
-        "Calculate Irrigation Requirement";
-
-      document.getElementById(
-        "result-empty"
-      ).style.display = "flex";
-
-      showToast(
-        "Request failed.",
-        true
-      );
-
-    });
-
-}
-
-function renderResult(d) {
-
-  const level =
-    (
-      d.irrigation_required ||
-      "none"
-    ).toLowerCase();
-
-  const badge =
-    document.getElementById(
-      "res-badge"
-    );
-
-  badge.className = "badge";
-
-  if (level === "high") {
-
-    badge.classList.add(
-      "badge-high"
-    );
-
-  } else if (level === "medium") {
-
-    badge.classList.add(
-      "badge-medium"
-    );
-
-  } else if (level === "low") {
-
-    badge.classList.add(
-      "badge-low"
-    );
-
-  } else {
-
-    badge.classList.add(
-      "badge-none"
-    );
-
-  }
-
-  badge.textContent =
-    d.irrigation_required ||
-    "No Data";
-
-  const waterElement =
-    document.getElementById(
-      "res-water"
-    );
-
-  if (
-    d.water_recommendation_mm !== null &&
-    d.water_recommendation_mm !== undefined
-  ) {
-
-    waterElement.textContent =
-      `${d.water_recommendation_mm} mm`;
-
-  } else {
-
-    waterElement.textContent =
-      "Not specified";
-
-  }
-
-  document.getElementById(
-    "res-confidence"
-  ).textContent =
-
-    d.confidence !== undefined &&
-    d.confidence !== null
-
-      ? (
-          d.confidence * 100
-        ).toFixed(1) + "%"
-
-      : "—";
-
-  const ul =
-    document.getElementById(
-      "res-reasons"
-    );
-
-  ul.innerHTML = "";
-
-  const reasons =
-    d.reasoning || [];
-
-  if (reasons.length === 0) {
-
-    const li =
-      document.createElement("li");
-
-    li.textContent =
-      "Prediction generated using the trained XGBoost model.";
-
-    ul.appendChild(li);
-
-  } else {
-
-    reasons.forEach(
-      reason => {
-
-        const li =
-          document.createElement("li");
-
-        li.textContent =
-          reason;
-
-        ul.appendChild(li);
-
-      }
-    );
-
-  }
-
-  const fi =
-    document.getElementById(
-      "res-fi"
-    );
-
-  fi.innerHTML = "";
-
-  const items =
-    Object.entries(
-      d.feature_importances || {}
-    )
-      .sort(
-        (a, b) => b[1] - a[1]
-      )
-      .slice(0, 3);
-
-  if (items.length === 0) {
-
-    fi.innerHTML = `
-      <div
-        style="
-          font-size: 0.8rem;
-          color: var(--text-muted);
-        "
-      >
-        Feature importance unavailable.
-      </div>
-    `;
-
-  } else {
-
-    const maxImportance =
-      Math.max(
-        ...items.map(
-          item => item[1]
-        )
-      );
-
-    items.forEach(
-      ([key, val]) => {
-
-        const pct =
-          maxImportance > 0
-            ? Math.round(
-                (val / maxImportance) * 100
-              )
-            : 0;
-
-        fi.innerHTML += `
-
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              font-size: 0.8rem;
-              margin-bottom: 4px;
-            "
-          >
-
-            <span
-              style="
-                text-transform: capitalize;
-              "
-            >
-              ${key.replace(
-                /_/g,
-                " "
-              )}
-            </span>
-
-            <span
-              style="
-                font-weight: 700;
-              "
-            >
-              ${pct}%
-            </span>
-
-          </div>
-
-          <div
-            style="
-              background: #eee;
-              height: 4px;
-              border-radius: 2px;
-              margin-bottom: 10px;
-            "
-          >
-
-            <div
-              style="
-                background: var(--primary);
-                width: ${pct}%;
-                height: 100%;
-                border-radius: 2px;
-              "
-            ></div>
-
-          </div>
-
-        `;
-
-      }
-    );
-
-  }
-
-  document.getElementById(
-    "res-time"
-  ).textContent =
-    fmtDate(
-      d.timestamp
-    );
-
-  document.getElementById(
-    "result-card"
-  ).classList.add(
-    "visible"
-  );
-
-}
-
-</script>
 
 {% endblock %}

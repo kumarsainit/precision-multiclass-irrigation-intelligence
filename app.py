@@ -799,6 +799,20 @@ def predict():
         }), 500
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    if request.path.startswith('/api/'):
+        return jsonify({"error": "Resource not found", "status": 404}), 404
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def server_error(e):
+    if request.path.startswith('/api/'):
+        return jsonify({"error": "Internal server error", "status": 500}), 500
+    return render_template('500.html'), 500
+
+
 if __name__ == "__main__":
 
     app.run(

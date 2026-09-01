@@ -5,670 +5,263 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Precision Multi-Class Irrigation Intelligence{% endblock %}</title>
 
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
-    <style>
-      :root {
-        --cream-bg: #fdfbf7;
-        --primary: #007a33;
-        --primary-soft: rgba(0, 122, 51, 0.1);
-        --border-color: #eaeaea;
-        --text-main: #1a1d1e;
-        --text-muted: #64748b;
-        --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-      }
-
-      body {
-        font-family: "Nunito", "Inter", sans-serif;
-        background-color: var(--cream-bg);
-        color: var(--text-main);
-        margin: 0;
-        line-height: 1.6;
-        font-size: 16px;
-      }
-
-      .two-col-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-      }
-
-      .form-group label {
-        display: block;
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: #444;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .badge {
-        padding: 6px 16px;
-        border-radius: 50px;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        display: inline-block;
-        border: 1px solid transparent;
-      }
-
-      .badge-high {
-        background: #fee2e2;
-        color: #b91c1c;
-        border-color: #fecaca;
-      }
-
-      .badge-medium {
-        background: #fef3c7;
-        color: #92400e;
-        border-color: #fde68a;
-      }
-
-      .badge-low {
-        background: #dcfce7;
-        color: #166534;
-        border-color: #bbf7d0;
-      }
-
-      .badge-none {
-        background: #f1f5f9;
-        color: #475569;
-        border-color: #e2e8f0;
-      }
-
-      .reasoning-list {
-        margin: 1rem 0;
-        padding-left: 1.2rem;
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        font-weight: 600;
-      }
-
-      .reasoning-list li {
-        margin-bottom: 0.5rem;
-      }
-
-      .section-title {
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-weight: 800;
-        color: var(--text-muted);
-        margin-top: 1.5rem;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 4px;
-      }
-
-      .navbar {
-        background: white;
-        padding: 0.75rem 5%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        border-bottom: 1px solid var(--border-color);
-      }
-
-      .nav-brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        text-decoration: none;
-        font-weight: 800;
-      }
-
-      .brand-logo-sq {
-        background: var(--primary);
-        padding: 8px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-      }
-
-      .brand-name {
-        color: var(--text-main);
-        font-weight: 800;
-        font-size: 1.1rem;
-        letter-spacing: -0.02em;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 1.5rem;
-      }
-
-      .nav-toggle {
-        display: none;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        background: white;
-        color: var(--text-main);
-        cursor: pointer;
-      }
-
-      .nav-toggle svg {
-        width: 20px;
-        height: 20px;
-      }
-
-      .nav-toggle:hover {
-        background: var(--primary-soft);
-        border-color: var(--primary);
-      }
-
-      .nav-link {
-        text-decoration: none;
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        font-weight: 700;
-        padding: 8px 12px;
-        border-radius: 10px;
-        transition: all 0.2s;
-      }
-
-      .nav-link:hover,
-      .nav-link.active {
-        color: var(--primary);
-        background: var(--primary-soft);
-      }
-
-      .page {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 0 1.5rem;
-      }
-
-      .predict-layout {
-        display: grid;
-        grid-template-columns: 1.5fr 1fr;
-        gap: 2rem;
-        align-items: start;
-      }
-
-      .space-y-4 > * + * {
-        margin-top: 1rem;
-      }
-
-      .space-y-6 > * + * {
-        margin-top: 1.5rem;
-      }
-
-      .card {
-        background: white;
-        border-radius: 12px;
-        border: 1px solid var(--border-color);
-        box-shadow: var(--card-shadow);
-        overflow: hidden;
-      }
-
-      .card-header {
-        padding: 1rem 1.25rem;
-        border-bottom: 1px solid var(--border-color);
-        background: #fafafa;
-      }
-
-      .card-header-title {
-        font-weight: 800;
-        font-size: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .card-body {
-        padding: 1.25rem;
-      }
-
-      .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        min-width: 0;
-      }
-
-      input,
-      select {
-        padding: 0.6rem;
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: 600;
-        outline: none;
-        font-family: inherit;
-      }
-
-      input:focus,
-      select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px var(--primary-soft);
-      }
-
-      .btn-primary {
-        background: var(--primary);
-        color: white;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        border-radius: 12px;
-        font-size: 1rem;
-        font-weight: 800;
-        width: 100%;
-        cursor: pointer;
-        transition: 0.2s;
-      }
-
-      .btn-primary:hover {
-        opacity: 0.92;
-      }
-
-      .btn-primary:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-      }
-
-      .switch {
-        position: relative;
-        display: inline-block;
-        width: 44px;
-        height: 22px;
-      }
-
-      .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-
-      .switch-track {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: 0.4s;
-        border-radius: 34px;
-      }
-
-      .switch-track:before {
-        position: absolute;
-        content: "";
-        height: 16px;
-        width: 16px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: 0.4s;
-        border-radius: 50%;
-      }
-
-      input:checked + .switch-track {
-        background-color: var(--primary);
-      }
-
-      input:checked + .switch-track:before {
-        transform: translateX(22px);
-      }
-
-      .result-sticky {
-        position: sticky;
-        top: 100px;
-      }
-
-      #toast {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        padding: 12px 24px;
-        border-radius: 8px;
-        background: #333;
-        color: white;
-        transform: translateY(100px);
-        opacity: 0;
-        transition: 0.3s;
-        z-index: 2000;
-      }
-
-      #toast.show {
-        transform: translateY(0);
-        opacity: 1;
-      }
-
-      #toast.error {
-        background: #dc3545;
-      }
-
-      .page-title {
-        font-size: clamp(2rem, 4vw, 2.5rem);
-        font-weight: 800;
-      }
-
-      .page-sub {
-        font-size: 1rem;
-        font-weight: 600;
-      }
-
-      .result-empty {
-        min-height: 380px;
-        border-radius: 14px;
-      }
-
-      .result-empty h3 {
-        font-size: 1.35rem;
-        font-weight: 800;
-        color: var(--text-main);
-      }
-
-      .result-empty p {
-        font-size: 1rem;
-        font-weight: 600;
-      }
-
-      .result-card {
-        border-radius: 14px;
-      }
-
-      .result-card .card-body {
-        font-size: 1rem;
-      }
-
-      .result-card .badge {
-        font-size: 1.05rem;
-        font-weight: 800;
-        border-radius: 999px;
-      }
-
-      .stat-label {
-        font-size: 0.9rem;
-        font-weight: 800;
-      }
-
-      .stat-val {
-        font-size: 1.2rem;
-        font-weight: 800;
-      }
-
-      .fi-list,
-      .result-meta {
-        font-size: 0.95rem;
-        font-weight: 600;
-      }
-
-      .site-footer {
-        margin-top: 2rem;
-        border-top: 1px solid var(--border-color);
-        background: #fff;
-      }
-
-      .footer-inner {
-        width: min(1280px, 100%);
-        margin: 0 auto;
-        padding: 1.25rem clamp(1rem, 4vw, 2.25rem);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .footer-links {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-
-      .footer-links a {
-        padding: 0.55rem 1rem;
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        color: var(--primary);
-        font-size: 0.95rem;
-        font-weight: 800;
-        text-decoration: none;
-      }
-
-      .footer-links a:hover {
-        background: var(--primary-soft);
-      }
-
-      @media (max-width: 992px) {
-        .predict-layout {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      @media (max-width: 767px) {
-        .navbar {
-          position: sticky;
-        }
-
-        .nav-toggle {
-          display: inline-flex;
-        }
-
-        .nav-links {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          display: none;
-          flex-direction: column;
-          gap: 0.25rem;
-          padding: 0.75rem 1rem 1rem;
-          background: white;
-          border-bottom: 1px solid var(--border-color);
-          box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
-        }
-
-        .nav-links.open {
-          display: flex;
-        }
-
-        .nav-link {
-          width: 100%;
-          padding: 0.75rem 0.8rem;
-        }
-
-        .two-col-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .brand-name {
-          font-size: 0.95rem;
-        }
-
-        .page {
-          padding: 0 1rem;
-        }
-      }
-    </style>
+    <!-- Main Stylesheet (Hero-34 & Hero-5 Design System) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    <!-- Immediate Theme Application (Zero FOUC) -->
+    <script>
+      (function () {
+        try {
+          const savedTheme = localStorage.getItem('precision_irrigation_theme');
+          if (savedTheme === 'dark' || savedTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+          } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
 
   <body>
-
-    <nav class="navbar">
-
-      <a href="/" class="nav-brand">
-
-        <div class="brand-logo-sq">
-
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="white"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
-          </svg>
-
-        </div>
-
-        <span class="brand-name">
-          Precision Multi-Class Irrigation Intelligence
-        </span>
-
-      </a>
-
-      <button
-        class="nav-toggle"
-        type="button"
-        aria-label="Toggle navigation"
-        aria-expanded="false"
-        onclick="toggleNavigation()"
-      >
-
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-        >
-          <line x1="4" y1="6" x2="20" y2="6"></line>
-          <line x1="4" y1="12" x2="20" y2="12"></line>
-          <line x1="4" y1="18" x2="20" y2="18"></line>
-        </svg>
-
-      </button>
-
-      <div class="nav-links">
-
-        <a
-          href="/"
-          class="nav-link {% if active == 'predict' %}active{% endif %}"
-        >
-          Predictor
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+      <div class="navbar-inner">
+        <!-- Brand Identity -->
+        <a href="/" class="brand-wrapper">
+          <div class="brand-icon-box">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+            </svg>
+          </div>
+          <div class="brand-titles">
+            <span class="brand-name">Precision Irrigation Intelligence</span>
+            <div class="brand-tag">
+              <span class="model-live-dot"></span>
+              <span>XGBoost Final Deployment Engine</span>
+            </div>
+          </div>
         </a>
 
+        <!-- Desktop Navigation Links -->
+        <nav class="nav-menu" aria-label="Main Navigation">
+          <a
+            href="/"
+            class="nav-link-item {% if active == 'predict' %}active{% endif %}"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+
+          <a
+            href="/models"
+            class="nav-link-item {% if active == 'models' %}active{% endif %}"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+            <span>Model Specification</span>
+          </a>
+
+          <a
+            href="/history"
+            class="nav-link-item {% if active == 'history' %}active{% endif %}"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 8v4l3 3"></path>
+              <circle cx="12" cy="12" r="9"></circle>
+            </svg>
+            <span>Prediction History</span>
+          </a>
+        </nav>
+
+        <!-- Navigation Actions (Theme Switch + Mobile Menu) -->
+        <div class="nav-actions">
+          <!-- Light / Dark Mode Toggle Button (Inspired by switch-mode.json) -->
+          <button
+            id="theme-toggle-btn"
+            class="theme-toggle-btn"
+            type="button"
+            onclick="toggleTheme()"
+            aria-label="Toggle Theme"
+          >
+            <!-- Sun Icon (shown in light mode) -->
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <!-- Moon Icon (shown in dark mode) -->
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+
+          <!-- Mobile Drawer Toggle -->
+          <button
+            class="mobile-nav-toggle"
+            type="button"
+            aria-label="Toggle mobile menu"
+            aria-expanded="false"
+            onclick="toggleMobileNav()"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="4" y1="6" x2="20" y2="6"></line>
+              <line x1="4" y1="12" x2="20" y2="12"></line>
+              <line x1="4" y1="18" x2="20" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Navigation Drawer -->
+      <div id="mobile-drawer" class="mobile-drawer">
         <a
-          href="/history"
-          class="nav-link {% if active == 'history' %}active{% endif %}"
+          href="/"
+          class="nav-link-item {% if active == 'predict' %}active{% endif %}"
+          onclick="toggleMobileNav()"
         >
-          History
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Dashboard</span>
         </a>
 
         <a
           href="/models"
-          class="nav-link {% if active == 'models' %}active{% endif %}"
+          class="nav-link-item {% if active == 'models' %}active{% endif %}"
+          onclick="toggleMobileNav()"
         >
-          Analytics
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          </svg>
+          <span>Model Specification</span>
         </a>
 
+        <a
+          href="/history"
+          class="nav-link-item {% if active == 'history' %}active{% endif %}"
+          onclick="toggleMobileNav()"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 8v4l3 3"></path>
+            <circle cx="12" cy="12" r="9"></circle>
+          </svg>
+          <span>Prediction History</span>
+        </a>
       </div>
+    </header>
 
-    </nav>
-
-    <main class="page">
+    <!-- Main Page Content -->
+    <main class="page-container">
+      {% block breadcrumb %}{% endblock %}
       {% block content %}{% endblock %}
     </main>
 
+    <!-- Structured Footer (Inspired by footer-1.json) -->
     <footer class="site-footer">
-
       <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <div class="footer-title">
+              Precision Multi-Class Irrigation Intelligence
+            </div>
+            <p class="footer-desc">
+              Production-grade machine-learning decision system predicting Low, Medium, and High crop irrigation requirements using verified XGBoost inference on field, soil, crop, and atmospheric conditions.
+            </p>
+          </div>
 
-        <div class="footer-links">
+          <div class="footer-links-group">
+            <a
+              href="https://github.com/kumarsainit"
+              class="footer-link-btn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+              </svg>
+              <span>GitHub</span>
+            </a>
 
-          <a
-            href="https://github.com/kumarsainit"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
+            <a
+              href="https://www.linkedin.com/in/gvs-sai-kumar/"
+              class="footer-link-btn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                <rect x="2" y="9" width="4" height="12"></rect>
+                <circle cx="4" cy="4" r="2"></circle>
+              </svg>
+              <span>LinkedIn</span>
+            </a>
 
-          <a
-            href="https://www.linkedin.com/in/gvs-sai-kumar/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            LinkedIn
-          </a>
-
+            <a
+              href="mailto:thekumarsaibit@gmail.com"
+              class="footer-link-btn"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>Email</span>
+            </a>
+          </div>
         </div>
 
+        <div class="footer-bottom">
+          <div>
+            Final Deployment Model: <strong>XGBoost (Extreme Gradient Boosting)</strong>
+          </div>
+          <div>
+            Precision Multi-Class Irrigation Intelligence
+          </div>
+        </div>
       </div>
-
     </footer>
 
-    <div id="toast"></div>
+    <!-- Toast Notification Element -->
+    <div id="toast" role="status" aria-live="polite"></div>
 
-    <script>
-      function toggleNavigation() {
-        const links = document.querySelector(".nav-links");
-        const button = document.querySelector(".nav-toggle");
-
-        links.classList.toggle("open");
-
-        button.setAttribute(
-          "aria-expanded",
-          links.classList.contains("open")
-        );
-      }
-
-      function showToast(message, isError = false) {
-        const toast = document.getElementById("toast");
-
-        if (!toast) {
-          return;
-        }
-
-        toast.textContent = message;
-        toast.className = isError ? "show error" : "show";
-
-        setTimeout(() => {
-          toast.className = "";
-        }, 3000);
-      }
-
-      function fmtDate(ts) {
-        if (!ts) {
-          return "Just now";
-        }
-
-        const date = new Date(ts);
-
-        return date.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit"
-        });
-      }
-
-      function badgeClass(level) {
-        const value = (level || "").toLowerCase();
-
-        if (value.includes("high")) {
-          return "badge badge-high";
-        }
-
-        if (value.includes("low")) {
-          return "badge badge-low";
-        }
-
-        if (value.includes("medium")) {
-          return "badge badge-medium";
-        }
-
-        return "badge badge-none";
-      }
-    </script>
-
+    <!-- Application Script -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block scripts %}{% endblock %}
-
   </body>
 </html>
