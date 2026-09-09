@@ -1,0 +1,249 @@
+{
+  "final_model": "CatBoost",
+  "target": "Irrigation_Need",
+  "class_labels": [
+    "High",
+    "Low",
+    "Medium"
+  ],
+  "class_index_to_label": {
+    "0": "High",
+    "1": "Low",
+    "2": "Medium"
+  },
+  "raw_feature_order": [
+    "Soil_Type",
+    "Soil_pH",
+    "Soil_Moisture",
+    "Organic_Carbon",
+    "Electrical_Conductivity",
+    "Temperature_C",
+    "Humidity",
+    "Rainfall_mm",
+    "Sunlight_Hours",
+    "Wind_Speed_kmh",
+    "Crop_Type",
+    "Crop_Growth_Stage",
+    "Season",
+    "Irrigation_Type",
+    "Water_Source",
+    "Field_Area_hectare",
+    "Mulching_Used",
+    "Previous_Irrigation_mm",
+    "Region"
+  ],
+  "categorical_features": [
+    "Soil_Type",
+    "Crop_Type",
+    "Crop_Growth_Stage",
+    "Season",
+    "Irrigation_Type",
+    "Water_Source",
+    "Mulching_Used",
+    "Region"
+  ],
+  "numeric_features": [
+    "Soil_pH",
+    "Soil_Moisture",
+    "Organic_Carbon",
+    "Electrical_Conductivity",
+    "Temperature_C",
+    "Humidity",
+    "Rainfall_mm",
+    "Sunlight_Hours",
+    "Wind_Speed_kmh",
+    "Field_Area_hectare",
+    "Previous_Irrigation_mm"
+  ],
+  "categorical_levels": {
+    "Soil_Type": [
+      "Clay",
+      "Loamy",
+      "Sandy",
+      "Silt"
+    ],
+    "Crop_Type": [
+      "Cotton",
+      "Maize",
+      "Potato",
+      "Rice",
+      "Sugarcane",
+      "Wheat"
+    ],
+    "Crop_Growth_Stage": [
+      "Flowering",
+      "Harvest",
+      "Sowing",
+      "Vegetative"
+    ],
+    "Season": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Irrigation_Type": [
+      "Canal",
+      "Drip",
+      "Rainfed",
+      "Sprinkler"
+    ],
+    "Water_Source": [
+      "Groundwater",
+      "Rainwater",
+      "Reservoir",
+      "River"
+    ],
+    "Mulching_Used": [
+      "No",
+      "Yes"
+    ],
+    "Region": [
+      "Central",
+      "East",
+      "North",
+      "South",
+      "West"
+    ]
+  },
+  "numeric_ranges": {
+    "Soil_pH": {
+      "min": 4.8,
+      "p25": 5.69,
+      "median": 6.44,
+      "p75": 7.27,
+      "max": 8.2,
+      "mean": 6.482497190476191,
+      "std": 0.9225044194489912
+    },
+    "Soil_Moisture": {
+      "min": 8.0,
+      "p25": 23.34,
+      "median": 37.75,
+      "p75": 51.27,
+      "max": 64.99,
+      "mean": 37.30448158730159,
+      "std": 16.377082267642674
+    },
+    "Organic_Carbon": {
+      "min": 0.3,
+      "p25": 0.61,
+      "median": 0.91,
+      "p75": 1.22,
+      "max": 1.6,
+      "mean": 0.9228580000000001,
+      "std": 0.3658077322032219
+    },
+    "Electrical_Conductivity": {
+      "min": 0.1,
+      "p25": 0.93,
+      "median": 1.74,
+      "p75": 2.58,
+      "max": 3.5,
+      "mean": 1.7446045396825394,
+      "std": 0.9523209966282833
+    },
+    "Temperature_C": {
+      "min": 12.0,
+      "p25": 19.5175,
+      "median": 26.96,
+      "p75": 34.54,
+      "max": 42.0,
+      "mean": 26.9981663015873,
+      "std": 8.623620774894261
+    },
+    "Humidity": {
+      "min": 25.0,
+      "p25": 45.39,
+      "median": 61.65,
+      "p75": 79.12,
+      "max": 94.99,
+      "mean": 61.56318004761905,
+      "std": 19.708152334649107
+    },
+    "Rainfall_mm": {
+      "min": 0.38,
+      "p25": 954.57,
+      "median": 1467.1599999999999,
+      "p75": 2054.28,
+      "max": 2499.69,
+      "mean": 1462.20756645873,
+      "std": 612.9897384055647
+    },
+    "Sunlight_Hours": {
+      "min": 4.0,
+      "p25": 5.76,
+      "median": 7.58,
+      "p75": 9.25,
+      "max": 11.0,
+      "mean": 7.513382317460317,
+      "std": 1.9993223768116344
+    },
+    "Wind_Speed_kmh": {
+      "min": 0.5,
+      "p25": 5.28,
+      "median": 10.48,
+      "p75": 15.43,
+      "max": 20.0,
+      "mean": 10.375394285714286,
+      "std": 5.689457962436633
+    },
+    "Field_Area_hectare": {
+      "min": 0.3,
+      "p25": 3.88,
+      "median": 7.38,
+      "p75": 11.14,
+      "max": 15.0,
+      "mean": 7.51774519047619,
+      "std": 4.218124078692729
+    },
+    "Previous_Irrigation_mm": {
+      "min": 0.02,
+      "p25": 33.14,
+      "median": 61.15,
+      "p75": 92.69,
+      "max": 119.99,
+      "mean": 62.31817737142856,
+      "std": 34.24693939478603
+    }
+  },
+  "encoded_feature_names": [
+    "Soil_Type_Loamy",
+    "Soil_Type_Sandy",
+    "Soil_Type_Silt",
+    "Crop_Type_Maize",
+    "Crop_Type_Potato",
+    "Crop_Type_Rice",
+    "Crop_Type_Sugarcane",
+    "Crop_Type_Wheat",
+    "Crop_Growth_Stage_Harvest",
+    "Crop_Growth_Stage_Sowing",
+    "Crop_Growth_Stage_Vegetative",
+    "Season_Rabi",
+    "Season_Zaid",
+    "Irrigation_Type_Drip",
+    "Irrigation_Type_Rainfed",
+    "Irrigation_Type_Sprinkler",
+    "Water_Source_Rainwater",
+    "Water_Source_Reservoir",
+    "Water_Source_River",
+    "Mulching_Used_Yes",
+    "Region_East",
+    "Region_North",
+    "Region_South",
+    "Region_West",
+    "Soil_pH",
+    "Soil_Moisture",
+    "Organic_Carbon",
+    "Electrical_Conductivity",
+    "Temperature_C",
+    "Humidity",
+    "Rainfall_mm",
+    "Sunlight_Hours",
+    "Wind_Speed_kmh",
+    "Field_Area_hectare",
+    "Previous_Irrigation_mm"
+  ],
+  "imbalance_strategy": "smote_original_partial",
+  "random_seed": 42,
+  "training_rows": 441000
+}

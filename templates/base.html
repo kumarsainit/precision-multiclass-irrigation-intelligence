@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Precision Multi-Class Irrigation Intelligence{% endblock %}</title>
 
-    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,10 +12,8 @@
       rel="stylesheet"
     />
 
-    <!-- Main Stylesheet (Hero-34 & Hero-5 Design System) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 
-    <!-- Immediate Theme Application (Zero FOUC) -->
     <script>
       (function () {
         try {
@@ -34,10 +31,8 @@
   </head>
 
   <body>
-    <!-- Top Navigation Bar -->
     <header class="navbar">
       <div class="navbar-inner">
-        <!-- Brand Identity -->
         <a href="/" class="brand-wrapper">
           <div class="brand-icon-box">
             <svg
@@ -57,12 +52,11 @@
             <span class="brand-name">Precision Irrigation Intelligence</span>
             <div class="brand-tag">
               <span class="model-live-dot"></span>
-              <span>XGBoost Final Deployment Engine</span>
+              <span>{{ experiment.final_model }} Final Deployment Engine</span>
             </div>
           </div>
         </a>
 
-        <!-- Desktop Navigation Links -->
         <nav class="nav-menu" aria-label="Main Navigation">
           <a
             href="/"
@@ -101,9 +95,7 @@
           </a>
         </nav>
 
-        <!-- Navigation Actions (Theme Switch + Mobile Menu) -->
         <div class="nav-actions">
-          <!-- Light / Dark Mode Toggle Button (Inspired by switch-mode.json) -->
           <button
             id="theme-toggle-btn"
             class="theme-toggle-btn"
@@ -111,7 +103,6 @@
             onclick="toggleTheme()"
             aria-label="Toggle Theme"
           >
-            <!-- Sun Icon (shown in light mode) -->
             <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"></circle>
               <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -123,13 +114,11 @@
               <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
               <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
             </svg>
-            <!-- Moon Icon (shown in dark mode) -->
             <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
           </button>
 
-          <!-- Mobile Drawer Toggle -->
           <button
             class="mobile-nav-toggle"
             type="button"
@@ -146,7 +135,6 @@
         </div>
       </div>
 
-      <!-- Mobile Navigation Drawer -->
       <div id="mobile-drawer" class="mobile-drawer">
         <a
           href="/"
@@ -187,13 +175,11 @@
       </div>
     </header>
 
-    <!-- Main Page Content -->
     <main class="page-container">
       {% block breadcrumb %}{% endblock %}
       {% block content %}{% endblock %}
     </main>
 
-    <!-- Structured Footer (Inspired by footer-1.json) -->
     <footer class="site-footer">
       <div class="footer-inner">
         <div class="footer-top">
@@ -202,7 +188,7 @@
               Precision Multi-Class Irrigation Intelligence
             </div>
             <p class="footer-desc">
-              Production-grade machine-learning decision system predicting Low, Medium, and High crop irrigation requirements using verified XGBoost inference on field, soil, crop, and atmospheric conditions.
+              Machine-learning decision system predicting Low, Medium, and High crop irrigation requirements from field, soil, crop, and atmospheric conditions. Every metric shown across this application is read from the recorded experiment, never hardcoded.
             </p>
           </div>
 
@@ -248,7 +234,7 @@
 
         <div class="footer-bottom">
           <div>
-            Final Deployment Model: <strong>XGBoost (Extreme Gradient Boosting)</strong>
+            Final Deployment Model: <strong>{{ experiment.final_model }}</strong>
           </div>
           <div>
             Precision Multi-Class Irrigation Intelligence
@@ -257,10 +243,8 @@
       </div>
     </footer>
 
-    <!-- Toast Notification Element -->
     <div id="toast" role="status" aria-live="polite"></div>
 
-    <!-- Application Script -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block scripts %}{% endblock %}
   </body>

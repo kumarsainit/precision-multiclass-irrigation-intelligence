@@ -1,0 +1,7 @@
+-r requirements.txt
+xgboost==3.4.1
+lightgbm==4.7.0
+imbalanced-learn==0.14.0
+matplotlib==3.10.6
+notebook==7.4.5
+ipykernel==6.31.0

@@ -1,0 +1,2043 @@
+{
+  "dataset": {
+    "path": "notebook/train.csv",
+    "rows": 630000,
+    "n_features": 19,
+    "id_column_dropped": true,
+    "target": "Irrigation_Need",
+    "classes": [
+      "High",
+      "Low",
+      "Medium"
+    ],
+    "categorical_features": [
+      "Soil_Type",
+      "Crop_Type",
+      "Crop_Growth_Stage",
+      "Season",
+      "Irrigation_Type",
+      "Water_Source",
+      "Mulching_Used",
+      "Region"
+    ],
+    "numeric_features": [
+      "Soil_pH",
+      "Soil_Moisture",
+      "Organic_Carbon",
+      "Electrical_Conductivity",
+      "Temperature_C",
+      "Humidity",
+      "Rainfall_mm",
+      "Sunlight_Hours",
+      "Wind_Speed_kmh",
+      "Field_Area_hectare",
+      "Previous_Irrigation_mm"
+    ],
+    "categorical_levels": {
+      "Soil_Type": [
+        "Clay",
+        "Loamy",
+        "Sandy",
+        "Silt"
+      ],
+      "Crop_Type": [
+        "Cotton",
+        "Maize",
+        "Potato",
+        "Rice",
+        "Sugarcane",
+        "Wheat"
+      ],
+      "Crop_Growth_Stage": [
+        "Flowering",
+        "Harvest",
+        "Sowing",
+        "Vegetative"
+      ],
+      "Season": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Irrigation_Type": [
+        "Canal",
+        "Drip",
+        "Rainfed",
+        "Sprinkler"
+      ],
+      "Water_Source": [
+        "Groundwater",
+        "Rainwater",
+        "Reservoir",
+        "River"
+      ],
+      "Mulching_Used": [
+        "No",
+        "Yes"
+      ],
+      "Region": [
+        "Central",
+        "East",
+        "North",
+        "South",
+        "West"
+      ]
+    },
+    "numeric_ranges": {
+      "Soil_pH": {
+        "min": 4.8,
+        "p25": 5.69,
+        "median": 6.44,
+        "p75": 7.27,
+        "max": 8.2,
+        "mean": 6.482497190476191,
+        "std": 0.9225044194489912
+      },
+      "Soil_Moisture": {
+        "min": 8.0,
+        "p25": 23.34,
+        "median": 37.75,
+        "p75": 51.27,
+        "max": 64.99,
+        "mean": 37.30448158730159,
+        "std": 16.377082267642674
+      },
+      "Organic_Carbon": {
+        "min": 0.3,
+        "p25": 0.61,
+        "median": 0.91,
+        "p75": 1.22,
+        "max": 1.6,
+        "mean": 0.9228580000000001,
+        "std": 0.3658077322032219
+      },
+      "Electrical_Conductivity": {
+        "min": 0.1,
+        "p25": 0.93,
+        "median": 1.74,
+        "p75": 2.58,
+        "max": 3.5,
+        "mean": 1.7446045396825394,
+        "std": 0.9523209966282833
+      },
+      "Temperature_C": {
+        "min": 12.0,
+        "p25": 19.5175,
+        "median": 26.96,
+        "p75": 34.54,
+        "max": 42.0,
+        "mean": 26.9981663015873,
+        "std": 8.623620774894261
+      },
+      "Humidity": {
+        "min": 25.0,
+        "p25": 45.39,
+        "median": 61.65,
+        "p75": 79.12,
+        "max": 94.99,
+        "mean": 61.56318004761905,
+        "std": 19.708152334649107
+      },
+      "Rainfall_mm": {
+        "min": 0.38,
+        "p25": 954.57,
+        "median": 1467.1599999999999,
+        "p75": 2054.28,
+        "max": 2499.69,
+        "mean": 1462.20756645873,
+        "std": 612.9897384055647
+      },
+      "Sunlight_Hours": {
+        "min": 4.0,
+        "p25": 5.76,
+        "median": 7.58,
+        "p75": 9.25,
+        "max": 11.0,
+        "mean": 7.513382317460317,
+        "std": 1.9993223768116344
+      },
+      "Wind_Speed_kmh": {
+        "min": 0.5,
+        "p25": 5.28,
+        "median": 10.48,
+        "p75": 15.43,
+        "max": 20.0,
+        "mean": 10.375394285714286,
+        "std": 5.689457962436633
+      },
+      "Field_Area_hectare": {
+        "min": 0.3,
+        "p25": 3.88,
+        "median": 7.38,
+        "p75": 11.14,
+        "max": 15.0,
+        "mean": 7.51774519047619,
+        "std": 4.218124078692729
+      },
+      "Previous_Irrigation_mm": {
+        "min": 0.02,
+        "p25": 33.14,
+        "median": 61.15,
+        "p75": 92.69,
+        "max": 119.99,
+        "mean": 62.31817737142856,
+        "std": 34.24693939478603
+      }
+    },
+    "missing_values_total": 0,
+    "duplicate_rows_including_target": 0,
+    "duplicate_rows_features_only": 0,
+    "contradictory_label_groups": 0,
+    "class_distribution": {
+      "High": {
+        "count": 21009,
+        "percentage": 3.334761904761905
+      },
+      "Low": {
+        "count": 369917,
+        "percentage": 58.71698412698413
+      },
+      "Medium": {
+        "count": 239074,
+        "percentage": 37.94825396825397
+      }
+    },
+    "imbalance_ratio_majority_to_minority": 17.607549145604263,
+    "numeric_mean_by_class": {
+      "High": {
+        "Soil_pH": 6.57828216478652,
+        "Soil_Moisture": 17.66987529154172,
+        "Organic_Carbon": 0.9241429863391879,
+        "Electrical_Conductivity": 1.6908800990051882,
+        "Temperature_C": 34.56813413299063,
+        "Humidity": 61.11957589604455,
+        "Rainfall_mm": 989.1566780903422,
+        "Sunlight_Hours": 7.46313817887572,
+        "Wind_Speed_kmh": 14.642638869056116,
+        "Field_Area_hectare": 7.53039126088819,
+        "Previous_Irrigation_mm": 63.05329953829311
+      },
+      "Low": {
+        "Soil_pH": 6.4878049129939965,
+        "Soil_Moisture": 43.3059015671083,
+        "Organic_Carbon": 0.9206797200453073,
+        "Electrical_Conductivity": 1.7317548801487903,
+        "Temperature_C": 25.347707701998015,
+        "Humidity": 61.949193900253306,
+        "Rainfall_mm": 1500.5343129377673,
+        "Sunlight_Hours": 7.511124928024396,
+        "Wind_Speed_kmh": 9.21642352203332,
+        "Field_Area_hectare": 7.447240624248143,
+        "Previous_Irrigation_mm": 61.71833035518778
+      },
+      "Medium": {
+        "Soil_pH": 6.465867346511959,
+        "Soil_Moisture": 29.743961283953926,
+        "Organic_Carbon": 0.9261155123518242,
+        "Electrical_Conductivity": 1.7692078184997113,
+        "Temperature_C": 28.886682993550117,
+        "Humidity": 61.00488677145989,
+        "Rainfall_mm": 1444.4750277319993,
+        "Sunlight_Hours": 7.521290437270468,
+        "Wind_Speed_kmh": 11.793668320269038,
+        "Field_Area_hectare": 7.625724963818734,
+        "Previous_Irrigation_mm": 63.18171513422622
+      }
+    },
+    "categorical_class_share": {
+      "Soil_Type": {
+        "Clay": {
+          "High": 3.505,
+          "Low": 58.696,
+          "Medium": 37.798
+        },
+        "Loamy": {
+          "High": 2.884,
+          "Low": 59.926,
+          "Medium": 37.19
+        },
+        "Sandy": {
+          "High": 3.866,
+          "Low": 57.632,
+          "Medium": 38.502
+        },
+        "Silt": {
+          "High": 3.032,
+          "Low": 58.682,
+          "Medium": 38.287
+        }
+      },
+      "Crop_Type": {
+        "Cotton": {
+          "High": 3.609,
+          "Low": 58.716,
+          "Medium": 37.675
+        },
+        "Maize": {
+          "High": 4.221,
+          "Low": 57.013,
+          "Medium": 38.766
+        },
+        "Potato": {
+          "High": 2.741,
+          "Low": 57.59,
+          "Medium": 39.669
+        },
+        "Rice": {
+          "High": 2.337,
+          "Low": 59.987,
+          "Medium": 37.677
+        },
+        "Sugarcane": {
+          "High": 3.915,
+          "Low": 59.287,
+          "Medium": 36.797
+        },
+        "Wheat": {
+          "High": 3.17,
+          "Low": 59.646,
+          "Medium": 37.185
+        }
+      },
+      "Crop_Growth_Stage": {
+        "Flowering": {
+          "High": 6.441,
+          "Low": 30.6,
+          "Medium": 62.96
+        },
+        "Harvest": {
+          "High": 0.32,
+          "Low": 84.794,
+          "Medium": 14.886
+        },
+        "Sowing": {
+          "High": 0.163,
+          "Low": 87.184,
+          "Medium": 12.653
+        },
+        "Vegetative": {
+          "High": 6.413,
+          "Low": 32.379,
+          "Medium": 61.208
+        }
+      },
+      "Season": {
+        "Kharif": {
+          "High": 3.483,
+          "Low": 57.135,
+          "Medium": 39.382
+        },
+        "Rabi": {
+          "High": 3.212,
+          "Low": 59.977,
+          "Medium": 36.811
+        },
+        "Zaid": {
+          "High": 3.304,
+          "Low": 59.109,
+          "Medium": 37.588
+        }
+      },
+      "Irrigation_Type": {
+        "Canal": {
+          "High": 3.818,
+          "Low": 55.795,
+          "Medium": 40.387
+        },
+        "Drip": {
+          "High": 2.671,
+          "Low": 59.46,
+          "Medium": 37.869
+        },
+        "Rainfed": {
+          "High": 3.316,
+          "Low": 60.668,
+          "Medium": 36.016
+        },
+        "Sprinkler": {
+          "High": 3.489,
+          "Low": 59.072,
+          "Medium": 37.439
+        }
+      },
+      "Water_Source": {
+        "Groundwater": {
+          "High": 2.347,
+          "Low": 60.101,
+          "Medium": 37.552
+        },
+        "Rainwater": {
+          "High": 3.353,
+          "Low": 60.37,
+          "Medium": 36.277
+        },
+        "Reservoir": {
+          "High": 3.263,
+          "Low": 56.263,
+          "Medium": 40.474
+        },
+        "River": {
+          "High": 4.344,
+          "Low": 58.302,
+          "Medium": 37.355
+        }
+      },
+      "Mulching_Used": {
+        "No": {
+          "High": 5.853,
+          "Low": 44.505,
+          "Medium": 49.643
+        },
+        "Yes": {
+          "High": 0.794,
+          "Low": 73.061,
+          "Medium": 26.145
+        }
+      },
+      "Region": {
+        "Central": {
+          "High": 3.435,
+          "Low": 59.301,
+          "Medium": 37.263
+        },
+        "East": {
+          "High": 2.87,
+          "Low": 59.346,
+          "Medium": 37.784
+        },
+        "North": {
+          "High": 3.428,
+          "Low": 57.625,
+          "Medium": 38.947
+        },
+        "South": {
+          "High": 3.475,
+          "Low": 58.653,
+          "Medium": 37.872
+        },
+        "West": {
+          "High": 3.461,
+          "Low": 58.577,
+          "Medium": 37.962
+        }
+      }
+    }
+  },
+  "split": {
+    "strategy": "stratified random split of raw rows, performed before any encoding or resampling",
+    "random_seed": 42,
+    "train_rows": 441000,
+    "val_rows": 94500,
+    "test_rows": 94500,
+    "train_pct": 70.0,
+    "val_pct": 15.0,
+    "test_pct": 15.0,
+    "index_overlap_train_val": 0,
+    "index_overlap_train_test": 0,
+    "index_overlap_val_test": 0,
+    "class_counts": {
+      "train": {
+        "Low": 258941,
+        "Medium": 167352,
+        "High": 14707
+      },
+      "validation": {
+        "Low": 55488,
+        "Medium": 35861,
+        "High": 3151
+      },
+      "test": {
+        "Low": 55488,
+        "Medium": 35861,
+        "High": 3151
+      }
+    }
+  },
+  "preprocessing": {
+    "fitted_on": "training split only",
+    "categorical_encoding": "OneHotEncoder(drop='first', handle_unknown='ignore')",
+    "numeric_handling": "passed through unscaled for the tree ensembles; StandardScaler applied inside the Logistic Regression pipeline only, because a linear model needs comparable scales to converge",
+    "encoded_feature_count": 35,
+    "encoded_feature_names": [
+      "Soil_Type_Loamy",
+      "Soil_Type_Sandy",
+      "Soil_Type_Silt",
+      "Crop_Type_Maize",
+      "Crop_Type_Potato",
+      "Crop_Type_Rice",
+      "Crop_Type_Sugarcane",
+      "Crop_Type_Wheat",
+      "Crop_Growth_Stage_Harvest",
+      "Crop_Growth_Stage_Sowing",
+      "Crop_Growth_Stage_Vegetative",
+      "Season_Rabi",
+      "Season_Zaid",
+      "Irrigation_Type_Drip",
+      "Irrigation_Type_Rainfed",
+      "Irrigation_Type_Sprinkler",
+      "Water_Source_Rainwater",
+      "Water_Source_Reservoir",
+      "Water_Source_River",
+      "Mulching_Used_Yes",
+      "Region_East",
+      "Region_North",
+      "Region_South",
+      "Region_West",
+      "Soil_pH",
+      "Soil_Moisture",
+      "Organic_Carbon",
+      "Electrical_Conductivity",
+      "Temperature_C",
+      "Humidity",
+      "Rainfall_mm",
+      "Sunlight_Hours",
+      "Wind_Speed_kmh",
+      "Field_Area_hectare",
+      "Previous_Irrigation_mm"
+    ]
+  },
+  "imbalance_study": {
+    "probe_model": "LightGBM with fixed hyperparameters, trained on the training split and scored on validation",
+    "probe_hyperparameters": {
+      "n_estimators": 300,
+      "learning_rate": 0.05,
+      "num_leaves": 63,
+      "min_child_samples": 40,
+      "subsample": 0.8,
+      "subsample_freq": 1,
+      "colsample_bytree": 0.8,
+      "reg_alpha": 0.1,
+      "reg_lambda": 1.0,
+      "n_jobs": -1,
+      "verbose": -1
+    },
+    "assumption_order": [
+      "none",
+      "class_weight_balanced",
+      "random_oversampling",
+      "random_undersampling",
+      "smote_on_encoded",
+      "smote_original_partial",
+      "smotenc_on_raw",
+      "smotetomek_on_encoded"
+    ],
+    "selection_rule": "Take the best validation Macro F1. Estimate the run-to-run standard deviation of that metric by repeating the probe across five seeds. Every strategy within one standard deviation of the best is treated as statistically indistinguishable, and among those the strategy that imposes the fewest assumptions on the training data is selected.",
+    "strategies": {
+      "none": {
+        "status": "ok",
+        "note": "train on the observed distribution, no resampling and no reweighting",
+        "train_rows_after": 441000,
+        "train_class_counts_after": {
+          "High": 14707,
+          "Low": 258941,
+          "Medium": 167352
+        },
+        "validation": {
+          "accuracy": 0.9843915343915344,
+          "macro_precision": 0.9798725252329158,
+          "macro_recall": 0.9612606478423645,
+          "macro_f1": 0.9702780054058359,
+          "weighted_f1": 0.9843243463850689,
+          "per_class": {
+            "High": {
+              "precision": 0.9700437563110064,
+              "recall": 0.9146302761028245,
+              "f1": 0.9415223783077425,
+              "support": 3151
+            },
+            "Low": {
+              "precision": 0.985100194500455,
+              "recall": 0.9949178200692042,
+              "f1": 0.9899846676649122,
+              "support": 55488
+            },
+            "Medium": {
+              "precision": 0.9844736248872858,
+              "recall": 0.9742338473550654,
+              "f1": 0.9793269702448527,
+              "support": 35861
+            }
+          },
+          "confusion_matrix": [
+            [
+              2882,
+              0,
+              269
+            ],
+            [
+              0,
+              55206,
+              282
+            ],
+            [
+              89,
+              835,
+              34937
+            ]
+          ],
+          "macro_roc_auc": 0.9974949834232683,
+          "macro_average_precision": 0.9893674232441407,
+          "micro_average_precision": 0.9968783024281519
+        },
+        "seconds": 21.0
+      },
+      "class_weight_balanced": {
+        "status": "ok",
+        "note": "no synthetic rows; each class weighted inversely to its frequency",
+        "train_rows_after": 441000,
+        "train_class_counts_after": {
+          "High": 14707,
+          "Low": 258941,
+          "Medium": 167352
+        },
+        "validation": {
+          "accuracy": 0.9829735449735449,
+          "macro_precision": 0.9611180441512489,
+          "macro_recall": 0.9671477399795858,
+          "macro_f1": 0.9640443692065505,
+          "weighted_f1": 0.9829642013123661,
+          "per_class": {
+            "High": {
+              "precision": 0.9123186168570546,
+              "recall": 0.9377975245953666,
+              "f1": 0.9248826291079812,
+              "support": 3151
+            },
+            "Low": {
+              "precision": 0.9853568813728817,
+              "recall": 0.9944312283737025,
+              "f1": 0.989873258765596,
+              "support": 55488
+            },
+            "Medium": {
+              "precision": 0.9856786342238103,
+              "recall": 0.9692144669696885,
+              "f1": 0.9773772197460737,
+              "support": 35861
+            }
+          },
+          "confusion_matrix": [
+            [
+              2955,
+              0,
+              196
+            ],
+            [
+              0,
+              55179,
+              309
+            ],
+            [
+              284,
+              820,
+              34757
+            ]
+          ],
+          "macro_roc_auc": 0.9973913482645228,
+          "macro_average_precision": 0.9892117065393459,
+          "micro_average_precision": 0.9964917602546765
+        },
+        "seconds": 21.6
+      },
+      "random_oversampling": {
+        "status": "ok",
+        "note": "existing minority rows duplicated until every class matches the majority",
+        "train_rows_after": 776823,
+        "train_class_counts_after": {
+          "High": 258941,
+          "Low": 258941,
+          "Medium": 258941
+        },
+        "validation": {
+          "accuracy": 0.9844444444444445,
+          "macro_precision": 0.9661416874256205,
+          "macro_recall": 0.9691745303321943,
+          "macro_f1": 0.9676015352135089,
+          "weighted_f1": 0.9844241236089611,
+          "per_class": {
+            "High": {
+              "precision": 0.9248284466625079,
+              "recall": 0.9409711202792764,
+              "f1": 0.9328299512348592,
+              "support": 3151
+            },
+            "Low": {
+              "precision": 0.9856564323051398,
+              "recall": 0.9956927623990772,
+              "f1": 0.990649178329045,
+              "support": 55488
+            },
+            "Medium": {
+              "precision": 0.9879401833092137,
+              "recall": 0.9708597083182288,
+              "f1": 0.9793254760766223,
+              "support": 35861
+            }
+          },
+          "confusion_matrix": [
+            [
+              2965,
+              0,
+              186
+            ],
+            [
+              0,
+              55249,
+              239
+            ],
+            [
+              241,
+              804,
+              34816
+            ]
+          ],
+          "macro_roc_auc": 0.9974531025828308,
+          "macro_average_precision": 0.9898084969621294,
+          "micro_average_precision": 0.9965612763988637
+        },
+        "seconds": 25.5
+      },
+      "random_undersampling": {
+        "status": "ok",
+        "note": "majority rows discarded until every class matches the minority",
+        "train_rows_after": 44121,
+        "train_class_counts_after": {
+          "High": 14707,
+          "Low": 14707,
+          "Medium": 14707
+        },
+        "validation": {
+          "accuracy": 0.9793544973544973,
+          "macro_precision": 0.9299003828773195,
+          "macro_recall": 0.969531276418755,
+          "macro_f1": 0.9478447844419177,
+          "weighted_f1": 0.9795668369746422,
+          "per_class": {
+            "High": {
+              "precision": 0.8175895765472313,
+              "recall": 0.9558870199936528,
+              "f1": 0.8813460131675201,
+              "support": 3151
+            },
+            "Low": {
+              "precision": 0.9854575338550041,
+              "recall": 0.9940888119953863,
+              "f1": 0.9897543557445587,
+              "support": 55488
+            },
+            "Medium": {
+              "precision": 0.9866540382297228,
+              "recall": 0.9586179972672262,
+              "f1": 0.9724339844136741,
+              "support": 35861
+            }
+          },
+          "confusion_matrix": [
+            [
+              3012,
+              0,
+              139
+            ],
+            [
+              2,
+              55160,
+              326
+            ],
+            [
+              670,
+              814,
+              34377
+            ]
+          ],
+          "macro_roc_auc": 0.9966870813297847,
+          "macro_average_precision": 0.9877121353709954,
+          "micro_average_precision": 0.9949714537147801
+        },
+        "seconds": 16.0
+      },
+      "smote_on_encoded": {
+        "status": "ok",
+        "note": "plain SMOTE interpolating the one-hot columns, minority classes raised to majority size",
+        "train_rows_after": 776823,
+        "train_class_counts_after": {
+          "High": 258941,
+          "Low": 258941,
+          "Medium": 258941
+        },
+        "validation": {
+          "accuracy": 0.9844550264550265,
+          "macro_precision": 0.9776058177604261,
+          "macro_recall": 0.9631431791523459,
+          "macro_f1": 0.9702008553220867,
+          "weighted_f1": 0.9843964183456507,
+          "per_class": {
+            "High": {
+              "precision": 0.9625082946250829,
+              "recall": 0.9206601079022533,
+              "f1": 0.9411192214111922,
+              "support": 3151
+            },
+            "Low": {
+              "precision": 0.9852589499232609,
+              "recall": 0.9949538638985006,
+              "f1": 0.9900826742705475,
+              "support": 55488
+            },
+            "Medium": {
+              "precision": 0.9850502087329347,
+              "recall": 0.973815565656284,
+              "f1": 0.9794006702845204,
+              "support": 35861
+            }
+          },
+          "confusion_matrix": [
+            [
+              2901,
+              0,
+              250
+            ],
+            [
+              0,
+              55208,
+              280
+            ],
+            [
+              113,
+              826,
+              34922
+            ]
+          ],
+          "macro_roc_auc": 0.9973891885754836,
+          "macro_average_precision": 0.9880822539374284,
+          "micro_average_precision": 0.9967640459144939
+        },
+        "seconds": 42.9
+      },
+      "smote_original_partial": {
+        "status": "ok",
+        "note": "the original project's partial SMOTE targets, also interpolating one-hot columns",
+        "train_rows_after": 558941,
+        "train_class_counts_after": {
+          "High": 100000,
+          "Low": 258941,
+          "Medium": 200000
+        },
+        "validation": {
+          "accuracy": 0.9845502645502645,
+          "macro_precision": 0.9790137326231759,
+          "macro_recall": 0.9631873813643533,
+          "macro_f1": 0.9708932682923125,
+          "weighted_f1": 0.984489393953238,
+          "per_class": {
+            "High": {
+              "precision": 0.9666777740753082,
+              "recall": 0.9206601079022533,
+              "f1": 0.9431079323797139,
+              "support": 3151
+            },
+            "Low": {
+              "precision": 0.9849809139880846,
+              "recall": 0.9951701268742791,
+              "f1": 0.990049305244285,
+              "support": 55488
+            },
+            "Medium": {
+              "precision": 0.9853825098061348,
+              "recall": 0.9737319093165278,
+              "f1": 0.9795225672529384,
+              "support": 35861
+            }
+          },
+          "confusion_matrix": [
+            [
+              2901,
+              0,
+              250
+            ],
+            [
+              0,
+              55220,
+              268
+            ],
+            [
+              100,
+              842,
+              34919
+            ]
+          ],
+          "macro_roc_auc": 0.9975114931393225,
+          "macro_average_precision": 0.9885256667418046,
+          "micro_average_precision": 0.9968945352754277
+        },
+        "seconds": 38.2
+      },
+      "smotenc_on_raw": {
+        "status": "ok",
+        "note": "SMOTENC on the raw frame: numeric columns interpolated, categorical columns set by neighbourhood majority vote",
+        "train_rows_after": 776823,
+        "train_class_counts_after": {
+          "High": 258941,
+          "Low": 258941,
+          "Medium": 258941
+        },
+        "validation": {
+          "accuracy": 0.9826031746031746,
+          "macro_precision": 0.9617550409214641,
+          "macro_recall": 0.9654934015436413,
+          "macro_f1": 0.9635727142870323,
+          "weighted_f1": 0.9825882616368576,
+          "per_class": {
+            "High": {
+              "precision": 0.9156026160074743,
+              "recall": 0.9330371310695017,
+              "f1": 0.9242376611128575,
+              "support": 3151
+            },
+            "Low": {
+              "precision": 0.9854002859185133,
+              "recall": 0.9937824394463668,
+              "f1": 0.9895736128059723,
+              "support": 55488
+            },
+            "Medium": {
+              "precision": 0.9842622208384048,
+              "recall": 0.9696606341150553,
+              "f1": 0.9769068689422672,
+              "support": 35861
+            }
+          },
+          "confusion_matrix": [
+            [
+              2940,
+              0,
+              211
+            ],
+            [
+              0,
+              55143,
+              345
+            ],
+            [
+              271,
+              817,
+              34773
+            ]
+          ],
+          "macro_roc_auc": 0.9970727861477148,
+          "macro_average_precision": 0.9869132395093061,
+          "micro_average_precision": 0.9963812264990035
+        },
+        "seconds": 882.3
+      },
+      "smotetomek_on_encoded": {
+        "status": "ok",
+        "note": "SMOTE followed by Tomek-link cleaning of borderline pairs",
+        "train_rows_after": 747895,
+        "train_class_counts_after": {
+          "High": 258892,
+          "Low": 244514,
+          "Medium": 244489
+        },
+        "validation": {
+          "accuracy": 0.9843174603174604,
+          "macro_precision": 0.9769481557053142,
+          "macro_recall": 0.9628962602473955,
+          "macro_f1": 0.9697577847946487,
+          "weighted_f1": 0.9842574631932035,
+          "per_class": {
+            "High": {
+              "precision": 0.9605829744948658,
+              "recall": 0.9203427483338623,
+              "f1": 0.940032414910859,
+              "support": 3151
+            },
+            "Low": {
+              "precision": 0.9849976809732777,
+              "recall": 0.9951160611303345,
+              "f1": 0.9900310185932261,
+              "support": 55488
+            },
+            "Medium": {
+              "precision": 0.9852638116477994,
+              "recall": 0.97322997127799,
+              "f1": 0.9792099208798608,
+              "support": 35861
+            }
+          },
+          "confusion_matrix": [
+            [
+              2900,
+              0,
+              251
+            ],
+            [
+              0,
+              55217,
+              271
+            ],
+            [
+              119,
+              841,
+              34901
+            ]
+          ],
+          "macro_roc_auc": 0.9973881104902245,
+          "macro_average_precision": 0.988570778209812,
+          "micro_average_precision": 0.9967516767179843
+        },
+        "seconds": 287.7
+      }
+    },
+    "noise_study": {
+      "none": {
+        "seeds": [
+          42,
+          7,
+          2024,
+          13,
+          101
+        ],
+        "macro_f1_scores": [
+          0.9702780054058359,
+          0.9703594771834049,
+          0.9707326283637535,
+          0.9701005013551232,
+          0.9700021420170374
+        ],
+        "mean": 0.9702945508650309,
+        "std": 0.0002826478465356518,
+        "range": 0.0007304863467161304
+      },
+      "smote_original_partial": {
+        "seeds": [
+          42,
+          7,
+          2024,
+          13,
+          101
+        ],
+        "macro_f1_scores": [
+          0.9708932682923125,
+          0.970742149644987,
+          0.9705514241443853,
+          0.9710422027398294,
+          0.9700216054309219
+        ],
+        "mean": 0.9706501300504872,
+        "std": 0.000395629516541988,
+        "range": 0.0010205973089075782
+      }
+    },
+    "noise_std_used": 0.000395629516541988,
+    "best_validation_macro_f1": 0.9708932682923125,
+    "indistinguishable_threshold": 0.9704976387757704,
+    "indistinguishable_strategies": [
+      "smote_original_partial"
+    ],
+    "selected": "smote_original_partial"
+  },
+  "candidates": {
+    "Logistic Regression": {
+      "best_iteration": null,
+      "train": {
+        "accuracy": 0.8612536922501659,
+        "macro_precision": 0.8568148869129306,
+        "macro_recall": 0.8550290614979216,
+        "macro_f1": 0.8558856307493218,
+        "weighted_f1": 0.8614788696611138,
+        "per_class": {
+          "High": {
+            "precision": 0.8598067348739112,
+            "recall": 0.84795,
+            "f1": 0.8538372075460299,
+            "support": 100000
+          },
+          "Low": {
+            "precision": 0.9088811411939578,
+            "recall": 0.902047184493765,
+            "f1": 0.9054512680860961,
+            "support": 258941
+          },
+          "Medium": {
+            "precision": 0.8017567846709226,
+            "recall": 0.81509,
+            "f1": 0.8083684166158392,
+            "support": 200000
+          }
+        },
+        "confusion_matrix": [
+          [
+            84795,
+            259,
+            14946
+          ],
+          [
+            2,
+            233577,
+            25362
+          ],
+          [
+            13824,
+            23158,
+            163018
+          ]
+        ],
+        "macro_roc_auc": 0.9643014708081216,
+        "macro_average_precision": 0.9264257344577613,
+        "micro_average_precision": 0.941148287130783
+      },
+      "validation": {
+        "accuracy": 0.8601904761904762,
+        "macro_precision": 0.7454589301592941,
+        "macro_recall": 0.8419170492350571,
+        "macro_f1": 0.779627654183679,
+        "weighted_f1": 0.8628753005302247,
+        "per_class": {
+          "High": {
+            "precision": 0.4926080363912055,
+            "recall": 0.8248175182481752,
+            "f1": 0.6168268660258692,
+            "support": 3151
+          },
+          "Low": {
+            "precision": 0.916985974883124,
+            "recall": 0.9014021049596309,
+            "f1": 0.9091272618214535,
+            "support": 55488
+          },
+          "Medium": {
+            "precision": 0.8267827792035526,
+            "recall": 0.7995315244973649,
+            "f1": 0.8129288347037142,
+            "support": 35861
+          }
+        },
+        "confusion_matrix": [
+          [
+            2599,
+            16,
+            536
+          ],
+          [
+            0,
+            50017,
+            5471
+          ],
+          [
+            2677,
+            4512,
+            28672
+          ]
+        ],
+        "macro_roc_auc": 0.9612130305373786,
+        "macro_average_precision": 0.8738184111917461,
+        "micro_average_precision": 0.9428137526231772
+      },
+      "fit_seconds": 4.7,
+      "gaps": {
+        "train_minus_val_accuracy": 0.001063216059689731,
+        "train_minus_val_macro_f1": 0.07625797656564282
+      }
+    },
+    "XGBoost": {
+      "best_iteration": 799,
+      "train": {
+        "accuracy": 0.9885354625980202,
+        "macro_precision": 0.9894947414298251,
+        "macro_recall": 0.98778450456539,
+        "macro_f1": 0.9886235409611345,
+        "weighted_f1": 0.9885229558195653,
+        "per_class": {
+          "High": {
+            "precision": 0.9931764280258873,
+            "recall": 0.98829,
+            "f1": 0.9907271888846563,
+            "support": 100000
+          },
+          "Low": {
+            "precision": 0.9867549415434071,
+            "recall": 0.9957635136961702,
+            "f1": 0.9912387601250178,
+            "support": 258941
+          },
+          "Medium": {
+            "precision": 0.9885528547201808,
+            "recall": 0.9793,
+            "f1": 0.983904673873729,
+            "support": 200000
+          }
+        },
+        "confusion_matrix": [
+          [
+            98829,
+            0,
+            1171
+          ],
+          [
+            0,
+            257844,
+            1097
+          ],
+          [
+            679,
+            3461,
+            195860
+          ]
+        ],
+        "macro_roc_auc": 0.9994367258657135,
+        "macro_average_precision": 0.9990420487579986,
+        "micro_average_precision": 0.9990776874659145
+      },
+      "validation": {
+        "accuracy": 0.9847724867724867,
+        "macro_precision": 0.9793512249592128,
+        "macro_recall": 0.961822278287593,
+        "macro_f1": 0.9703310989582388,
+        "weighted_f1": 0.9847069765407216,
+        "per_class": {
+          "High": {
+            "precision": 0.9674714956405097,
+            "recall": 0.9155823548079974,
+            "f1": 0.9408120006522094,
+            "support": 3151
+          },
+          "Low": {
+            "precision": 0.9854919875798566,
+            "recall": 0.9952602364475202,
+            "f1": 0.9903520255366461,
+            "support": 55488
+          },
+          "Medium": {
+            "precision": 0.9850901916572717,
+            "recall": 0.9746242436072614,
+            "f1": 0.9798292706858609,
+            "support": 35861
+          }
+        },
+        "confusion_matrix": [
+          [
+            2885,
+            0,
+            266
+          ],
+          [
+            0,
+            55225,
+            263
+          ],
+          [
+            97,
+            813,
+            34951
+          ]
+        ],
+        "macro_roc_auc": 0.9975122732716488,
+        "macro_average_precision": 0.9886803999576707,
+        "micro_average_precision": 0.9969149407352659
+      },
+      "fit_seconds": 30.7,
+      "gaps": {
+        "train_minus_val_accuracy": 0.003762975825533421,
+        "train_minus_val_macro_f1": 0.018292442002895704
+      }
+    },
+    "LightGBM": {
+      "best_iteration": 799,
+      "train": {
+        "accuracy": 0.9932944622062078,
+        "macro_precision": 0.9942765655971139,
+        "macro_recall": 0.9935308935175708,
+        "macro_f1": 0.9938974664136687,
+        "weighted_f1": 0.9932910043903782,
+        "per_class": {
+          "High": {
+            "precision": 0.9978474384517576,
+            "recall": 0.99666,
+            "f1": 0.9972533657526228,
+            "support": 100000
+          },
+          "Low": {
+            "precision": 0.9910975581654364,
+            "recall": 0.9965976805527128,
+            "f1": 0.9938400097050175,
+            "support": 258941
+          },
+          "Medium": {
+            "precision": 0.9938847001741477,
+            "recall": 0.987335,
+            "f1": 0.9905990237833662,
+            "support": 200000
+          }
+        },
+        "confusion_matrix": [
+          [
+            99666,
+            0,
+            334
+          ],
+          [
+            0,
+            258060,
+            881
+          ],
+          [
+            215,
+            2318,
+            197467
+          ]
+        ],
+        "macro_roc_auc": 0.9997720731009511,
+        "macro_average_precision": 0.9996348302060033,
+        "micro_average_precision": 0.9996315620758717
+      },
+      "validation": {
+        "accuracy": 0.9844338624338624,
+        "macro_precision": 0.9788086917959115,
+        "macro_recall": 0.9624984668967621,
+        "macro_f1": 0.9704325739668166,
+        "weighted_f1": 0.9843732721462434,
+        "per_class": {
+          "High": {
+            "precision": 0.9665998663994656,
+            "recall": 0.9184385909235163,
+            "f1": 0.9419039869812856,
+            "support": 3151
+          },
+          "Low": {
+            "precision": 0.9853781332571592,
+            "recall": 0.9946835351787774,
+            "f1": 0.9900089686098654,
+            "support": 55488
+          },
+          "Medium": {
+            "precision": 0.9844480757311095,
+            "recall": 0.9743732745879925,
+            "f1": 0.9793847663092986,
+            "support": 35861
+          }
+        },
+        "confusion_matrix": [
+          [
+            2894,
+            0,
+            257
+          ],
+          [
+            0,
+            55193,
+            295
+          ],
+          [
+            100,
+            819,
+            34942
+          ]
+        ],
+        "macro_roc_auc": 0.9974881061315678,
+        "macro_average_precision": 0.9890584898336897,
+        "micro_average_precision": 0.9968392437027933
+      },
+      "fit_seconds": 95.4,
+      "gaps": {
+        "train_minus_val_accuracy": 0.008860599772345323,
+        "train_minus_val_macro_f1": 0.023464892446852126
+      }
+    },
+    "CatBoost": {
+      "best_iteration": 799,
+      "train": {
+        "accuracy": 0.9843292941473251,
+        "macro_precision": 0.9845038373506644,
+        "macro_recall": 0.9818312612075081,
+        "macro_f1": 0.9831466164167347,
+        "weighted_f1": 0.9843046579824881,
+        "per_class": {
+          "High": {
+            "precision": 0.9862732611618199,
+            "recall": 0.97573,
+            "f1": 0.9809733023007977,
+            "support": 100000
+          },
+          "Low": {
+            "precision": 0.9857581681094666,
+            "recall": 0.995168783622524,
+            "f1": 0.9904411227741114,
+            "support": 258941
+          },
+          "Medium": {
+            "precision": 0.9814800827807066,
+            "recall": 0.974595,
+            "f1": 0.9780254241752948,
+            "support": 200000
+          }
+        },
+        "confusion_matrix": [
+          [
+            97573,
+            0,
+            2427
+          ],
+          [
+            0,
+            257690,
+            1251
+          ],
+          [
+            1358,
+            3723,
+            194919
+          ]
+        ],
+        "macro_roc_auc": 0.9983601233158259,
+        "macro_average_precision": 0.9969957043672238,
+        "micro_average_precision": 0.9973674734059249
+      },
+      "validation": {
+        "accuracy": 0.9848783068783069,
+        "macro_precision": 0.9785760758331801,
+        "macro_recall": 0.9629733470455192,
+        "macro_f1": 0.9705727287404362,
+        "weighted_f1": 0.984817747187366,
+        "per_class": {
+          "High": {
+            "precision": 0.9646902065289806,
+            "recall": 0.9190733100602984,
+            "f1": 0.9413294327970095,
+            "support": 3151
+          },
+          "Low": {
+            "precision": 0.9856153626499143,
+            "recall": 0.9952782583621684,
+            "f1": 0.9904232424677188,
+            "support": 55488
+          },
+          "Medium": {
+            "precision": 0.9854226583206451,
+            "recall": 0.9745684727140905,
+            "f1": 0.9799655109565802,
+            "support": 35861
+          }
+        },
+        "confusion_matrix": [
+          [
+            2896,
+            0,
+            255
+          ],
+          [
+            0,
+            55226,
+            262
+          ],
+          [
+            106,
+            806,
+            34949
+          ]
+        ],
+        "macro_roc_auc": 0.9972153079333929,
+        "macro_average_precision": 0.9874798495069278,
+        "micro_average_precision": 0.9965187773380023
+      },
+      "fit_seconds": 44.2,
+      "gaps": {
+        "train_minus_val_accuracy": -0.000549012730981846,
+        "train_minus_val_macro_f1": 0.012573887676298523
+      }
+    }
+  },
+  "candidate_hyperparameters": {
+    "XGBoost": {
+      "learning_rate": 0.05,
+      "max_depth": 6,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "min_child_weight": 5,
+      "gamma": 0.1,
+      "reg_lambda": 2.0,
+      "reg_alpha": 0.1,
+      "objective": "multi:softprob",
+      "random_state": 42,
+      "n_jobs": -1,
+      "tree_method": "hist",
+      "n_estimators_cap": 800,
+      "early_stopping_rounds": 50
+    },
+    "LightGBM": {
+      "learning_rate": 0.05,
+      "num_leaves": 63,
+      "min_child_samples": 40,
+      "subsample": 0.8,
+      "subsample_freq": 1,
+      "colsample_bytree": 0.8,
+      "reg_alpha": 0.1,
+      "reg_lambda": 1.0,
+      "random_state": 42,
+      "n_jobs": -1,
+      "verbose": -1,
+      "n_estimators_cap": 800,
+      "early_stopping_rounds": 50
+    },
+    "CatBoost": {
+      "learning_rate": 0.05,
+      "depth": 6,
+      "l2_leaf_reg": 5,
+      "loss_function": "MultiClass",
+      "random_seed": 42,
+      "verbose": false,
+      "allow_writing_files": false,
+      "iterations_cap": 800,
+      "early_stopping_rounds": 50
+    },
+    "Logistic Regression": {
+      "max_iter": 2000,
+      "C": 1.0,
+      "solver": "lbfgs",
+      "random_state": 42,
+      "n_jobs": -1
+    }
+  },
+  "catboost_native_categorical": {
+    "note": "identical split and imbalance strategy; categorical columns handed to CatBoost untouched so its ordered target statistics replace one-hot encoding",
+    "applies_only_when_no_synthetic_rows": false,
+    "best_iteration": 798,
+    "validation": {
+      "accuracy": 0.9844550264550265,
+      "macro_precision": 0.979593262231026,
+      "macro_recall": 0.9612199273616003,
+      "macro_f1": 0.9701250402981553,
+      "weighted_f1": 0.9843881170454593,
+      "per_class": {
+        "High": {
+          "precision": 0.9690548267743021,
+          "recall": 0.9143129165344335,
+          "f1": 0.9408883082952318,
+          "support": 3151
+        },
+        "Low": {
+          "precision": 0.9852760079241848,
+          "recall": 0.9949178200692042,
+          "f1": 0.9900734404002905,
+          "support": 55488
+        },
+        "Medium": {
+          "precision": 0.9844489519945909,
+          "recall": 0.9744290454811634,
+          "f1": 0.9794133721989433,
+          "support": 35861
+        }
+      },
+      "confusion_matrix": [
+        [
+          2881,
+          0,
+          270
+        ],
+        [
+          0,
+          55206,
+          282
+        ],
+        [
+          92,
+          825,
+          34944
+        ]
+      ],
+      "macro_roc_auc": 0.9970869134188303,
+      "macro_average_precision": 0.986768324854976,
+      "micro_average_precision": 0.9964715625213196
+    },
+    "fit_seconds": 220.1
+  },
+  "cross_validation": {
+    "folds": 5,
+    "rows_used": 150000,
+    "note": "stratified K-fold restricted to the training split; encoding and any resampling are refitted inside every fold; the test split is never involved",
+    "results": {
+      "Logistic Regression": {
+        "macro_f1_mean": 0.7804777876726873,
+        "macro_f1_std": 0.004482814539505009,
+        "macro_f1_folds": [
+          0.7736149795140288,
+          0.7840669891475692,
+          0.778400736973953,
+          0.7840946828552019,
+          0.7822115498726835
+        ],
+        "high_recall_mean": 0.8130703296703297,
+        "high_recall_std": 0.013885227973953694
+      },
+      "XGBoost": {
+        "macro_f1_mean": 0.968096862563413,
+        "macro_f1_std": 0.0019556449503946877,
+        "macro_f1_folds": [
+          0.9646549450041441,
+          0.9689221361043501,
+          0.9694562836367728,
+          0.9684685836269041,
+          0.9689823644448929
+        ],
+        "high_recall_mean": 0.9102331668331669,
+        "high_recall_std": 0.009836915178785995
+      },
+      "LightGBM": {
+        "macro_f1_mean": 0.9691453919842168,
+        "macro_f1_std": 0.0018878481928403818,
+        "macro_f1_folds": [
+          0.9663982252575442,
+          0.9684331386599299,
+          0.9714494953667172,
+          0.9693873550136773,
+          0.9700587456232155
+        ],
+        "high_recall_mean": 0.9118317682317683,
+        "high_recall_std": 0.012160617569844894
+      },
+      "CatBoost": {
+        "macro_f1_mean": 0.9679501447948693,
+        "macro_f1_std": 0.0011672213229186842,
+        "macro_f1_folds": [
+          0.9659665999510039,
+          0.9680368198266794,
+          0.968541891497519,
+          0.968211667711781,
+          0.968993744987363
+        ],
+        "high_recall_mean": 0.9100323676323677,
+        "high_recall_std": 0.011032418595467127
+      }
+    }
+  },
+  "selection": {
+    "rule": "Rank candidates by validation Macro F1 rounded to four decimals; break ties on validation High-class recall and then on the smaller absolute train-validation Macro F1 gap. Cross-validation standard deviations are reported alongside so a reader can judge whether the winning margin exceeds run-to-run noise.",
+    "ranking": [
+      {
+        "model": "CatBoost",
+        "validation_macro_f1": 0.9705727287404362,
+        "validation_accuracy": 0.9848783068783069,
+        "validation_high_recall": 0.9190733100602984,
+        "validation_high_f1": 0.9413294327970095,
+        "train_minus_val_macro_f1": 0.012573887676298523,
+        "cv_macro_f1_mean": 0.9679501447948693,
+        "cv_macro_f1_std": 0.0011672213229186842
+      },
+      {
+        "model": "LightGBM",
+        "validation_macro_f1": 0.9704325739668166,
+        "validation_accuracy": 0.9844338624338624,
+        "validation_high_recall": 0.9184385909235163,
+        "validation_high_f1": 0.9419039869812856,
+        "train_minus_val_macro_f1": 0.023464892446852126,
+        "cv_macro_f1_mean": 0.9691453919842168,
+        "cv_macro_f1_std": 0.0018878481928403818
+      },
+      {
+        "model": "XGBoost",
+        "validation_macro_f1": 0.9703310989582388,
+        "validation_accuracy": 0.9847724867724867,
+        "validation_high_recall": 0.9155823548079974,
+        "validation_high_f1": 0.9408120006522094,
+        "train_minus_val_macro_f1": 0.018292442002895704,
+        "cv_macro_f1_mean": 0.968096862563413,
+        "cv_macro_f1_std": 0.0019556449503946877
+      },
+      {
+        "model": "Logistic Regression",
+        "validation_macro_f1": 0.779627654183679,
+        "validation_accuracy": 0.8601904761904762,
+        "validation_high_recall": 0.8248175182481752,
+        "validation_high_f1": 0.6168268660258692,
+        "train_minus_val_macro_f1": 0.07625797656564282,
+        "cv_macro_f1_mean": 0.7804777876726873,
+        "cv_macro_f1_std": 0.004482814539505009
+      }
+    ],
+    "final_model": "CatBoost",
+    "margin_over_runner_up": 0.00014015477361961626
+  },
+  "high_class_threshold_study": {
+    "note": "computed on the validation split only; the deployed model keeps the default argmax rule, so this table documents the operating points available if a farm wanted to trade precision for recall",
+    "rows": [
+      {
+        "threshold": 0.2,
+        "high_precision": 0.9185576624184022,
+        "high_recall": 0.9377975245953666,
+        "high_f1": 0.9280778894472361,
+        "macro_f1": 0.9656806750512632,
+        "accuracy": 0.9838518518518519
+      },
+      {
+        "threshold": 0.3,
+        "high_precision": 0.9482702877465244,
+        "high_recall": 0.9308156140907649,
+        "high_f1": 0.9394618834080718,
+        "macro_f1": 0.9698621335040701,
+        "accuracy": 0.9846984126984127
+      },
+      {
+        "threshold": 0.4,
+        "high_precision": 0.9594995060915377,
+        "high_recall": 0.9247857822913361,
+        "high_f1": 0.9418228829993536,
+        "macro_f1": 0.9707386091791436,
+        "accuracy": 0.9848888888888889
+      },
+      {
+        "threshold": 0.5,
+        "high_precision": 0.9646902065289806,
+        "high_recall": 0.9190733100602984,
+        "high_f1": 0.9413294327970095,
+        "macro_f1": 0.9705727287404362,
+        "accuracy": 0.9848783068783069
+      },
+      {
+        "threshold": 0.6,
+        "high_precision": 0.9692775151924375,
+        "high_recall": 0.9111393208505236,
+        "high_f1": 0.9393096679208245,
+        "macro_f1": 0.9698565098514212,
+        "accuracy": 0.9847724867724867
+      },
+      {
+        "threshold": 0.7,
+        "high_precision": 0.9730191256830601,
+        "high_recall": 0.9041574103459219,
+        "high_f1": 0.9373252179634808,
+        "macro_f1": 0.9691515423371665,
+        "accuracy": 0.9846666666666667
+      },
+      {
+        "threshold": 0.8,
+        "high_precision": 0.9794925269377824,
+        "high_recall": 0.8943192637258013,
+        "high_f1": 0.9349701393497014,
+        "macro_f1": 0.9683200279797081,
+        "accuracy": 0.9845502645502645
+      }
+    ]
+  },
+  "final_test": {
+    "accuracy": 0.9855026455026455,
+    "macro_precision": 0.9776786762812267,
+    "macro_recall": 0.9644000467257197,
+    "macro_f1": 0.970892869269988,
+    "weighted_f1": 0.9854502468071669,
+    "per_class": {
+      "High": {
+        "precision": 0.9606481481481481,
+        "recall": 0.9219295461758172,
+        "f1": 0.9408906882591093,
+        "support": 3151
+      },
+      "Low": {
+        "precision": 0.9867769776459446,
+        "recall": 0.9952241926182238,
+        "f1": 0.9909825842747036,
+        "support": 55488
+      },
+      "Medium": {
+        "precision": 0.9856109030495874,
+        "recall": 0.9760464013831182,
+        "f1": 0.980805335276151,
+        "support": 35861
+      }
+    },
+    "confusion_matrix": [
+      [
+        2905,
+        0,
+        246
+      ],
+      [
+        0,
+        55223,
+        265
+      ],
+      [
+        119,
+        740,
+        35002
+      ]
+    ],
+    "macro_roc_auc": 0.9972776313093084,
+    "macro_average_precision": 0.9869544584430446,
+    "micro_average_precision": 0.9965425441419684
+  },
+  "test_set_classification_report": "              precision    recall  f1-score   support\n\n        High     0.9606    0.9219    0.9409      3151\n         Low     0.9868    0.9952    0.9910     55488\n      Medium     0.9856    0.9760    0.9808     35861\n\n    accuracy                         0.9855     94500\n   macro avg     0.9777    0.9644    0.9709     94500\nweighted avg     0.9855    0.9855    0.9855     94500\n",
+  "all_candidates_test": {
+    "Logistic Regression": {
+      "accuracy": 0.8630582010582011,
+      "macro_precision": 0.7503228749603211,
+      "macro_recall": 0.8468045769063641,
+      "macro_f1": 0.7847949969678654,
+      "weighted_f1": 0.8656310043307831,
+      "per_class": {
+        "High": {
+          "precision": 0.5022953328232593,
+          "recall": 0.8333862265947318,
+          "f1": 0.6268051080081155,
+          "support": 3151
+        },
+        "Low": {
+          "precision": 0.9188450461357841,
+          "recall": 0.9026996828143022,
+          "f1": 0.9107008118108018,
+          "support": 55488
+        },
+        "Medium": {
+          "precision": 0.8298282459219195,
+          "recall": 0.8043278213100583,
+          "f1": 0.8168790710846786,
+          "support": 35861
+        }
+      },
+      "confusion_matrix": [
+        [
+          2626,
+          9,
+          516
+        ],
+        [
+          0,
+          50089,
+          5399
+        ],
+        [
+          2602,
+          4415,
+          28844
+        ]
+      ],
+      "macro_roc_auc": 0.9618364707854309,
+      "macro_average_precision": 0.8755226148243541,
+      "micro_average_precision": 0.9439088666336102
+    },
+    "XGBoost": {
+      "accuracy": 0.9854814814814815,
+      "macro_precision": 0.9779470395702167,
+      "macro_recall": 0.9639856274003181,
+      "macro_f1": 0.9708043236937942,
+      "weighted_f1": 0.9854270348638421,
+      "per_class": {
+        "High": {
+          "precision": 0.9615512098110706,
+          "recall": 0.9206601079022533,
+          "f1": 0.9406614785992218,
+          "support": 3151
+        },
+        "Low": {
+          "precision": 0.9867071645524388,
+          "recall": 0.9952782583621684,
+          "f1": 0.990974178614366,
+          "support": 55488
+        },
+        "Medium": {
+          "precision": 0.9855827443471404,
+          "recall": 0.9760185159365328,
+          "f1": 0.980777313867795,
+          "support": 35861
+        }
+      },
+      "confusion_matrix": [
+        [
+          2901,
+          0,
+          250
+        ],
+        [
+          0,
+          55226,
+          262
+        ],
+        [
+          116,
+          744,
+          35001
+        ]
+      ],
+      "macro_roc_auc": 0.9976356700380039,
+      "macro_average_precision": 0.9889165136163922,
+      "micro_average_precision": 0.997043353190526
+    },
+    "LightGBM": {
+      "accuracy": 0.9850582010582011,
+      "macro_precision": 0.9772171780238841,
+      "macro_recall": 0.963805660295174,
+      "macro_f1": 0.9703617750852384,
+      "weighted_f1": 0.9850054871343981,
+      "per_class": {
+        "High": {
+          "precision": 0.9602911978821972,
+          "recall": 0.9209774674706442,
+          "f1": 0.9402235541875911,
+          "support": 3151
+        },
+        "Low": {
+          "precision": 0.9865591878317753,
+          "recall": 0.9947556228373703,
+          "f1": 0.9906404515555874,
+          "support": 55488
+        },
+        "Medium": {
+          "precision": 0.9848011483576796,
+          "recall": 0.9756838905775076,
+          "f1": 0.9802213195125368,
+          "support": 35861
+        }
+      },
+      "confusion_matrix": [
+        [
+          2902,
+          0,
+          249
+        ],
+        [
+          0,
+          55197,
+          291
+        ],
+        [
+          120,
+          752,
+          34989
+        ]
+      ],
+      "macro_roc_auc": 0.997622709697731,
+      "macro_average_precision": 0.9891826848099295,
+      "micro_average_precision": 0.9969961815234635
+    },
+    "CatBoost": {
+      "accuracy": 0.9855026455026455,
+      "macro_precision": 0.9776786762812267,
+      "macro_recall": 0.9644000467257197,
+      "macro_f1": 0.970892869269988,
+      "weighted_f1": 0.9854502468071669,
+      "per_class": {
+        "High": {
+          "precision": 0.9606481481481481,
+          "recall": 0.9219295461758172,
+          "f1": 0.9408906882591093,
+          "support": 3151
+        },
+        "Low": {
+          "precision": 0.9867769776459446,
+          "recall": 0.9952241926182238,
+          "f1": 0.9909825842747036,
+          "support": 55488
+        },
+        "Medium": {
+          "precision": 0.9856109030495874,
+          "recall": 0.9760464013831182,
+          "f1": 0.980805335276151,
+          "support": 35861
+        }
+      },
+      "confusion_matrix": [
+        [
+          2905,
+          0,
+          246
+        ],
+        [
+          0,
+          55223,
+          265
+        ],
+        [
+          119,
+          740,
+          35002
+        ]
+      ],
+      "macro_roc_auc": 0.9972776313093084,
+      "macro_average_precision": 0.9869544584430446,
+      "micro_average_precision": 0.9965425441419684
+    }
+  },
+  "overfitting": {
+    "final_model": "CatBoost",
+    "train": {
+      "accuracy": 0.9843292941473251,
+      "macro_f1": 0.9831466164167347
+    },
+    "validation": {
+      "accuracy": 0.9848783068783069,
+      "macro_f1": 0.9705727287404362
+    },
+    "test": {
+      "accuracy": 0.9855026455026455,
+      "macro_f1": 0.970892869269988
+    },
+    "gaps": {
+      "train_minus_val_accuracy": -0.000549012730981846,
+      "train_minus_test_accuracy": -0.0011733513553204844,
+      "val_minus_test_accuracy": -0.0006243386243386384,
+      "train_minus_val_macro_f1": 0.012573887676298523,
+      "train_minus_test_macro_f1": 0.012253747146746763,
+      "val_minus_test_macro_f1": -0.0003201405295517601
+    },
+    "controls_applied": [
+      "early stopping against an inner split carved out of the training data, keeping validation free for selection",
+      "shrinkage learning rate of 0.05",
+      "row and column subsampling",
+      "L1 and L2 penalties plus minimum-child-weight constraints",
+      "bounded tree depth or leaf count",
+      "5-fold stratified cross-validation to measure fold-to-fold variance"
+    ]
+  },
+  "feature_importance": {
+    "Soil_Moisture": 0.23509938777323763,
+    "Crop_Growth_Stage_Harvest": 0.1328421378341398,
+    "Crop_Growth_Stage_Sowing": 0.11629250744787856,
+    "Mulching_Used_Yes": 0.105195210636059,
+    "Temperature_C": 0.10191723711361164,
+    "Wind_Speed_kmh": 0.09389421043197956,
+    "Rainfall_mm": 0.07070940491892072,
+    "Crop_Growth_Stage_Vegetative": 0.013698277740860076,
+    "Humidity": 0.012429657994628697,
+    "Water_Source_River": 0.010172122394111931,
+    "Previous_Irrigation_mm": 0.009757548588561796,
+    "Water_Source_Reservoir": 0.008807476278481465,
+    "Irrigation_Type_Sprinkler": 0.008182206752967342,
+    "Irrigation_Type_Rainfed": 0.007825010381688705,
+    "Season_Rabi": 0.007641064989480877,
+    "Crop_Type_Sugarcane": 0.005548929452116905,
+    "Soil_Type_Sandy": 0.005430856812805578,
+    "Water_Source_Rainwater": 0.005298737583178795,
+    "Electrical_Conductivity": 0.0049086004734056376,
+    "Soil_Type_Silt": 0.004772652079910037,
+    "Soil_Type_Loamy": 0.004194426093749965,
+    "Crop_Type_Maize": 0.003956659171910377,
+    "Region_West": 0.003706968224955946,
+    "Season_Zaid": 0.0036623912083732606,
+    "Soil_pH": 0.0034974832195922585,
+    "Irrigation_Type_Drip": 0.0031944674594583436,
+    "Crop_Type_Rice": 0.002865838236968934,
+    "Region_North": 0.0027443797742428776,
+    "Field_Area_hectare": 0.0025521782370429174,
+    "Sunlight_Hours": 0.002481525874001825,
+    "Organic_Carbon": 0.0015277585516278347,
+    "Crop_Type_Wheat": 0.0014715130279770471,
+    "Crop_Type_Potato": 0.0014168825964332701,
+    "Region_East": 0.0011668322905983648,
+    "Region_South": 0.0011374583550420767
+  },
+  "artifacts": {
+    "irrigation_model.pkl": "sklearn Pipeline holding the training-fitted ColumnTransformer and the selected classifier",
+    "model_schema.json": "raw feature order, categorical levels, numeric ranges and class mapping used by the API and the form",
+    "model_metrics.json": "compact metrics file consumed by the Flask application",
+    "experiments/results.json": "the complete experiment record behind every number in the documentation"
+  },
+  "environment": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.7.2",
+    "xgboost": "3.4.1",
+    "lightgbm": "4.7.0",
+    "catboost": "1.2.10",
+    "imbalanced-learn": "0.14.0",
+    "joblib": "1.5.2"
+  }
+}

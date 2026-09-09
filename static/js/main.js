@@ -1,10 +1,9 @@
 /**
- * Precision Multi-Class Irrigation Intelligence — Main Application Controller (2026)
- * Pure Vanilla JavaScript (ES6+) for Flask + Jinja2 UI
- * Zero Emojis | Verified XGBoost Model Alignment | WCAG Compliant
+ * Precision Multi-Class Irrigation Intelligence - front-end controller.
+ * The feature schema and every metric are fetched from the Flask API so the
+ * interface can never drift from the recorded experiment.
  */
 
-// --- Global App State ---
 const AppState = {
   theme: 'light',
   currentStep: 1,
@@ -15,12 +14,21 @@ const AppState = {
   historyFiltered: [],
   historyPage: 1,
   historyPageSize: 8,
-  latestPrediction: null
+  latestPrediction: null,
+  schema: null,
+  modelName: 'the deployment model'
 };
 
-// ==========================================================================
-// 1. Theme Management (Light / Dark Mode with Persistence & No Flash)
-// ==========================================================================
+function fieldsInStep(step) {
+  const panel = document.getElementById(`step-panel-${step}`);
+  if (!panel) return [];
+  return Array.from(panel.querySelectorAll('[name]'));
+}
+
+function readField(el) {
+  if (el.type === 'checkbox') return el.checked ? 'Yes' : 'No';
+  return el.value;
+}
 
 function initTheme() {
   const savedTheme = localStorage.getItem('precision_irrigation_theme');
@@ -34,7 +42,6 @@ function initTheme() {
 
   applyTheme(AppState.theme);
 
-  // Listen for system changes if user hasn't explicitly set localStorage
   if (window.matchMedia) {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
       if (!localStorage.getItem('precision_irrigation_theme')) {
@@ -60,10 +67,6 @@ function toggleTheme() {
   showToast(`Switched to ${AppState.theme} mode`, 'info');
 }
 
-// ==========================================================================
-// 2. Navigation & Mobile Drawer
-// ==========================================================================
-
 function toggleMobileNav() {
   const drawer = document.getElementById('mobile-drawer');
   const toggleBtn = document.querySelector('.mobile-nav-toggle');
@@ -79,15 +82,10 @@ function toggleMobileNav() {
   }
 }
 
-// ==========================================================================
-// 3. Toast Notification System
-// ==========================================================================
-
 function showToast(message, type = 'info') {
   const toast = document.getElementById('toast');
   if (!toast) return;
 
-  // Clear existing timer
   if (toast._timer) clearTimeout(toast._timer);
 
   let iconSvg = '';
@@ -106,10 +104,6 @@ function showToast(message, type = 'info') {
     toast.className = '';
   }, 3500);
 }
-
-// ==========================================================================
-// 4. Utility Functions (Formatting & Helpers)
-// ==========================================================================
 
 function badgeClass(level) {
   const val = (level || '').toLowerCase().trim();
@@ -132,22 +126,12 @@ function fmtDate(ts) {
   });
 }
 
-function formatPercent(val, decimals = 1) {
-  if (val === null || val === undefined || isNaN(val)) return '—';
-  return `${(Number(val) * 100).toFixed(decimals)}%`;
-}
-
-// ==========================================================================
-// 5. Guided Stepper Form Controller (Home Page)
-// ==========================================================================
-
 function initStepper() {
   const stepPanels = document.querySelectorAll('.step-panel');
   if (stepPanels.length === 0) return;
 
   goToStep(1);
 
-  // Setup range sliders live output
   document.querySelectorAll('input[type="range"]').forEach((slider) => {
     const valBadge = document.getElementById(`${slider.id}_val`);
     if (valBadge) {
@@ -159,7 +143,6 @@ function initStepper() {
     }
   });
 
-  // Setup change listeners for summary
   const formInputs = document.querySelectorAll('#prediction-form input, #prediction-form select');
   formInputs.forEach((input) => {
     input.addEventListener('change', updateReviewSummary);
@@ -170,21 +153,18 @@ function initStepper() {
 function goToStep(stepNumber) {
   if (stepNumber < 1 || stepNumber > AppState.totalSteps) return;
 
-  // If moving forward, validate previous step
   if (stepNumber > AppState.currentStep) {
     if (!validateStep(AppState.currentStep)) return;
   }
 
   AppState.currentStep = stepNumber;
 
-  // Update panels
   document.querySelectorAll('.step-panel').forEach((panel) => {
     panel.classList.remove('active');
   });
   const currentPanel = document.getElementById(`step-panel-${stepNumber}`);
   if (currentPanel) currentPanel.classList.add('active');
 
-  // Update stepper header buttons & progress bar
   document.querySelectorAll('.stepper-step').forEach((stepBtn) => {
     const stepIdx = parseInt(stepBtn.getAttribute('data-step'), 10);
     stepBtn.classList.remove('active', 'completed');
@@ -216,170 +196,116 @@ function prevStep() {
 }
 
 function validateStep(step) {
-  if (step === 1) {
-    const cropType = document.getElementById('crop_type');
-    const cropStage = document.getElementById('crop_growth_stage');
-    const fieldArea = document.getElementById('field_area_hectare');
+  for (const el of fieldsInStep(step)) {
+    if (el.type === 'checkbox') continue;
 
-    if (!cropType || !cropType.value) {
-      showToast('Please select a Crop Type.', 'error');
-      cropType?.focus();
+    if (el.required && el.value === '') {
+      showToast(`Please provide a value for ${labelFor(el)}.`, 'error');
+      el.focus();
       return false;
     }
-    if (!cropStage || !cropStage.value) {
-      showToast('Please select a Crop Growth Stage.', 'error');
-      cropStage?.focus();
-      return false;
-    }
-    if (!fieldArea || fieldArea.value === '' || Number(fieldArea.value) <= 0) {
-      showToast('Please enter a valid Field Area in hectares.', 'error');
-      fieldArea?.focus();
-      return false;
-    }
-  } else if (step === 2) {
-    const temp = document.getElementById('temperature_c');
-    const humidity = document.getElementById('humidity');
-    const rainfall = document.getElementById('rainfall_mm');
 
-    if (!temp || temp.value === '') {
-      showToast('Please enter Temperature (°C).', 'error');
-      temp?.focus();
-      return false;
-    }
-    if (!humidity || humidity.value === '') {
-      showToast('Please enter Humidity (%).', 'error');
-      humidity?.focus();
-      return false;
-    }
-    if (!rainfall || rainfall.value === '') {
-      showToast('Please enter Rainfall (mm).', 'error');
-      rainfall?.focus();
-      return false;
-    }
-  } else if (step === 3) {
-    const waterSource = document.getElementById('water_source');
-    const soilPh = document.getElementById('soil_ph');
-
-    if (!waterSource || !waterSource.value) {
-      showToast('Please select a Water Source.', 'error');
-      waterSource?.focus();
-      return false;
-    }
-    if (!soilPh || soilPh.value === '') {
-      showToast('Please enter Soil pH level.', 'error');
-      soilPh?.focus();
-      return false;
+    if (el.type === 'number' || el.type === 'range') {
+      const value = Number(el.value);
+      const min = Number(el.dataset.min);
+      const max = Number(el.dataset.max);
+      if (!Number.isFinite(value)) {
+        showToast(`${labelFor(el)} must be a number.`, 'error');
+        el.focus();
+        return false;
+      }
+      if (Number.isFinite(min) && Number.isFinite(max) && (value < min || value > max)) {
+        showToast(
+          `${labelFor(el)} is outside the range the model was trained on (${min} to ${max}).`,
+          'error'
+        );
+        el.focus();
+        return false;
+      }
     }
   }
   return true;
 }
 
-function updateReviewSummary() {
-  const getVal = (id, fallback = '—') => {
-    const el = document.getElementById(id);
-    if (!el) return fallback;
-    if (el.type === 'checkbox') return el.checked ? 'Yes (Active)' : 'No (None)';
-    return el.value || fallback;
-  };
-
-  const setSummary = (key, text) => {
-    const el = document.getElementById(`rev-${key}`);
-    if (el) el.textContent = text;
-  };
-
-  setSummary('crop', `${getVal('crop_type')} (${getVal('crop_growth_stage')})`);
-  setSummary('area', `${getVal('field_area_hectare')} ha`);
-  setSummary('temp', `${getVal('temperature_c')} °C`);
-  setSummary('humidity', `${getVal('humidity')} %`);
-  setSummary('rain', `${getVal('rainfall_mm')} mm`);
-  setSummary('wind', `${getVal('windspeed_kmph')} km/h`);
-  setSummary('sun', `${getVal('sunlight_hours')} hrs`);
-  setSummary('moisture', `${getVal('soil_moisture')} %`);
-  setSummary('ph', `${getVal('soil_ph')}`);
-  setSummary('carbon', `${getVal('organic_carbon')} %`);
-  setSummary('source', `${getVal('water_source')}`);
-  setSummary('mulching', getVal('mulching_used'));
+function labelFor(el) {
+  const label = document.querySelector(`label[for="${el.id}"] span`);
+  return label ? label.textContent.trim() : el.name.replace(/_/g, ' ');
 }
 
-// Quick Scenario Presets
-const FieldScenarios = {
+function updateReviewSummary() {
+  const grid = document.getElementById('review-grid');
+  if (!grid) return;
+
+  const items = [];
+  for (let step = 1; step <= 3; step += 1) {
+    fieldsInStep(step).forEach((el) => {
+      items.push(`
+        <div class="review-item">
+          <span class="review-key">${labelFor(el)}</span>
+          <span class="review-val">${readField(el) || '-'}</span>
+        </div>
+      `);
+    });
+  }
+  grid.innerHTML = items.join('');
+}
+
+const SCENARIO_SHAPES = {
   arid: {
-    crop_type: 'Tomato',
-    crop_growth_stage: 'Flowering',
-    field_area_hectare: 2.5,
-    temperature_c: 37.5,
-    humidity: 28,
-    rainfall_mm: 0,
-    windspeed_kmph: 24,
-    sunlight_hours: 11,
-    soil_moisture: 18,
-    soil_ph: 7.4,
-    organic_carbon: 0.9,
-    water_source: 'Borewell',
-    previous_irrigation_mm: 0,
-    mulching_used: false
+    numeric: {
+      Soil_Moisture: 'p25', Rainfall_mm: 'p25', Humidity: 'p25', Organic_Carbon: 'median',
+      Temperature_C: 'p75', Wind_Speed_kmh: 'p75', Sunlight_Hours: 'p75',
+      Soil_pH: 'median', Electrical_Conductivity: 'median',
+      Field_Area_hectare: 'median', Previous_Irrigation_mm: 'median'
+    },
+    categorical: { Crop_Growth_Stage: 'Flowering', Soil_Type: 'Sandy', Season: 'Zaid' },
+    mulching: false
   },
   postRain: {
-    crop_type: 'Rice',
-    crop_growth_stage: 'Vegetative',
-    field_area_hectare: 4.0,
-    temperature_c: 27.0,
-    humidity: 82,
-    rainfall_mm: 35.0,
-    windspeed_kmph: 12,
-    sunlight_hours: 6.5,
-    soil_moisture: 78,
-    soil_ph: 6.5,
-    organic_carbon: 2.0,
-    water_source: 'Canal',
-    previous_irrigation_mm: 20,
-    mulching_used: true
+    numeric: {
+      Soil_Moisture: 'p75', Rainfall_mm: 'p75', Humidity: 'p75', Organic_Carbon: 'median',
+      Temperature_C: 'p25', Wind_Speed_kmh: 'p25', Sunlight_Hours: 'p25',
+      Soil_pH: 'median', Electrical_Conductivity: 'median',
+      Field_Area_hectare: 'median', Previous_Irrigation_mm: 'median'
+    },
+    categorical: { Crop_Growth_Stage: 'Harvest', Soil_Type: 'Clay', Season: 'Kharif' },
+    mulching: true
   },
-  moderate: {
-    crop_type: 'Wheat',
-    crop_growth_stage: 'Flowering',
-    field_area_hectare: 1.5,
-    temperature_c: 24.5,
-    humidity: 52,
-    rainfall_mm: 4.0,
-    windspeed_kmph: 11,
-    sunlight_hours: 8.5,
-    soil_moisture: 42,
-    soil_ph: 6.8,
-    organic_carbon: 1.4,
-    water_source: 'Drip System',
-    previous_irrigation_mm: 12,
-    mulching_used: true
-  }
+  moderate: { numeric: {}, categorical: {}, mulching: false }
 };
 
 function loadScenario(scenarioKey) {
-  const scenario = FieldScenarios[scenarioKey];
-  if (!scenario) return;
+  const shape = SCENARIO_SHAPES[scenarioKey];
+  const schema = AppState.schema;
+  if (!shape || !schema) return;
 
-  Object.entries(scenario).forEach(([key, val]) => {
-    const el = document.getElementById(key);
+  Object.entries(schema.numeric_ranges).forEach(([column, stats]) => {
+    const el = document.getElementById(column);
     if (!el) return;
-    if (el.type === 'checkbox') {
-      el.checked = Boolean(val);
-    } else {
-      el.value = val;
-    }
-    const valBadge = document.getElementById(`${key}_val`);
-    if (valBadge) valBadge.textContent = val;
+    const statName = shape.numeric[column] || 'median';
+    const value = stats[statName];
+    el.value = Number(value).toFixed(2);
+    const badge = document.getElementById(`${column}_val`);
+    if (badge) badge.textContent = Number(value).toFixed(1);
   });
 
+  Object.keys(schema.categorical_levels).forEach((column) => {
+    const el = document.getElementById(column);
+    if (!el || el.tagName !== 'SELECT') return;
+    const wanted = shape.categorical[column];
+    const levels = schema.categorical_levels[column];
+    el.value = wanted && levels.includes(wanted) ? wanted : levels[0];
+  });
+
+  const mulching = document.getElementById('Mulching_Used');
+  if (mulching) mulching.checked = Boolean(shape.mulching);
+
   updateReviewSummary();
-  showToast(`Loaded ${scenarioKey.toUpperCase()} field parameters`, 'info');
+  showToast('Loaded field parameters drawn from the training distribution', 'info');
   goToStep(4);
 }
 
-// ==========================================================================
-// 6. Prediction API Execution & Result Dashboard
-// ==========================================================================
-
 function submitForm() {
-  // Validate all steps
   for (let s = 1; s <= 3; s++) {
     if (!validateStep(s)) {
       goToStep(s);
@@ -398,26 +324,17 @@ function submitForm() {
 
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = `<div class="spinner"></div><span>Running XGBoost Inference...</span>`;
+    btn.innerHTML = `<div class="spinner"></div><span>Running ${AppState.modelName} inference...</span>`;
   }
 
-  const payload = {
-    model: 'xgboost',
-    crop_type: document.getElementById('crop_type')?.value || '',
-    crop_growth_stage: document.getElementById('crop_growth_stage')?.value || '',
-    field_area_hectare: parseFloat(document.getElementById('field_area_hectare')?.value || 1),
-    temperature_c: parseFloat(document.getElementById('temperature_c')?.value || 25),
-    humidity: parseFloat(document.getElementById('humidity')?.value || 60),
-    rainfall_mm: parseFloat(document.getElementById('rainfall_mm')?.value || 0),
-    windspeed_kmph: parseFloat(document.getElementById('windspeed_kmph')?.value || 10),
-    sunlight_hours: parseFloat(document.getElementById('sunlight_hours')?.value || 8),
-    soil_moisture: parseFloat(document.getElementById('soil_moisture')?.value || 45),
-    soil_ph: parseFloat(document.getElementById('soil_ph')?.value || 6.5),
-    organic_carbon: parseFloat(document.getElementById('organic_carbon')?.value || 1.5),
-    water_source: document.getElementById('water_source')?.value || '',
-    previous_irrigation_mm: parseFloat(document.getElementById('previous_irrigation_mm')?.value || 0),
-    mulching_used: Boolean(document.getElementById('mulching_used')?.checked)
-  };
+  const payload = {};
+  for (let step = 1; step <= 3; step += 1) {
+    fieldsInStep(step).forEach((el) => {
+      payload[el.name] = el.type === 'number' || el.type === 'range'
+        ? Number(el.value)
+        : readField(el);
+    });
+  }
 
   fetch('/api/predict', {
     method: 'POST',
@@ -429,18 +346,21 @@ function submitForm() {
       if (loadingState) loadingState.classList.remove('visible');
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"></path></svg><span>Calculate Irrigation Requirement</span>`;
+        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"></path></svg><span>Run ${AppState.modelName} inference</span>`;
       }
 
       if (data.error) {
-        showToast(data.error, 'error');
+        const detail = data.invalid_fields
+          ? `${data.error} ${Object.keys(data.invalid_fields).join(', ')}`
+          : data.error;
+        showToast(detail, 'error');
         if (emptyState) emptyState.style.display = 'flex';
         return;
       }
 
       AppState.latestPrediction = data;
       renderPredictionResult(data);
-      showToast(`XGBoost Inference Complete: ${data.irrigation_required} Need`, 'success');
+      showToast(`${data.model_used}: ${data.irrigation_required} irrigation need`, 'success');
     })
     .catch((err) => {
       console.error('Prediction API Error:', err);
@@ -448,7 +368,7 @@ function submitForm() {
       if (emptyState) emptyState.style.display = 'flex';
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"></path></svg><span>Calculate Irrigation Requirement</span>`;
+        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"></path></svg><span>Run ${AppState.modelName} inference</span>`;
       }
       showToast('Inference request failed. Please check server connection.', 'error');
     });
@@ -460,14 +380,12 @@ function renderPredictionResult(data) {
 
   const level = (data.irrigation_required || 'None').trim();
 
-  // 1. Badge Class & Label
   const badgeEl = document.getElementById('res-badge');
   if (badgeEl) {
     badgeEl.className = badgeClass(level);
     badgeEl.textContent = `${level} IRRIGATION NEED`;
   }
 
-  // 2. Confidence Metric
   const confEl = document.getElementById('res-confidence');
   if (confEl) {
     confEl.textContent = data.confidence !== undefined && data.confidence !== null
@@ -475,26 +393,20 @@ function renderPredictionResult(data) {
       : '—';
   }
 
-  // 3. Recommended Water Volume
-  const waterEl = document.getElementById('res-water');
-  if (waterEl) {
-    if (data.water_recommendation_mm !== null && data.water_recommendation_mm !== undefined) {
-      waterEl.textContent = `${data.water_recommendation_mm} mm`;
-    } else {
-      waterEl.textContent = 'Standard Dosage';
-    }
+  const highProbEl = document.getElementById('res-high-prob');
+  if (highProbEl) {
+    const highProb = data.class_probabilities ? data.class_probabilities.High : undefined;
+    highProbEl.textContent = Number.isFinite(highProb) ? `${(highProb * 100).toFixed(1)}%` : '\u2014';
   }
 
-  // 4. Multi-class Probabilities Breakdown & Dynamic Chart
   renderClassProbabilities(data.class_probabilities || {});
 
-  // 5. Reasoning list
   const reasonsList = document.getElementById('res-reasons');
   if (reasonsList) {
     reasonsList.innerHTML = '';
     const reasons = Array.isArray(data.reasoning) && data.reasoning.length > 0
       ? data.reasoning
-      : ['Predicted with XGBoost multi-class decision boundaries on field parameters.'];
+      : [`${data.model_used} assigned this field to the ${level} irrigation-need class.`];
 
     reasons.forEach((reason) => {
       const li = document.createElement('li');
@@ -504,10 +416,8 @@ function renderPredictionResult(data) {
     });
   }
 
-  // 6. Feature Importance Drivers (from backend)
   renderFeatureImportances(data.feature_importances);
 
-  // 7. Meta Time & Engine
   const timeEl = document.getElementById('res-time');
   if (timeEl) {
     timeEl.textContent = fmtDate(data.timestamp);
@@ -517,7 +427,6 @@ function renderPredictionResult(data) {
 }
 
 function renderClassProbabilities(probabilities) {
-  // Probabilities keys: High, Low, Medium
   const lowPct = probabilities['Low'] !== undefined ? probabilities['Low'] * 100 : 0;
   const medPct = probabilities['Medium'] !== undefined ? probabilities['Medium'] * 100 : 0;
   const highPct = probabilities['High'] !== undefined ? probabilities['High'] * 100 : 0;
@@ -543,7 +452,7 @@ function renderFeatureImportances(importances) {
   if (!importances || Object.keys(importances).length === 0) {
     fiContainer.innerHTML = `
       <div style="font-size: 0.8rem; color: var(--text-muted); padding: 0.5rem 0;">
-        Primary decision weights derived from trained XGBoost model trees.
+        Feature importances are unavailable for the loaded model.
       </div>
     `;
     return;
@@ -576,7 +485,6 @@ function resetForm() {
   const form = document.getElementById('prediction-form');
   if (form) form.reset();
 
-  // Reset range slider displays
   document.querySelectorAll('input[type="range"]').forEach((slider) => {
     const valBadge = document.getElementById(`${slider.id}_val`);
     if (valBadge) valBadge.textContent = slider.value;
@@ -591,17 +499,12 @@ function resetForm() {
   showToast('Prediction form reset', 'info');
 }
 
-// ==========================================================================
-// 7. Prediction History & Audit Trail (/history)
-// ==========================================================================
-
 function initHistoryPage() {
   const historyContent = document.getElementById('history-content');
   if (!historyContent) return;
 
   loadHistory();
 
-  // Search & Filter listeners
   const searchInput = document.getElementById('history-search');
   const cropFilter = document.getElementById('history-crop-filter');
   const urgencyFilter = document.getElementById('history-urgency-filter');
@@ -618,7 +521,6 @@ function initHistoryPage() {
     });
   }
 
-  // Setup auto refresh timer
   setupAutoRefresh();
 }
 
@@ -675,7 +577,6 @@ function updateHistoryStatistics(predictions) {
     return;
   }
 
-  // Average confidence
   const confValues = predictions
     .map((p) => Number(p.confidence))
     .filter((c) => Number.isFinite(c));
@@ -689,7 +590,6 @@ function updateHistoryStatistics(predictions) {
     }
   }
 
-  // Most frequent crop
   const cropCounts = {};
   const needCounts = {};
 
@@ -771,7 +671,6 @@ function renderHistoryTable() {
     return;
   }
 
-  // Calculate slice for current page
   const total = AppState.historyFiltered.length;
   const startIdx = (AppState.historyPage - 1) * AppState.historyPageSize;
   const pageItems = AppState.historyFiltered.slice(startIdx, startIdx + AppState.historyPageSize);
@@ -779,7 +678,6 @@ function renderHistoryTable() {
   let rowsHtml = '';
   pageItems.forEach((p) => {
     const level = (p.irrigation_required || 'None').toLowerCase();
-    const water = Number(p.water_recommendation_mm);
     const conf = Number(p.confidence);
 
     rowsHtml += `
@@ -804,11 +702,6 @@ function renderHistoryTable() {
           </span>
         </td>
         <td>
-          <div style="font-weight: 700; color: ${Number.isFinite(water) && water > 0 ? 'var(--brand-orange)' : 'var(--text-muted)'};">
-            ${Number.isFinite(water) && water > 0 ? `${water} mm` : 'Default'}
-          </div>
-        </td>
-        <td>
           <div style="font-family: var(--font-mono); font-weight: 700; color: var(--text-primary);">
             ${Number.isFinite(conf) ? `${(conf * 100).toFixed(1)}%` : '—'}
           </div>
@@ -816,7 +709,7 @@ function renderHistoryTable() {
         <td>
           <span class="model-pill-badge">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-            XGBoost Final Deployment Model
+            ${p.model_used || AppState.modelName}
           </span>
         </td>
       </tr>
@@ -831,7 +724,6 @@ function renderHistoryTable() {
             <th>Timestamp</th>
             <th>Crop</th>
             <th>Irrigation Need</th>
-            <th>Rec. Volume</th>
             <th>Confidence</th>
             <th>Deployment Model</th>
           </tr>
@@ -864,7 +756,6 @@ function renderPagination(totalCount) {
 
   let pagesHtml = '';
 
-  // Previous Button
   pagesHtml += `
     <button class="page-btn" onclick="changeHistoryPage(${cur - 1})" ${cur === 1 ? 'disabled' : ''} aria-label="Previous page">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
@@ -881,7 +772,6 @@ function renderPagination(totalCount) {
     }
   }
 
-  // Next Button
   pagesHtml += `
     <button class="page-btn" onclick="changeHistoryPage(${cur + 1})" ${cur === totalPages ? 'disabled' : ''} aria-label="Next page">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
@@ -920,90 +810,21 @@ function renderHistoryError() {
   `;
 }
 
-// ==========================================================================
-// 8. Model Specification Page Controller (/models)
-// ==========================================================================
-
-const VerifiedXGBoostMetrics = {
-  accuracy: 0.9853,
-  macroF1: 0.9704,
-  macroRocAuc: 0.9976,
-  microAvgPrecision: 0.9970,
-  highClassF1: 0.9397,
-  classes: {
-    High: { precision: 0.9521, recall: 0.9276, f1: 0.9397 },
-    Low: { precision: 0.9867, recall: 0.9951, f1: 0.9909 },
-    Medium: { precision: 0.9860, recall: 0.9752, f1: 0.9806 }
-  }
-};
-
-function initModelsPage() {
-  const container = document.getElementById('models-metrics-container');
-  if (!container) return;
-
-  // Render Verified Metrics Progress Cards
-  const metricItems = [
-    { label: 'Test Accuracy', val: VerifiedXGBoostMetrics.accuracy },
-    { label: 'Test Macro F1', val: VerifiedXGBoostMetrics.macroF1 },
-    { label: 'Test Macro ROC-AUC', val: VerifiedXGBoostMetrics.macroRocAuc },
-    { label: 'Test Micro Average Precision', val: VerifiedXGBoostMetrics.microAvgPrecision },
-    { label: 'High-Class F1 Score', val: VerifiedXGBoostMetrics.highClassF1 }
-  ];
-
-  let metricsHtml = '';
-  metricItems.forEach((m) => {
-    const pct = (m.val * 100).toFixed(2);
-    metricsHtml += `
-      <div class="metric-progress-card">
-        <div class="metric-progress-header">
-          <span class="metric-progress-label">${m.label}</span>
-          <span class="metric-progress-val">${pct}%</span>
-        </div>
-        <div class="metric-progress-track">
-          <div class="metric-progress-fill" style="width: ${pct}%;"></div>
-        </div>
-      </div>
-    `;
-  });
-  container.innerHTML = metricsHtml;
-
-  // Render Class-wise report cards
-  const classContainer = document.getElementById('class-breakdown-container');
-  if (classContainer) {
-    let classHtml = '';
-    Object.entries(VerifiedXGBoostMetrics.classes).forEach(([className, scores]) => {
-      classHtml += `
-        <div class="class-metric-card">
-          <div class="class-metric-title">
-            <span class="${badgeClass(className)}">${className} Class</span>
-            <span>Performance</span>
-          </div>
-          <div class="class-stat-row">
-            <span class="class-stat-name">Precision</span>
-            <span class="class-stat-val">${(scores.precision * 100).toFixed(2)}%</span>
-          </div>
-          <div class="class-stat-row">
-            <span class="class-stat-name">Recall</span>
-            <span class="class-stat-val">${(scores.recall * 100).toFixed(2)}%</span>
-          </div>
-          <div class="class-stat-row">
-            <span class="class-stat-name">F1 Score</span>
-            <span class="class-stat-val">${(scores.f1 * 100).toFixed(2)}%</span>
-          </div>
-        </div>
-      `;
-    });
-    classContainer.innerHTML = classHtml;
-  }
+function bootstrapSchema() {
+  return fetch('/api/schema')
+    .then((res) => res.json())
+    .then((data) => {
+      if (!data.error) {
+        AppState.schema = data;
+        AppState.modelName = data.final_model;
+      }
+    })
+    .catch(() => {});
 }
-
-// ==========================================================================
-// 9. Document Ready Initialization
-// ==========================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
+  bootstrapSchema();
   initStepper();
   initHistoryPage();
-  initModelsPage();
 });

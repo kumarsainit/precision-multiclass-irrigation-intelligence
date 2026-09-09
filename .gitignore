@@ -5,3 +5,4 @@ __pycache__/
 .DS_Store
 notebook/catboost_info/
 .Rhistory
+experiments/run.log

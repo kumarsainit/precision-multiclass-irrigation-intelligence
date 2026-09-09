@@ -28,10 +28,9 @@
 
 {% block content %}
 
-<!-- Hero Banner (Inspired by medesk-dashboard & Hero-5) -->
 <section class="model-hero-card">
   <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; flex-wrap: wrap;">
-    <div style="max-width: 760px;">
+    <div style="max-width: 780px;">
       <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
         <span class="hero-model-pill">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -43,32 +42,37 @@
       </div>
 
       <h1 style="font-size: clamp(2rem, 3.5vw, 2.75rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 0.75rem; color: #FAF9F5;">
-        XGBoost Classifier
+        {{ experiment.final_model }}
       </h1>
 
       <p style="font-size: 1rem; color: #D1DDD5; line-height: 1.6; margin-bottom: 1.5rem;">
-        Extreme Gradient Boosting (XGBoost) is the selected and verified final deployment model for the precision irrigation intelligence engine. XGBoost is used as the final deployment classifier because its gradient-boosted tree architecture provides strong multi-class discrimination while controlling model complexity through regularization.
+        {{ experiment.final_model }} was chosen by the selection rule recorded with the experiment:
+        {{ experiment.selection_rule }}
       </p>
 
       <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
         <div style="background: rgba(255,255,255,0.08); padding: 0.6rem 1.15rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.14);">
           <div style="font-size: 0.7rem; text-transform: uppercase; color: #A9B7AF; font-weight: 600;">Artifact</div>
-          <div style="font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; color: #FAF9F5;">xgboost_model.pkl</div>
+          <div style="font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; color: #FAF9F5;">{{ experiment.artifact }}</div>
         </div>
 
         <div style="background: rgba(255,255,255,0.08); padding: 0.6rem 1.15rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.14);">
-          <div style="font-size: 0.7rem; text-transform: uppercase; color: #A9B7AF; font-weight: 600;">Feature Columns</div>
-          <div style="font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; color: #FAF9F5;">model_columns.pkl</div>
+          <div style="font-size: 0.7rem; text-transform: uppercase; color: #A9B7AF; font-weight: 600;">Feature Schema</div>
+          <div style="font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; color: #FAF9F5;">{{ experiment.schema_artifact }}</div>
         </div>
 
         <div style="background: rgba(255,255,255,0.08); padding: 0.6rem 1.15rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.14);">
           <div style="font-size: 0.7rem; text-transform: uppercase; color: #A9B7AF; font-weight: 600;">Classes</div>
-          <div style="font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; color: #7BE495;">Low / Medium / High</div>
+          <div style="font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; color: #7BE495;">{{ experiment.class_labels|join(' / ') }}</div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.08); padding: 0.6rem 1.15rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.14);">
+          <div style="font-size: 0.7rem; text-transform: uppercase; color: #A9B7AF; font-weight: 600;">Encoded Features</div>
+          <div style="font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; color: #FAF9F5;">{{ experiment.encoded_feature_count }}</div>
         </div>
       </div>
     </div>
 
-    <!-- Algorithm Graphic Box -->
     <div style="opacity: 0.22; display: flex; align-items: center; justify-content: center;">
       <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
@@ -79,10 +83,8 @@
   </div>
 </section>
 
-<!-- Two-Column Technical Layout -->
 <div class="dashboard-grid">
 
-  <!-- Left: Verified XGBoost Test Metrics -->
   <div class="card">
     <div class="card-header">
       <div>
@@ -90,76 +92,40 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
           </svg>
-          Verified XGBoost Test Performance
+          Final Test Performance
         </h2>
         <p class="card-description">
-          Empirical holdout test set evaluation scores for the production model.
+          One evaluation on {{ "{:,}".format(experiment.split.test_rows) }} test rows that took no part in preprocessing, resampling, tuning or model selection.
         </p>
       </div>
     </div>
 
     <div class="card-body">
-      <!-- Dynamic / Pre-rendered Metric Progress Bars -->
-      <div id="models-metrics-container">
-        <!-- Test Accuracy -->
-        <div class="metric-progress-card">
-          <div class="metric-progress-header">
-            <span class="metric-progress-label">Test Accuracy</span>
-            <span class="metric-progress-val">98.53%</span>
-          </div>
-          <div class="metric-progress-track">
-            <div class="metric-progress-fill" style="width: 98.53%;"></div>
-          </div>
+      {% set rows = [
+        ('Accuracy', final_test_metrics.accuracy),
+        ('Macro F1', final_test_metrics.macro_f1),
+        ('Weighted F1', final_test_metrics.weighted_f1),
+        ('Macro Precision', final_test_metrics.macro_precision),
+        ('Macro Recall', final_test_metrics.macro_recall),
+        ('Macro ROC-AUC', final_test_metrics.macro_roc_auc),
+        ('Micro Average Precision', final_test_metrics.micro_average_precision),
+        ('High-Class F1', final_test_metrics.high_f1),
+        ('High-Class Recall', final_test_metrics.high_recall)
+      ] %}
+      {% for label, value in rows %}
+      <div class="metric-progress-card">
+        <div class="metric-progress-header">
+          <span class="metric-progress-label">{{ label }}</span>
+          <span class="metric-progress-val">{{ "%.2f"|format(value * 100) }}%</span>
         </div>
-
-        <!-- Test Macro F1 -->
-        <div class="metric-progress-card">
-          <div class="metric-progress-header">
-            <span class="metric-progress-label">Test Macro F1</span>
-            <span class="metric-progress-val">97.04%</span>
-          </div>
-          <div class="metric-progress-track">
-            <div class="metric-progress-fill" style="width: 97.04%;"></div>
-          </div>
-        </div>
-
-        <!-- Macro ROC-AUC -->
-        <div class="metric-progress-card">
-          <div class="metric-progress-header">
-            <span class="metric-progress-label">Macro ROC-AUC</span>
-            <span class="metric-progress-val">99.76%</span>
-          </div>
-          <div class="metric-progress-track">
-            <div class="metric-progress-fill" style="width: 99.76%;"></div>
-          </div>
-        </div>
-
-        <!-- Micro Average Precision -->
-        <div class="metric-progress-card">
-          <div class="metric-progress-header">
-            <span class="metric-progress-label">Micro Average Precision</span>
-            <span class="metric-progress-val">99.70%</span>
-          </div>
-          <div class="metric-progress-track">
-            <div class="metric-progress-fill" style="width: 99.70%;"></div>
-          </div>
-        </div>
-
-        <!-- High-Class F1 -->
-        <div class="metric-progress-card">
-          <div class="metric-progress-header">
-            <span class="metric-progress-label">High-Class F1 Score</span>
-            <span class="metric-progress-val">93.97%</span>
-          </div>
-          <div class="metric-progress-track">
-            <div class="metric-progress-fill" style="width: 93.97%;"></div>
-          </div>
+        <div class="metric-progress-track">
+          <div class="metric-progress-fill" style="width: {{ "%.2f"|format(value * 100) }}%;"></div>
         </div>
       </div>
+      {% endfor %}
     </div>
   </div>
 
-  <!-- Right: Class-Wise Performance Breakdown -->
   <div class="card">
     <div class="card-header">
       <div>
@@ -169,82 +135,43 @@
             <line x1="3" y1="9" x2="21" y2="9"></line>
             <line x1="9" y1="21" x2="9" y2="9"></line>
           </svg>
-          Class-Wise Classification Report
+          Class-Wise Test Report
         </h2>
         <p class="card-description">
-          Verified precision, recall, and F1 metrics across irrigation need tiers.
+          Precision, recall and F1 per irrigation-need class, with the number of test rows each score is based on.
         </p>
       </div>
     </div>
 
     <div class="card-body">
-      <div id="class-breakdown-container" class="form-group" style="gap: 1rem;">
-        <!-- High Need Card -->
+      <div class="form-group" style="gap: 1rem;">
+        {% for label in ['High', 'Medium', 'Low'] %}
+        {% set scores = experiment.final_test.per_class[label] %}
         <div class="class-metric-card">
           <div class="class-metric-title">
-            <span class="badge badge-high">High Need</span>
-            <span>Performance</span>
+            <span class="badge badge-{{ label|lower }}">{{ label }} Need</span>
+            <span>{{ "{:,}".format(scores.support) }} test rows</span>
           </div>
           <div class="class-stat-row">
             <span class="class-stat-name">Precision</span>
-            <span class="class-stat-val">95.21%</span>
+            <span class="class-stat-val">{{ "%.2f"|format(scores.precision * 100) }}%</span>
           </div>
           <div class="class-stat-row">
             <span class="class-stat-name">Recall</span>
-            <span class="class-stat-val">92.76%</span>
+            <span class="class-stat-val">{{ "%.2f"|format(scores.recall * 100) }}%</span>
           </div>
           <div class="class-stat-row">
             <span class="class-stat-name">F1 Score</span>
-            <span class="class-stat-val">93.97%</span>
+            <span class="class-stat-val">{{ "%.2f"|format(scores.f1 * 100) }}%</span>
           </div>
         </div>
-
-        <!-- Medium Need Card -->
-        <div class="class-metric-card">
-          <div class="class-metric-title">
-            <span class="badge badge-medium">Medium Need</span>
-            <span>Performance</span>
-          </div>
-          <div class="class-stat-row">
-            <span class="class-stat-name">Precision</span>
-            <span class="class-stat-val">98.60%</span>
-          </div>
-          <div class="class-stat-row">
-            <span class="class-stat-name">Recall</span>
-            <span class="class-stat-val">97.52%</span>
-          </div>
-          <div class="class-stat-row">
-            <span class="class-stat-name">F1 Score</span>
-            <span class="class-stat-val">98.06%</span>
-          </div>
-        </div>
-
-        <!-- Low Need Card -->
-        <div class="class-metric-card">
-          <div class="class-metric-title">
-            <span class="badge badge-low">Low Need</span>
-            <span>Performance</span>
-          </div>
-          <div class="class-stat-row">
-            <span class="class-stat-name">Precision</span>
-            <span class="class-stat-val">98.67%</span>
-          </div>
-          <div class="class-stat-row">
-            <span class="class-stat-name">Recall</span>
-            <span class="class-stat-val">99.51%</span>
-          </div>
-          <div class="class-stat-row">
-            <span class="class-stat-name">F1 Score</span>
-            <span class="class-stat-val">99.09%</span>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
   </div>
 
 </div>
 
-<!-- Multi-Model Comparative Benchmark Table (Section 18) -->
 <div class="card" style="margin-top: 2rem;">
   <div class="card-header">
     <div>
@@ -254,10 +181,11 @@
           <line x1="12" y1="20" x2="12" y2="4"></line>
           <line x1="6" y1="20" x2="6" y2="14"></line>
         </svg>
-        Multi-Model Benchmark Evaluation
+        Model Comparison
       </h2>
       <p class="card-description">
-        Final comparative benchmarking results leading to the selection of XGBoost as the production deployment model.
+        All four candidates trained on the same split with the same encoding and the same imbalance strategy.
+        Selection used the validation column; the test column is reported afterwards for transparency only.
       </p>
     </div>
   </div>
@@ -266,162 +194,273 @@
     <table class="metrics-comparison-table">
       <thead>
         <tr>
-          <th>Model Architecture</th>
-          <th>Macro ROC-AUC</th>
-          <th>Micro Average Precision</th>
+          <th>Model</th>
+          <th>Validation Macro F1</th>
+          <th>Cross-Validated Macro F1</th>
+          <th>Test Macro F1</th>
           <th>Test Accuracy</th>
-          <th>Model Role / Selection Status</th>
+          <th>Test High Recall</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody>
-        <!-- XGBoost (Final Deployment Model) -->
-        <tr class="highlighted-row">
+        {% for m in models %}
+        <tr {% if m.is_final %}class="highlighted-row"{% endif %}>
           <td>
-            <div style="font-weight: 800; color: var(--text-primary);">XGBoost</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Extreme Gradient Boosting Classifier</div>
+            <div style="font-weight: {{ 800 if m.is_final else 700 }}; color: var(--text-primary);">{{ m.name }}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">{{ m.algorithm_type }}</div>
           </td>
+          <td><span style="font-family: var(--font-mono); font-weight: {{ 800 if m.is_final else 600 }};">{{ "%.4f"|format(m.validation_macro_f1) }}</span></td>
+          <td><span style="font-family: var(--font-mono); font-weight: 600;">{{ "%.4f"|format(m.cv_macro_f1_mean) }} &plusmn; {{ "%.4f"|format(m.cv_macro_f1_std) }}</span></td>
+          <td><span style="font-family: var(--font-mono); font-weight: {{ 800 if m.is_final else 600 }};">{{ "%.4f"|format(m.macro_f1) }}</span></td>
+          <td><span style="font-family: var(--font-mono); font-weight: 600;">{{ "%.2f"|format(m.accuracy * 100) }}%</span></td>
+          <td><span style="font-family: var(--font-mono); font-weight: 600;">{{ "%.2f"|format(m.high_recall * 100) }}%</span></td>
           <td>
-            <span style="font-family: var(--font-mono); font-weight: 800; color: var(--brand-emerald-dark);">0.9976</span>
-          </td>
-          <td>
-            <span style="font-family: var(--font-mono); font-weight: 800; color: var(--brand-emerald-dark);">0.9970</span>
-          </td>
-          <td>
-            <span style="font-family: var(--font-mono); font-weight: 800; color: var(--brand-emerald-dark);">98.53%</span>
-          </td>
-          <td>
+            {% if m.is_final %}
             <span class="model-pill-badge">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              FINAL DEPLOYMENT MODEL
+              DEPLOYED
             </span>
+            {% else %}
+            <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">Evaluated candidate</span>
+            {% endif %}
           </td>
         </tr>
-
-        <!-- CatBoost (Evaluated Candidate) -->
-        <tr>
-          <td>
-            <div style="font-weight: 700;">CatBoost</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Ordered Gradient Boosting Trees</div>
-          </td>
-          <td>
-            <span style="font-family: var(--font-mono); font-weight: 600;">0.9972</span>
-          </td>
-          <td>
-            <span style="font-family: var(--font-mono); font-weight: 600;">0.9964</span>
-          </td>
-          <td>
-            <span style="font-family: var(--font-mono); font-weight: 600;">98.53%</span>
-          </td>
-          <td>
-            <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">Evaluated Candidate</span>
-          </td>
-        </tr>
-
-        <!-- LightGBM (Evaluated Candidate) -->
-        <tr>
-          <td>
-            <div style="font-weight: 700;">LightGBM</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Gradient Boosting Decision Tree</div>
-          </td>
-          <td>
-            <span style="font-family: var(--font-mono); font-weight: 600;">0.9975</span>
-          </td>
-          <td>
-            <span style="font-family: var(--font-mono); font-weight: 600;">0.9969</span>
-          </td>
-          <td>
-            <span style="font-family: var(--font-mono); font-weight: 600;">98.52%</span>
-          </td>
-          <td>
-            <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">Evaluated Candidate</span>
-          </td>
-        </tr>
-
-        <!-- Logistic Regression (Baseline) -->
-        <tr>
-          <td>
-            <div style="font-weight: 700;">Logistic Regression</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Linear Probabilistic Baseline Classifier</div>
-          </td>
-          <td>
-            <span style="font-family: var(--font-mono); font-weight: 600;">0.9297</span>
-          </td>
-          <td>
-            <span style="font-family: var(--font-mono); font-weight: 600;">0.9034</span>
-          </td>
-          <td>
-            <span style="font-family: var(--font-mono); font-weight: 600;">81.96%</span>
-          </td>
-          <td>
-            <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">Baseline Candidate</span>
-          </td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>
+
+  <div class="card-body" style="border-top: 1px solid var(--border-subtle);">
+    <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem;">How close is this result</h3>
+    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65;">
+      {{ experiment.final_model }} finished ahead of the runner-up by
+      <strong>{{ "%.5f"|format(experiment.selection_margin) }}</strong> validation Macro F1. That margin is
+      smaller than the fold-to-fold spread of cross-validation, so the three gradient-boosting models should be
+      read as statistically indistinguishable on this dataset rather than as a ranking. The selection rule was
+      fixed before the comparison and {{ experiment.final_model }} came first under it; it also carries the
+      smallest train-to-validation gap of the three, which is the secondary reason to prefer it. Choosing either
+      of the other two ensembles would have been defensible and would have changed the headline metrics by
+      well under half a percentage point.
+      {% if experiment.catboost_native_macro_f1 %}
+      A separate run gave CatBoost its categorical columns directly instead of one-hot encoding them, which
+      scored {{ "%.4f"|format(experiment.catboost_native_macro_f1) }} validation Macro F1 - no better than the
+      shared encoding, so the shared encoding was kept for every model.
+      {% endif %}
+    </p>
+  </div>
 </div>
 
-<!-- Algorithm Deep Dive Cards (Clean Human-Readable Technical Copy - ZERO Raw LaTeX) -->
-<div class="form-grid-3" style="margin-top: 2rem;">
+<div class="dashboard-grid" style="margin-top: 2rem;">
+
   <div class="card">
-    <div class="card-body">
-      <div style="width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--brand-emerald-soft); color: var(--brand-emerald); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-        </svg>
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"></path>
+            <path d="M7 14l4-4 4 4 4-6"></path>
+          </svg>
+          Overfitting Check
+        </h2>
+        <p class="card-description">
+          Training, validation and test scores for {{ experiment.final_model }}, with the gaps between them.
+        </p>
       </div>
-      <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.45rem;">Second-Order Optimization</h3>
-      <p style="font-size: 0.825rem; color: var(--text-secondary); line-height: 1.55;">
-        XGBoost utilizes both first-order gradient direction and second-order curvature information from the multi-class log-loss objective to calculate optimal leaf node weights with high computational efficiency.
-      </p>
+    </div>
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="metrics-comparison-table">
+          <thead>
+            <tr><th>Split</th><th>Accuracy</th><th>Macro F1</th></tr>
+          </thead>
+          <tbody>
+            {% for name, key in [('Training', 'train'), ('Validation', 'validation'), ('Test', 'test')] %}
+            <tr>
+              <td style="font-weight: 700;">{{ name }}</td>
+              <td><span style="font-family: var(--font-mono);">{{ "%.4f"|format(experiment.overfitting[key].accuracy) }}</span></td>
+              <td><span style="font-family: var(--font-mono);">{{ "%.4f"|format(experiment.overfitting[key].macro_f1) }}</span></td>
+            </tr>
+            {% endfor %}
+            <tr class="highlighted-row">
+              <td style="font-weight: 700;">Train minus test</td>
+              <td><span style="font-family: var(--font-mono);">{{ "%+.4f"|format(experiment.overfitting.gaps.train_minus_test_accuracy) }}</span></td>
+              <td><span style="font-family: var(--font-mono);">{{ "%+.4f"|format(experiment.overfitting.gaps.train_minus_test_macro_f1) }}</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight: 700;">Validation minus test</td>
+              <td><span style="font-family: var(--font-mono);">{{ "%+.4f"|format(experiment.overfitting.gaps.val_minus_test_accuracy) }}</span></td>
+              <td><span style="font-family: var(--font-mono);">{{ "%+.4f"|format(experiment.overfitting.gaps.val_minus_test_macro_f1) }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ul style="margin-top: 1rem; padding-left: 1.1rem; font-size: 0.825rem; color: var(--text-secondary); line-height: 1.7;">
+        {% for control in experiment.overfitting.controls_applied %}
+        <li>{{ control }}</li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 
   <div class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+            <path d="M9 3v18M15 3v18M3 9h18M3 15h18"></path>
+          </svg>
+          Test Confusion Matrix
+        </h2>
+        <p class="card-description">
+          Rows are the true class, columns are what {{ experiment.final_model }} predicted.
+        </p>
+      </div>
+    </div>
+
     <div class="card-body">
-      <div style="width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--brand-orange-soft); color: var(--brand-orange); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="table-responsive">
+        <table class="metrics-comparison-table">
+          <thead>
+            <tr>
+              <th>True \ Predicted</th>
+              {% for label in experiment.class_labels %}<th>{{ label }}</th>{% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in experiment.final_test.confusion_matrix %}
+            {% set true_index = loop.index0 %}
+            <tr>
+              <td style="font-weight: 700;">{{ experiment.class_labels[true_index] }}</td>
+              {% for value in row %}
+              {% set diagonal = loop.index0 == true_index %}
+              <td>
+                <span style="font-family: var(--font-mono); font-weight: {{ 800 if diagonal else 500 }}; color: {{ 'var(--brand-emerald-dark)' if diagonal else 'var(--text-muted)' }};">
+                  {{ "{:,}".format(value) }}
+                </span>
+              </td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin-top: 1rem; font-size: 0.825rem; color: var(--text-secondary); line-height: 1.6;">
+        The diagonal holds the correct predictions. The most consequential cell is a genuinely High-need field
+        predicted as Medium or Low, because that is the error that leaves a crop under-watered.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<div class="card" style="margin-top: 2rem;">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16v16H4z"></path>
+          <path d="M4 10h16M10 4v16"></path>
+        </svg>
+        Experimental Protocol
+      </h2>
+      <p class="card-description">
+        The settings that produced the numbers on this page.
+      </p>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="form-grid-2" style="gap: 1.5rem;">
+      <div>
+        <div class="class-stat-row"><span class="class-stat-name">Dataset rows</span><span class="class-stat-val">{{ "{:,}".format(experiment.dataset_rows) }}</span></div>
+        <div class="class-stat-row"><span class="class-stat-name">Train / validation / test</span><span class="class-stat-val">{{ experiment.split.train_pct }}% / {{ experiment.split.val_pct }}% / {{ experiment.split.test_pct }}%</span></div>
+        <div class="class-stat-row"><span class="class-stat-name">Random seed</span><span class="class-stat-val">{{ experiment.random_seed }}</span></div>
+        <div class="class-stat-row"><span class="class-stat-name">Imbalance ratio</span><span class="class-stat-val">{{ experiment.imbalance_ratio }} to 1</span></div>
+        <div class="class-stat-row"><span class="class-stat-name">Imbalance strategy</span><span class="class-stat-val">{{ experiment.imbalance_strategy }}</span></div>
+        <div class="class-stat-row"><span class="class-stat-name">Split overlap</span><span class="class-stat-val">{{ experiment.split.index_overlap_train_test }} rows</span></div>
+      </div>
+      <div>
+        {% for label, count in experiment.class_distribution.items() %}
+        <div class="class-stat-row">
+          <span class="class-stat-name">{{ label }} class in full dataset</span>
+          <span class="class-stat-val">{{ "{:,}".format(count.count) }} ({{ "%.2f"|format(count.percentage) }}%)</span>
+        </div>
+        {% endfor %}
+        <div class="class-stat-row"><span class="class-stat-name">Cross-validation</span><span class="class-stat-val">{{ experiment.cross_validation.folds }}-fold stratified</span></div>
+        <div class="class-stat-row"><span class="class-stat-name">Encoded features</span><span class="class-stat-val">{{ experiment.encoded_feature_count }}</span></div>
+      </div>
+    </div>
+
+    <p style="margin-top: 1.25rem; font-size: 0.825rem; color: var(--text-secondary); line-height: 1.6;">
+      Imbalance handling &mdash; {{ experiment.imbalance_strategy }} (<code>{{ experiment.imbalance_strategy_key }}</code>):
+      {{ experiment.imbalance_strategy_note }}
+      It was applied to the training split only, after the split had already been made, so no synthetic row can
+      reach validation or test.
+    </p>
+  </div>
+</div>
+
+<div class="card" style="margin-top: 2rem;">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
-          <path d="M12 6v6l4 2"></path>
+          <path d="M12 8v8M8 12h8"></path>
         </svg>
-      </div>
-      <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.45rem;">Tree Regularization</h3>
-      <p style="font-size: 0.825rem; color: var(--text-secondary); line-height: 1.55;">
-        Directly penalizes tree complexity using combined L1 and L2 regularization penalties, preventing overfitting on noisy soil sensor and atmospheric telemetry.
+        Why Each Model Was Included
+      </h2>
+      <p class="card-description">
+        What each candidate contributes to the comparison, and how it performed here.
       </p>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-body">
-      <div style="width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--brand-blue-soft); color: var(--brand-blue); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-        </svg>
+  <div class="card-body">
+    <div class="form-grid-2" style="gap: 1.25rem;">
+      {% for m in models %}
+      <div class="class-metric-card">
+        <div class="class-metric-title">
+          <span style="font-weight: 800; color: var(--text-primary);">{{ m.name }}</span>
+          <span style="font-family: var(--font-mono); font-size: 0.8rem;">Val Macro F1 {{ "%.4f"|format(m.validation_macro_f1) }}</span>
+        </div>
+        <p style="font-size: 0.825rem; color: var(--text-secondary); line-height: 1.6; margin-top: 0.5rem;">
+          {{ m.description }}
+        </p>
       </div>
-      <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.45rem;">Technical Resources</h3>
-      <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.75rem;">
-        <a
-          href="https://xgboost.readthedocs.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-          style="font-size: 0.825rem; font-weight: 600; color: var(--brand-blue); display: flex; align-items: center; gap: 0.35rem;"
-        >
-          <span>XGBoost Official Documentation</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-        </a>
-        <a
-          href="https://github.com/dmlc/xgboost"
-          target="_blank"
-          rel="noopener noreferrer"
-          style="font-size: 0.825rem; font-weight: 600; color: var(--brand-blue); display: flex; align-items: center; gap: 0.35rem;"
-        >
-          <span>XGBoost GitHub Repository</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-        </a>
-      </div>
+      {% endfor %}
     </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top: 2rem;">
+  <div class="card-body">
+    <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem;">Reference Documentation</h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 1.25rem;">
+      {% set links = [
+        ('XGBoost', 'https://xgboost.readthedocs.io/'),
+        ('LightGBM', 'https://lightgbm.readthedocs.io/'),
+        ('CatBoost', 'https://catboost.ai/docs/'),
+        ('scikit-learn', 'https://scikit-learn.org/stable/'),
+        ('imbalanced-learn', 'https://imbalanced-learn.org/stable/')
+      ] %}
+      {% for name, url in links %}
+      <a href="{{ url }}" target="_blank" rel="noopener noreferrer"
+         style="font-size: 0.825rem; font-weight: 600; color: var(--brand-blue); display: flex; align-items: center; gap: 0.35rem;">
+        <span>{{ name }}</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+      </a>
+      {% endfor %}
+    </div>
+
+    <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">
+      {% for package, version in experiment.environment.items() %}{{ package }} {{ version }}{% if not loop.last %} &middot; {% endif %}{% endfor %}
+    </p>
   </div>
 </div>
 

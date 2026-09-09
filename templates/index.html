@@ -28,7 +28,46 @@
 
 {% block content %}
 
-<!-- Hero Banner (Inspired by hero-34 & Hero-5) -->
+{% macro select_field(column, label, helper) -%}
+<div class="form-group">
+  <label class="form-label" for="{{ column }}">
+    <span>{{ label }}</span>
+    <span class="unit-tag">{{ schema.categorical_levels[column]|length }} options</span>
+  </label>
+  <select id="{{ column }}" name="{{ column }}" class="form-select" required>
+    {% for level in schema.categorical_levels[column] -%}
+    <option value="{{ level }}">{{ level }}</option>
+    {% endfor -%}
+  </select>
+  <span class="form-helper">{{ helper }}</span>
+</div>
+{%- endmacro %}
+
+{% macro number_field(column, label, unit, step) -%}
+{% set stats = schema.numeric_ranges[column] -%}
+<div class="form-group">
+  <label class="form-label" for="{{ column }}">
+    <span>{{ label }}</span>
+    <span class="unit-tag">{{ unit }}</span>
+  </label>
+  <input
+    type="number"
+    id="{{ column }}"
+    name="{{ column }}"
+    class="form-control"
+    value="{{ "%.2f"|format(stats.median) }}"
+    min="{{ "%.2f"|format(stats.min) }}"
+    max="{{ "%.2f"|format(stats.max) }}"
+    step="{{ step }}"
+    data-min="{{ stats.min }}"
+    data-max="{{ stats.max }}"
+    data-median="{{ stats.median }}"
+    required
+  />
+  <span class="form-helper">Training range {{ "%.2f"|format(stats.min) }} to {{ "%.2f"|format(stats.max) }}.</span>
+</div>
+{%- endmacro %}
+
 <section class="hero-card">
   <div class="hero-content">
     <div class="hero-badge-row">
@@ -36,7 +75,7 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
-        Final Deployment Model: XGBoost
+        Final Deployment Model: {{ experiment.final_model }}
       </span>
       <span class="hero-category-pill">
         Multi-Class Precision Irrigation
@@ -48,38 +87,35 @@
     </h1>
 
     <p class="hero-subtitle">
-      Precision irrigation intelligence powered by a verified XGBoost production model, translating crop, soil, weather, and field conditions into actionable Low, Medium, or High irrigation recommendations.
+      A {{ experiment.final_model }} classifier trained on {{ "{:,}".format(experiment.dataset_rows) }} field records, translating crop, soil, weather, and field conditions into a Low, Medium, or High irrigation recommendation. The figures below come from a single evaluation on a test split that was held out from every training and tuning decision.
     </p>
 
-    <!-- Verified Metric Chips -->
     <div class="hero-kpis-grid">
       <div class="hero-kpi-item">
-        <span class="hero-kpi-val highlight-emerald">98.53%</span>
+        <span class="hero-kpi-val highlight-emerald">{{ "%.2f"|format(experiment.final_test.accuracy * 100) }}%</span>
         <span class="hero-kpi-label">Test Accuracy</span>
       </div>
 
       <div class="hero-kpi-item">
-        <span class="hero-kpi-val highlight-orange">99.76%</span>
+        <span class="hero-kpi-val highlight-orange">{{ "%.2f"|format(experiment.final_test.macro_roc_auc * 100) }}%</span>
         <span class="hero-kpi-label">Macro ROC-AUC</span>
       </div>
 
       <div class="hero-kpi-item">
-        <span class="hero-kpi-val">97.04%</span>
+        <span class="hero-kpi-val">{{ "%.2f"|format(experiment.final_test.macro_f1 * 100) }}%</span>
         <span class="hero-kpi-label">Macro F1 Score</span>
       </div>
 
       <div class="hero-kpi-item">
-        <span class="hero-kpi-val">93.97%</span>
+        <span class="hero-kpi-val">{{ "%.2f"|format(experiment.final_test.per_class.High.f1 * 100) }}%</span>
         <span class="hero-kpi-label">High-Class F1</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Dashboard Grid (Input Workflow + Live Results) -->
 <div class="dashboard-grid">
 
-  <!-- Left Column: Guided 4-Step Input Stepper -->
   <div class="card">
     <div class="card-header">
       <div>
@@ -109,14 +145,12 @@
     </div>
 
     <div class="card-body">
-      <!-- Stepper Navigation Header (Inspired by stepper.json) -->
       <div class="stepper-container">
         <div class="stepper-header">
           <div class="stepper-progress-bar">
             <div id="stepper-progress-fill" class="stepper-progress-fill"></div>
           </div>
 
-          <!-- Step 1 Node -->
           <button
             type="button"
             class="stepper-step active"
@@ -127,7 +161,6 @@
             <span class="stepper-label">Crop & Field</span>
           </button>
 
-          <!-- Step 2 Node -->
           <button
             type="button"
             class="stepper-step"
@@ -138,7 +171,6 @@
             <span class="stepper-label">Atmosphere</span>
           </button>
 
-          <!-- Step 3 Node -->
           <button
             type="button"
             class="stepper-step"
@@ -149,7 +181,6 @@
             <span class="stepper-label">Soil & Water</span>
           </button>
 
-          <!-- Step 4 Node -->
           <button
             type="button"
             class="stepper-step"
@@ -161,83 +192,39 @@
           </button>
         </div>
 
-        <!-- Form Element -->
         <form id="prediction-form" onsubmit="event.preventDefault(); submitForm();">
 
-          <!-- STEP 1: Crop & Field -->
           <div id="step-panel-1" class="step-panel active">
             <div class="form-grid-2">
-              <div class="form-group">
-                <label class="form-label" for="crop_type">
-                  <span>Crop Type</span>
-                  <span class="unit-tag">Required</span>
-                </label>
-                <select id="crop_type" name="crop_type" class="form-select" required>
-                  <option value="" disabled selected>Select target crop</option>
-                  <option value="Rice">Rice</option>
-                  <option value="Wheat">Wheat</option>
-                  <option value="Maize">Maize</option>
-                  <option value="Cotton">Cotton</option>
-                  <option value="Sugarcane">Sugarcane</option>
-                  <option value="Soybean">Soybean</option>
-                  <option value="Tomato">Tomato</option>
-                  <option value="Potato">Potato</option>
-                  <option value="Onion">Onion</option>
-                  <option value="Sunflower">Sunflower</option>
-                </select>
-                <span class="form-helper">Botanical water-use coefficient determines baseline demand.</span>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="crop_growth_stage">
-                  <span>Growth Stage</span>
-                  <span class="unit-tag">Required</span>
-                </label>
-                <select id="crop_growth_stage" name="crop_growth_stage" class="form-select" required>
-                  <option value="" disabled selected>Select growth stage</option>
-                  <option value="Germination">Germination</option>
-                  <option value="Seedling">Seedling</option>
-                  <option value="Vegetative">Vegetative</option>
-                  <option value="Flowering">Flowering</option>
-                  <option value="Fruit Development">Fruit Development</option>
-                  <option value="Maturity">Maturity</option>
-                  <option value="Harvest">Harvest</option>
-                </select>
-                <span class="form-helper">Critical moisture windows occur in flowering & vegetative stages.</span>
-              </div>
+              {{ select_field('Crop_Type', 'Crop Type', 'Crops present in the training data.') }}
+              {{ select_field('Crop_Growth_Stage', 'Growth Stage', 'The strongest single driver in the trained model.') }}
             </div>
 
-            <div class="form-group" style="margin-top: 1.25rem;">
-              <label class="form-label" for="field_area_hectare">
-                <span>Field Area</span>
-                <span class="unit-tag">Hectares</span>
-              </label>
-              <input
-                type="number"
-                id="field_area_hectare"
-                name="field_area_hectare"
-                class="form-control"
-                value="2.0"
-                min="0.1"
-                step="0.1"
-                required
-              />
-              <span class="form-helper">Total contiguous agricultural plot surface.</span>
+            <div class="form-grid-2" style="margin-top: 1.25rem;">
+              {{ select_field('Season', 'Season', 'Kharif, Rabi and Zaid cropping seasons.') }}
+              {{ select_field('Region', 'Region', 'Geographic zone recorded for the field.') }}
             </div>
 
-            <!-- Quick Preset Scenarios Section -->
+            <div class="form-grid-2" style="margin-top: 1.25rem;">
+              {{ number_field('Field_Area_hectare', 'Field Area', 'hectare', '0.01') }}
+              {{ select_field('Irrigation_Type', 'Irrigation Method', 'Delivery method installed on the field.') }}
+            </div>
+
             <div class="preset-section">
               <div class="preset-title">Quick Simulation Presets</div>
               <div class="preset-pills">
                 <button type="button" class="preset-btn" onclick="loadScenario('arid')">
-                  Arid Field Scenario (High Need)
+                  Hot Dry Field
                 </button>
                 <button type="button" class="preset-btn" onclick="loadScenario('postRain')">
-                  Post-Rain Scenario (Low Need)
+                  Wet Field After Rain
                 </button>
                 <button type="button" class="preset-btn" onclick="loadScenario('moderate')">
-                  Moderate Scenario (Medium Need)
+                  Median Field
                 </button>
+              </div>
+              <div class="preset-note">
+                Presets set every input to values drawn from the training range, so the model is never asked to score a field it has no comparable examples for.
               </div>
             </div>
 
@@ -252,98 +239,16 @@
             </div>
           </div>
 
-          <!-- STEP 2: Weather & Atmosphere -->
           <div id="step-panel-2" class="step-panel">
             <div class="form-grid-2">
-              <div class="form-group">
-                <label class="form-label" for="temperature_c">
-                  <span>Ambient Temperature</span>
-                  <span class="unit-tag">°C</span>
-                </label>
-                <input
-                  type="number"
-                  id="temperature_c"
-                  name="temperature_c"
-                  class="form-control"
-                  value="28.5"
-                  step="0.1"
-                  required
-                />
-                <span class="form-helper">High temperatures accelerate crop evapotranspiration.</span>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="humidity">
-                  <span>Relative Humidity</span>
-                  <span class="unit-tag">%</span>
-                </label>
-                <input
-                  type="number"
-                  id="humidity"
-                  name="humidity"
-                  class="form-control"
-                  value="55"
-                  min="0"
-                  max="100"
-                  step="1"
-                  required
-                />
-                <span class="form-helper">Atmospheric vapor pressure deficit proxy.</span>
-              </div>
+              {{ number_field('Temperature_C', 'Ambient Temperature', 'deg C', '0.01') }}
+              {{ number_field('Humidity', 'Relative Humidity', '%', '0.01') }}
             </div>
 
             <div class="form-grid-3" style="margin-top: 1.25rem;">
-              <div class="form-group">
-                <label class="form-label" for="rainfall_mm">
-                  <span>Recent Rainfall</span>
-                  <span class="unit-tag">mm</span>
-                </label>
-                <input
-                  type="number"
-                  id="rainfall_mm"
-                  name="rainfall_mm"
-                  class="form-control"
-                  value="2.0"
-                  min="0"
-                  step="0.1"
-                  required
-                />
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="windspeed_kmph">
-                  <span>Wind Velocity</span>
-                  <span class="unit-tag">km/h</span>
-                </label>
-                <input
-                  type="number"
-                  id="windspeed_kmph"
-                  name="windspeed_kmph"
-                  class="form-control"
-                  value="12.5"
-                  min="0"
-                  step="0.1"
-                  required
-                />
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="sunlight_hours">
-                  <span>Daily Sunlight</span>
-                  <span class="unit-tag">Hours</span>
-                </label>
-                <input
-                  type="number"
-                  id="sunlight_hours"
-                  name="sunlight_hours"
-                  class="form-control"
-                  value="8.5"
-                  min="0"
-                  max="24"
-                  step="0.5"
-                  required
-                />
-              </div>
+              {{ number_field('Rainfall_mm', 'Cumulative Rainfall', 'mm', '0.01') }}
+              {{ number_field('Wind_Speed_kmh', 'Wind Velocity', 'km/h', '0.01') }}
+              {{ number_field('Sunlight_Hours', 'Daily Sunlight', 'hours', '0.01') }}
             </div>
 
             <div class="stepper-actions">
@@ -355,7 +260,7 @@
               </button>
 
               <button type="button" class="btn btn-primary" onclick="nextStep()">
-                <span>Continue: Soil & Water</span>
+                <span>Continue: Soil &amp; Water</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
@@ -363,105 +268,55 @@
             </div>
           </div>
 
-          <!-- STEP 3: Soil & Practices -->
           <div id="step-panel-3" class="step-panel">
-            <!-- Soil Moisture Slider (Live Feedback) -->
+            {% set moisture = schema.numeric_ranges['Soil_Moisture'] %}
             <div class="form-group slider-group" style="margin-bottom: 1.5rem;">
               <div class="slider-header">
-                <label class="form-label" for="soil_moisture">
-                  <span>Volumetric Soil Moisture Level</span>
+                <label class="form-label" for="Soil_Moisture">
+                  <span>Volumetric Soil Moisture</span>
                   <span class="unit-tag">%</span>
                 </label>
-                <span id="soil_moisture_val" class="slider-value-badge">45</span>
+                <span id="Soil_Moisture_val" class="slider-value-badge">{{ "%.1f"|format(moisture.median) }}</span>
               </div>
               <input
                 type="range"
-                id="soil_moisture"
-                name="soil_moisture"
-                min="0"
-                max="100"
-                value="45"
+                id="Soil_Moisture"
+                name="Soil_Moisture"
+                min="{{ "%.2f"|format(moisture.min) }}"
+                max="{{ "%.2f"|format(moisture.max) }}"
+                step="0.1"
+                value="{{ "%.1f"|format(moisture.median) }}"
+                data-min="{{ moisture.min }}"
+                data-max="{{ moisture.max }}"
+                data-median="{{ moisture.median }}"
               />
-              <span class="form-helper">Real-time volumetric root-zone moisture percentage.</span>
+              <span class="form-helper">
+                Root-zone moisture. Training range {{ "%.2f"|format(moisture.min) }} to {{ "%.2f"|format(moisture.max) }} percent.
+              </span>
             </div>
 
             <div class="form-grid-2">
-              <div class="form-group">
-                <label class="form-label" for="soil_ph">
-                  <span>Soil pH Level</span>
-                  <span class="unit-tag">0–14</span>
-                </label>
-                <input
-                  type="number"
-                  id="soil_ph"
-                  name="soil_ph"
-                  class="form-control"
-                  value="6.8"
-                  min="0"
-                  max="14"
-                  step="0.1"
-                  required
-                />
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="organic_carbon">
-                  <span>Organic Carbon</span>
-                  <span class="unit-tag">%</span>
-                </label>
-                <input
-                  type="number"
-                  id="organic_carbon"
-                  name="organic_carbon"
-                  class="form-control"
-                  value="1.4"
-                  min="0"
-                  step="0.1"
-                  required
-                />
-              </div>
+              {{ select_field('Soil_Type', 'Soil Type', 'Texture class of the field.') }}
+              {{ number_field('Soil_pH', 'Soil pH', 'pH', '0.01') }}
             </div>
 
             <div class="form-grid-2" style="margin-top: 1.25rem;">
-              <div class="form-group">
-                <label class="form-label" for="water_source">
-                  <span>Primary Water Source</span>
-                  <span class="unit-tag">Required</span>
-                </label>
-                <select id="water_source" name="water_source" class="form-select" required>
-                  <option value="" disabled selected>Select water source</option>
-                  <option value="Canal">Canal System</option>
-                  <option value="Borewell">Borewell / Ground</option>
-                  <option value="Drip System">Drip Irrigation</option>
-                  <option value="Sprinkler">Sprinkler System</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="previous_irrigation_mm">
-                  <span>Previous Irrigation</span>
-                  <span class="unit-tag">mm</span>
-                </label>
-                <input
-                  type="number"
-                  id="previous_irrigation_mm"
-                  name="previous_irrigation_mm"
-                  class="form-control"
-                  value="10.0"
-                  min="0"
-                  step="0.1"
-                />
-              </div>
+              {{ number_field('Organic_Carbon', 'Organic Carbon', '%', '0.01') }}
+              {{ number_field('Electrical_Conductivity', 'Electrical Conductivity', 'dS/m', '0.01') }}
             </div>
 
-            <!-- Mulching Used Switch -->
+            <div class="form-grid-2" style="margin-top: 1.25rem;">
+              {{ select_field('Water_Source', 'Primary Water Source', 'Where the irrigation water comes from.') }}
+              {{ number_field('Previous_Irrigation_mm', 'Previous Irrigation', 'mm', '0.01') }}
+            </div>
+
             <div class="switch-control-card" style="margin-top: 1.25rem;">
               <div>
                 <div class="switch-label-title">Ground Mulching Active</div>
-                <div class="switch-label-sub">Reduces direct soil surface evaporation.</div>
+                <div class="switch-label-sub">Mulched fields skew strongly towards lower irrigation need.</div>
               </div>
               <label class="switch">
-                <input type="checkbox" id="mulching_used" name="mulching_used" />
+                <input type="checkbox" id="Mulching_Used" name="Mulching_Used" />
                 <span class="switch-slider"></span>
               </label>
             </div>
@@ -475,7 +330,7 @@
               </button>
 
               <button type="button" class="btn btn-primary" onclick="nextStep()">
-                <span>Review Inputs</span>
+                <span>Continue: Review</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
@@ -483,72 +338,21 @@
             </div>
           </div>
 
-          <!-- STEP 4: Review Summary & Predict Trigger -->
           <div id="step-panel-4" class="step-panel">
             <div class="review-card">
-              <div class="review-grid">
-                <div class="review-item">
-                  <span class="review-key">Crop & Stage</span>
-                  <span id="rev-crop" class="review-val">—</span>
-                </div>
-                <div class="review-item">
-                  <span class="review-key">Field Area</span>
-                  <span id="rev-area" class="review-val">—</span>
-                </div>
-                <div class="review-item">
-                  <span class="review-key">Temperature</span>
-                  <span id="rev-temp" class="review-val">—</span>
-                </div>
-                <div class="review-item">
-                  <span class="review-key">Humidity</span>
-                  <span id="rev-humidity" class="review-val">—</span>
-                </div>
-                <div class="review-item">
-                  <span class="review-key">Rainfall</span>
-                  <span id="rev-rain" class="review-val">—</span>
-                </div>
-                <div class="review-item">
-                  <span class="review-key">Wind Velocity</span>
-                  <span id="rev-wind" class="review-val">—</span>
-                </div>
-                <div class="review-item">
-                  <span class="review-key">Sunlight Hours</span>
-                  <span id="rev-sun" class="review-val">—</span>
-                </div>
-                <div class="review-item">
-                  <span class="review-key">Soil Moisture</span>
-                  <span id="rev-moisture" class="review-val">—</span>
-                </div>
-                <div class="review-item">
-                  <span class="review-key">Soil pH</span>
-                  <span id="rev-ph" class="review-val">—</span>
-                </div>
-                <div class="review-item">
-                  <span class="review-key">Organic Carbon</span>
-                  <span id="rev-carbon" class="review-val">—</span>
-                </div>
-                <div class="review-item">
-                  <span class="review-key">Water Source</span>
-                  <span id="rev-source" class="review-val">—</span>
-                </div>
-                <div class="review-item">
-                  <span class="review-key">Mulching</span>
-                  <span id="rev-mulching" class="review-val">—</span>
-                </div>
-              </div>
+              <div id="review-grid" class="review-grid"></div>
             </div>
 
-            <!-- Submit CTA -->
             <button
               id="submit-btn"
               type="submit"
               class="btn btn-primary btn-block"
               style="padding: 0.95rem 1.5rem; font-size: 1rem; font-weight: 700;"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
               </svg>
-              <span>Run XGBoost Inference</span>
+              <span>Run {{ experiment.final_model }} Inference</span>
             </button>
 
             <div class="stepper-actions" style="margin-top: 1rem;">
@@ -556,7 +360,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
-                <span>Edit Parameters</span>
+                <span>Previous</span>
               </button>
               <div></div>
             </div>
@@ -567,10 +371,8 @@
     </div>
   </div>
 
-  <!-- Right Column: Sticky Prediction Result Dashboard -->
   <div class="sticky-result-wrapper">
 
-    <!-- 1. Placeholder Empty State -->
     <div id="result-empty" class="result-placeholder">
       <div class="result-placeholder-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -585,20 +387,17 @@
       </p>
     </div>
 
-    <!-- 2. Loading State -->
     <div id="result-loading" class="result-loading-state">
       <div class="loader-spinner"></div>
       <div style="font-weight: 700; color: var(--text-primary); font-size: 1rem;">
-        Running XGBoost Inference
+        Running {{ experiment.final_model }} inference
       </div>
       <p style="font-size: 0.8125rem; color: var(--text-muted);">
         Evaluating multi-class decision trees and probability distributions...
       </p>
     </div>
 
-    <!-- 3. Result Card Active -->
     <div id="result-card" class="card result-card-active">
-      <!-- Main Decision Banner -->
       <div class="result-hero-box">
         <div class="result-eyebrow">Calculated Irrigation Requirement</div>
         <div id="res-badge" class="badge badge-none">
@@ -606,11 +405,10 @@
         </div>
       </div>
 
-      <!-- KPI Stats -->
       <div class="result-metrics-grid">
         <div class="metric-stat-box">
-          <div class="metric-stat-label">Recommended Dosage</div>
-          <div id="res-water" class="metric-stat-val">Standard Dosage</div>
+          <div class="metric-stat-label">High-Need Probability</div>
+          <div id="res-high-prob" class="metric-stat-val">&mdash;</div>
         </div>
 
         <div class="metric-stat-box">
@@ -619,15 +417,13 @@
         </div>
       </div>
 
-      <!-- Dynamic Probability Breakdown Graph (Section 18) -->
       <div class="prob-section">
         <div class="prob-title">
           <span>Class Probabilities Distribution</span>
-          <span style="font-size: 0.72rem; color: var(--brand-orange); font-family: var(--font-mono);">XGBoost Softmax</span>
+          <span style="font-size: 0.72rem; color: var(--brand-orange); font-family: var(--font-mono);">Predicted probabilities</span>
         </div>
 
         <div class="prob-bars-list">
-          <!-- Low Probability Bar -->
           <div class="prob-bar-item">
             <div class="prob-bar-header">
               <span class="prob-bar-label">Low Need Probability</span>
@@ -638,7 +434,6 @@
             </div>
           </div>
 
-          <!-- Medium Probability Bar -->
           <div class="prob-bar-item">
             <div class="prob-bar-header">
               <span class="prob-bar-label">Medium Need Probability</span>
@@ -649,7 +444,6 @@
             </div>
           </div>
 
-          <!-- High Probability Bar -->
           <div class="prob-bar-item">
             <div class="prob-bar-header">
               <span class="prob-bar-label">High Need Probability</span>
@@ -662,24 +456,21 @@
         </div>
       </div>
 
-      <!-- Agronomic Reasoning & Drivers -->
       <div class="insights-section">
         <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.5rem;">
           Key Agronomic Reasoning
         </div>
         <ul id="res-reasons" class="reasoning-list"></ul>
 
-        <!-- Top Feature Importance -->
         <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-top: 1.25rem; margin-bottom: 0.5rem;">
           Primary Decision Drivers
         </div>
         <div id="res-fi" class="fi-list"></div>
       </div>
 
-      <!-- Result Meta Footer -->
       <div class="result-meta-footer">
         <div>
-          Engine: <strong>XGBoost Final Deployment Model</strong>
+          Engine: <strong>{{ experiment.final_model }} ({{ experiment.artifact }})</strong>
         </div>
         <div id="res-time">—</div>
       </div>
